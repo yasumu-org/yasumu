@@ -1,10 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react()],
+  plugins: [
+    react(),
+    TanStackRouterVite({
+      routesDirectory: path.resolve(__dirname, './src/screens'),
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
