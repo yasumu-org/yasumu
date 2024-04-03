@@ -1,6 +1,11 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod requests;
+
+use std::collections::HashMap;
+
+use requests::make_request;
 use tauri::{Manager, Window};
 
 #[derive(Clone, serde::Serialize)]
@@ -10,23 +15,55 @@ struct Payload {
 }
 
 #[derive(Clone, serde::Serialize)]
-struct ExecutionResult {
-    response: String,
-    status: usize,
+struct ExecutionFailedResult {
+    body: String,
 }
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+#[derive(Clone, serde::Serialize)]
+struct ExecutionResult {
+    status: usize,
+    time: usize,
+    body: String,
+    headers: HashMap<String, String>,
+}
+
 #[tauri::command]
-fn execute(window: Window, url: &str, method: &str) {
+async fn execute(
+    window: Window,
+    url: &str,
+    method: &str,
+    headers: HashMap<&str, &str>,
+) -> Result<(), ()> {
+    let (status, response_time, headers, body) =
+        make_request(url, method, headers).await.map_err(|e| {
+            window
+                .emit(
+                    "execution-failed",
+                    ExecutionFailedResult {
+                        body: format!("Error: {}", e),
+                    },
+                )
+                .unwrap();
+        })?;
+
     window
         .emit(
             "execution-result",
             ExecutionResult {
-                response: format!("You sent a request to {} using {} method", url, method),
-                status: 200,
+                status: status as usize,
+                time: response_time as usize,
+                body,
+                headers: headers
+                    .iter()
+                    .fold(HashMap::new(), |mut acc, (key, value)| {
+                        acc.insert(key.to_string(), value.to_str().unwrap().to_string());
+                        acc
+                    }),
             },
         )
         .unwrap();
+
+    Ok(())
 }
 
 #[tauri::command]

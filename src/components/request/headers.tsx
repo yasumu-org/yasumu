@@ -12,20 +12,24 @@ import {
 } from '../ui/table';
 import { useRequestContext } from '@/context/RequestContext';
 
-export function ParameterTable() {
-  const { parameters, setParameters } = useRequestContext();
+export function HeadersTable() {
+  const { headers, setHeaders } = useRequestContext();
+
+  // const addHeader = () => {
+  //   setHeaders(`Header ${headers.size + 1}`, '');
+  // };
 
   return (
     <Table className="border rounded-md">
       <TableHeader>
         <TableRow>
-          <TableHead>Key</TableHead>
+          <TableHead>Name</TableHead>
           <TableHead>Value</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Array.from(parameters.entries()).map(([key, value]) => (
+        {Array.from(headers.entries()).map(([key, value]) => (
           <TableRow>
             <TableCell>
               <Input
@@ -33,8 +37,8 @@ export function ParameterTable() {
                 placeholder="Name"
                 value={key}
                 onChange={(e) => {
-                  parameters.delete(key);
-                  setParameters(e.target.value, '');
+                  headers.delete(key);
+                  setHeaders(e.target.value, '');
                 }}
               />
             </TableCell>
@@ -44,7 +48,7 @@ export function ParameterTable() {
                 placeholder="Value"
                 value={value}
                 onChange={(e) => {
-                  setParameters(key, e.target.value);
+                  setHeaders(key, e.target.value);
                 }}
               />
             </TableCell>
@@ -54,8 +58,8 @@ export function ParameterTable() {
                 variant="ghost"
                 size="icon"
                 onClick={() => {
-                  parameters.delete(key);
-                  setParameters('', '');
+                  headers.delete(key);
+                  setHeaders('', '');
                 }}
               >
                 <Trash2 className="h-5 w-5 text-destructive" />

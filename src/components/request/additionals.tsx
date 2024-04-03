@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Body } from './body';
+import { HeadersTable } from './headers';
 import { ParameterTable } from './params';
 
 export function Additionals() {
@@ -12,10 +13,10 @@ export function Additionals() {
           <TabsTrigger value="body">Body</TabsTrigger>
         </TabsList>
         <TabsContent value="parameters">
-          <ParameterTable name="Parameter" />
+          <ParameterTable />
         </TabsContent>
         <TabsContent value="headers">
-          <ParameterTable name="Header" />
+          <HeadersTable />
         </TabsContent>
         <TabsContent value="body">
           <Body />

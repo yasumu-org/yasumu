@@ -7,6 +7,7 @@ import {
 import { RequestInput } from '@/components/request/input';
 import { RequestResult } from '@/components/request/result';
 import { RequestRoutes } from '@/components/request/routes';
+import { RequestContextProvider } from '@/context/RequestContext';
 
 function Index() {
   return (
@@ -15,17 +16,19 @@ function Index() {
         <RequestRoutes />
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel>
-        <ResizablePanelGroup direction="vertical">
-          <ResizablePanel minSize={30} defaultSize={30}>
-            <RequestInput />
-          </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel minSize={15}>
-            <RequestResult />
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </ResizablePanel>
+      <RequestContextProvider>
+        <ResizablePanel>
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel minSize={30} defaultSize={30}>
+              <RequestInput />
+            </ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel minSize={15}>
+              <RequestResult />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+      </RequestContextProvider>
     </ResizablePanelGroup>
   );
 }
