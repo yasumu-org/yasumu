@@ -35,7 +35,7 @@ fn ready(window: Window) {
         .emit_all(
             "show-toast",
             Payload {
-                message: "Welcome to Proton 🚀!".into(),
+                message: "Welcome to Yasumu 🚀!".into(),
                 description: "Reimagining the way you test your api.".into(),
             },
         )
@@ -47,7 +47,7 @@ fn main() {
         .setup(|app| {
             let window = app.get_window("main").unwrap();
             // window.open_devtools();
-            window.set_title("Proton")?;
+            window.set_title("Yasumu")?;
             window.maximize()?;
 
             Ok(())
