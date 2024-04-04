@@ -6,7 +6,7 @@ pub async fn make_request(
     url: &str,
     method: &str,
     headers: HashMap<&str, &str>,
-) -> Result<(u16, u128, reqwest::header::HeaderMap, String), reqwest::Error> {
+) -> Result<(u16, u128, reqwest::header::HeaderMap, String, String), reqwest::Error> {
     let req_method = match method {
         "GET" => Method::GET,
         "POST" => Method::POST,
@@ -40,10 +40,16 @@ pub async fn make_request(
     let response_time = send_time.elapsed().as_millis();
 
     let status = res.status().as_u16();
+    let status_text = res
+        .status()
+        .canonical_reason()
+        .to_owned()
+        .unwrap_or("")
+        .into();
 
     let headers = res.headers().clone();
 
     let body = res.text().await?;
 
-    Ok((status, response_time, headers, body))
+    Ok((status, response_time, headers, body, status_text))
 }

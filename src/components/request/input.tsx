@@ -37,6 +37,12 @@ export function RequestInput() {
           onChange={(e) => setURL(e.target.value)}
           placeholder="URL"
           className="w-[70%]"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              execute();
+            }
+          }}
         />
         <Button onClick={execute}>Send</Button>
       </div>

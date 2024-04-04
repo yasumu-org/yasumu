@@ -23,7 +23,7 @@ function Index() {
               <RequestInput />
             </ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel minSize={15}>
+            <ResizablePanel minSize={50} defaultSize={30}>
               <RequestResult />
             </ResizablePanel>
           </ResizablePanelGroup>

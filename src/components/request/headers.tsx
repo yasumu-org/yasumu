@@ -12,6 +12,27 @@ import {
 } from '../ui/table';
 import { useRequestContext } from '@/context/RequestContext';
 
+export function ReadonlyHeaders({ headers }: { headers: Map<string, string> }) {
+  return (
+    <Table className="border rounded-md">
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Value</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from(headers.entries()).map(([key, value]) => (
+          <TableRow>
+            <TableCell>{key}</TableCell>
+            <TableCell>{value}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
 export function HeadersTable() {
   const { headers, setHeaders } = useRequestContext();
 

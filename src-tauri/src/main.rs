@@ -22,6 +22,7 @@ struct ExecutionFailedResult {
 #[derive(Clone, serde::Serialize)]
 struct ExecutionResult {
     status: usize,
+    statusText: String,
     time: usize,
     body: String,
     headers: HashMap<String, String>,
@@ -34,7 +35,7 @@ async fn execute(
     method: &str,
     headers: HashMap<&str, &str>,
 ) -> Result<(), ()> {
-    let (status, response_time, headers, body) =
+    let (status, response_time, headers, body, status_text) =
         make_request(url, method, headers).await.map_err(|e| {
             window
                 .emit(
@@ -51,6 +52,7 @@ async fn execute(
             "execution-result",
             ExecutionResult {
                 status: status as usize,
+                statusText: status_text,
                 time: response_time as usize,
                 body,
                 headers: headers
