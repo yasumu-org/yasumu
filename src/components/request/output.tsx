@@ -1,35 +1,21 @@
 import { Editor } from '@monaco-editor/react';
-import { useEffect, useState } from 'react';
-import prettier from 'prettier/standalone';
-import babel from 'prettier/plugins/babel';
-import html from 'prettier/plugins/html';
+import { usePrettier } from '@/hooks/usePrettier';
 
-export function Output({ value }: { value: string }) {
-  const [code, setCode] = useState('');
-
-  useEffect(() => {
-    (async () => {
-      const formatted = await prettier
-        .format(value, {
-          parser: 'babel',
-          tabWidth: 2,
-          plugins: [html, babel],
-        })
-        .catch((w) => {
-          console.log(w);
-          return value;
-        });
-
-      setCode(formatted);
-    })();
-  }, [value]);
+export function Output({
+  value,
+  contentType,
+}: {
+  value: string;
+  contentType?: string;
+}) {
+  const { code, parser } = usePrettier(value, contentType);
 
   return (
     <Editor
       height="300px"
       theme="dark"
       value={code}
-      language="html"
+      language={parser.type || 'plaintext'}
       className="border rounded-sm"
       options={{
         readOnly: true,

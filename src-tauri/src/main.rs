@@ -22,7 +22,8 @@ struct ExecutionFailedResult {
 #[derive(Clone, serde::Serialize)]
 struct ExecutionResult {
     status: usize,
-    statusText: String,
+    #[serde(rename = "statusText")]
+    status_text: String,
     time: usize,
     body: String,
     headers: HashMap<String, String>,
@@ -52,7 +53,7 @@ async fn execute(
             "execution-result",
             ExecutionResult {
                 status: status as usize,
-                statusText: status_text,
+                status_text,
                 time: response_time as usize,
                 body,
                 headers: headers

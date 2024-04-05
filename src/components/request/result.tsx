@@ -23,10 +23,6 @@ export function RequestResult() {
   const [response, setResponse] = useState<ExecutionResult | null>(null);
 
   useListener<ExecutionResult>('execution-result', (data) => {
-    console.log({
-      ...data.payload,
-      body: null,
-    });
     const { body, headers, status, statusText, time } = data.payload;
     setResponse({
       body,
@@ -70,7 +66,13 @@ export function RequestResult() {
             <TabsContent value="body">
               <ScrollArea className="h-[38vh]">
                 <div className="pt-4">
-                  <Output value={response.body} />
+                  <Output
+                    value={response.body}
+                    contentType={
+                      response.headers.get('Content-Type') ||
+                      response.headers.get('content-type')
+                    }
+                  />
                 </div>
               </ScrollArea>
             </TabsContent>
