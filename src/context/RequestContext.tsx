@@ -2,9 +2,9 @@ import { invoke } from '@tauri-apps/api';
 import { createContext, useCallback, useContext, useState } from 'react';
 import { toast } from 'sonner';
 
-export type RequestMethod = keyof typeof RequestMethod;
+export type HttpMethod = keyof typeof HttpMethod;
 
-export const RequestMethod = {
+export const HttpMethod = {
   GET: 'GET',
   POST: 'POST',
   PUT: 'PUT',
@@ -17,8 +17,8 @@ export const RequestMethod = {
 interface IRequestContext {
   url: string;
   setURL: (url: string) => void;
-  method: RequestMethod;
-  setMethod: (method: RequestMethod) => void;
+  method: HttpMethod;
+  setMethod: (method: HttpMethod) => void;
   execute: () => void;
   headers: Map<string, string>;
   setHeaders: (key: string, value: string) => void;
@@ -36,7 +36,7 @@ export function RequestContextProvider({
   children: React.ReactNode;
 }) {
   const [url, setURL] = useState('');
-  const [method, setMethodInner] = useState<RequestMethod>(RequestMethod.GET);
+  const [method, setMethodInner] = useState<HttpMethod>(HttpMethod.GET);
   const [headers, setHeadersInner] = useState<Map<string, string>>(
     new Map([['User-Agent', 'yasumu/0.0.0']])
   );
@@ -79,7 +79,7 @@ export function RequestContextProvider({
         setURL,
         method,
         setMethod: (method) =>
-          setMethodInner(method.toUpperCase() as RequestMethod),
+          setMethodInner(method.toUpperCase() as HttpMethod),
         execute,
         headers,
         setHeaders,

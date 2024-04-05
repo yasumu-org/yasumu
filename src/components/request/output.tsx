@@ -14,6 +14,9 @@ export function Output({
     <Editor
       height="300px"
       theme="dark"
+      // value disappears when this component is re-mounted
+      // adding a random key fixes the issue
+      key={Math.random()}
       value={code}
       language={parser.type || 'plaintext'}
       className="border rounded-sm"

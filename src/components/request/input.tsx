@@ -1,3 +1,8 @@
+import { cn } from '@/lib/utils';
+import {
+  httpMethodStyles,
+  RequestMethod,
+} from '../text-formats/request-method';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
@@ -8,7 +13,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Additionals } from './additionals';
-import { RequestMethod, useRequestContext } from '@/context/RequestContext';
+import { HttpMethod, useRequestContext } from '@/context/RequestContext';
 
 export function RequestInput() {
   const { url, setURL, method, setMethod, execute } = useRequestContext();
@@ -18,15 +23,15 @@ export function RequestInput() {
       <div className="flex gap-2 border border-l-0 bg-muted p-2">
         <Select
           value={method}
-          onValueChange={(m) => setMethod(m as RequestMethod)}
+          onValueChange={(m) => setMethod(m as HttpMethod)}
         >
-          <SelectTrigger className="w-[150px]">
+          <SelectTrigger className={cn('w-[150px]', httpMethodStyles[method])}>
             <SelectValue placeholder="Method" />
           </SelectTrigger>
           <SelectContent>
-            {Object.values(RequestMethod).map((method) => (
+            {Object.values(HttpMethod).map((method) => (
               <SelectItem key={method} value={method}>
-                {method}
+                <RequestMethod method={method} />
               </SelectItem>
             ))}
           </SelectContent>
