@@ -1,6 +1,5 @@
 import { useListener } from '@/hooks/useListener';
 import { useState } from 'react';
-import { Editor } from '@monaco-editor/react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
