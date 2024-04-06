@@ -10,9 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import { useRequestContext } from '@/context/RequestContext';
+import { useRequestStore } from '@/store/requestStore';
+import { KV } from '@/lib/kv';
 
-export function ReadonlyHeaders({ headers }: { headers: Map<string, string> }) {
+export function ReadonlyHeaders({ headers }: { headers: KV<string, string> }) {
   return (
     <Table className="border rounded-md">
       <TableHeader>
@@ -22,7 +23,7 @@ export function ReadonlyHeaders({ headers }: { headers: Map<string, string> }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Array.from(headers.entries()).map(([key, value]) => (
+        {headers.map((key, value) => (
           <TableRow>
             <TableCell>{key}</TableCell>
             <TableCell>{value}</TableCell>
@@ -34,61 +35,70 @@ export function ReadonlyHeaders({ headers }: { headers: Map<string, string> }) {
 }
 
 export function HeadersTable() {
-  const { headers, setHeaders } = useRequestContext();
-
-  // const addHeader = () => {
-  //   setHeaders(`Header ${headers.size + 1}`, '');
-  // };
+  const { headers, setHeaders } = useRequestStore();
 
   return (
-    <Table className="border rounded-md">
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Value</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {Array.from(headers.entries()).map(([key, value]) => (
+    <div className="space-y-2">
+      <Table className="border rounded-md">
+        <TableHeader>
           <TableRow>
-            <TableCell>
-              <Input
-                type="text"
-                placeholder="Name"
-                value={key}
-                onChange={(e) => {
-                  headers.delete(key);
-                  setHeaders(e.target.value, '');
-                }}
-              />
-            </TableCell>
-            <TableCell>
-              <Input
-                type="text"
-                placeholder="Value"
-                value={value}
-                onChange={(e) => {
-                  setHeaders(key, e.target.value);
-                }}
-              />
-            </TableCell>
-            <TableCell className="flex items-center gap-2">
-              <Checkbox defaultChecked />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  headers.delete(key);
-                  setHeaders('', '');
-                }}
-              >
-                <Trash2 className="h-5 w-5 text-destructive" />
-              </Button>
-            </TableCell>
+            <TableHead>Key</TableHead>
+            <TableHead>Value</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {headers.map((key, value) => (
+            <TableRow>
+              <TableCell>
+                <Input
+                  type="text"
+                  placeholder="Name"
+                  value={key}
+                  onChange={(e) => {
+                    const updated = headers.set(e.target.value, '');
+                    setHeaders(updated);
+                  }}
+                />
+              </TableCell>
+              <TableCell>
+                <Input
+                  type="text"
+                  placeholder="Value"
+                  value={value}
+                  onChange={(e) => {
+                    const updated = headers.set(key, e.target.value);
+                    setHeaders(updated);
+                  }}
+                />
+              </TableCell>
+              <TableCell className="flex items-center gap-2">
+                <Checkbox defaultChecked />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    headers.delete(key, value);
+                  }}
+                >
+                  <Trash2 className="h-5 w-5 text-destructive" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <Button
+        onClick={() => {
+          const size = headers.size + 1;
+          const key = `header${size}`;
+          const value = `value${size}`;
+          const param = headers.set(key, value);
+          setHeaders(param);
+        }}
+      >
+        Add new
+      </Button>
+    </div>
   );
 }

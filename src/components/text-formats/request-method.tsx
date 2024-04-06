@@ -1,4 +1,4 @@
-import { HttpMethod } from '@/context/RequestContext';
+import { HttpMethod } from '@/store/RequestContext';
 import { cn } from '@/lib/utils';
 
 interface IProps {
