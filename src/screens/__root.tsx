@@ -1,7 +1,7 @@
+import { useStorage } from '@/hooks/useStorage';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { invoke } from '@tauri-apps/api';
-import { appWindow } from '@tauri-apps/api/window';
+import { invoke } from '@tauri-apps/api/core';
+import { listen } from '@tauri-apps/api/event';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -10,23 +10,26 @@ export const Route = createRootRoute({
 });
 
 function RootRoute() {
+  const store = useStorage();
+
   useEffect(() => {
-    const cleanup = appWindow.listen<{
+    const cleanup = listen<{
       message: string;
       description: string;
     }>('show-toast', ({ payload }) => {
       toast(payload.message, {
         description: payload.description,
-        action: {
-          label: 'Close',
-          onClick: () => {
-            console.log('Toast closed');
-          },
-        },
+        dismissible: true,
       });
     });
 
-    invoke('ready');
+    store
+      .get('toast:welcome')
+      .then((value) => {
+        if (!value)
+          return invoke('ready').then(() => store.set('toast:welcome', true));
+      })
+      .catch(() => {});
 
     return () => void cleanup.then((c) => c());
   }, []);
@@ -34,7 +37,6 @@ function RootRoute() {
   return (
     <>
       <Outlet />
-      <TanStackRouterDevtools />
     </>
   );
 }
