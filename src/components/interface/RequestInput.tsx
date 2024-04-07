@@ -21,32 +21,44 @@ export function RequestInput() {
 
   return (
     <div className="flex gap-2">
-      <Select value={method} onValueChange={(m) => setMethod(m as HttpMethod)}>
-        <SelectTrigger className={cn('w-[150px]', httpMethodStyles[method])}>
-          <SelectValue placeholder="Method" />
-        </SelectTrigger>
-        <SelectContent>
-          {Object.values(HttpMethod).map((method) => (
-            <SelectItem key={method} value={method}>
-              <RequestMethod method={method} />
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <Input
-        type="text"
-        value={`${url}${parameters.size ? '?' : ''}${parameters.toString()}`}
-        onChange={(e) => setURL(e.target.value)}
-        placeholder="URL"
-        className="w-[70%]"
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            execute();
-          }
-        }}
-      />
-      <Button onClick={execute}>Send</Button>
+      <div className="flex w-full">
+        <Select
+          value={method}
+          onValueChange={(m) => setMethod(m as HttpMethod)}
+        >
+          <SelectTrigger
+            className={cn(
+              'w-[150px] rounded-r-none border-r-0',
+              httpMethodStyles[method]
+            )}
+          >
+            <SelectValue placeholder="Method" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.values(HttpMethod).map((method) => (
+              <SelectItem key={method} value={method}>
+                <RequestMethod method={method} />
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Input
+          type="text"
+          value={`${url}${parameters.size ? '?' : ''}${parameters.toString()}`}
+          onChange={(e) => setURL(e.target.value)}
+          placeholder="URL"
+          className="rounded-l-none"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              execute();
+            }
+          }}
+        />
+      </div>
+      <Button className="w-1/6" onClick={execute}>
+        Send
+      </Button>
     </div>
   );
 }

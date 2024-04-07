@@ -13,7 +13,7 @@ export function Output({
   return (
     <Editor
       height="300px"
-      theme="dark"
+      theme="vs-dark"
       // value disappears when this component is re-mounted
       // adding a random key fixes the issue
       key={Math.random()}

@@ -14,6 +14,8 @@ interface IRequestStore {
   setParameters: (headers: KV<string, string>) => void;
   body: BodyLike | null;
   setBody: (body: BodyLike | null) => void;
+  title: string;
+  setTitle: (title: string) => void;
 }
 
 export type BodyLike = string | Record<string, unknown>;
@@ -40,6 +42,8 @@ export const useRequestStore = create<IRequestStore>((set) => ({
   setBody: (body) => set({ body }),
   setMethod: (method) => set({ method: method.toUpperCase() as HttpMethod }),
   setURL: (url) => set({ url }),
+  title: '',
+  setTitle: (title) => set({ title }),
 }));
 
 export function useExecuteRequest() {

@@ -6,7 +6,7 @@ export function RequestInputOptions() {
   return (
     <Tabs defaultValue="parameters">
       <TabsList>
-        {/* <TabsTrigger value="parameters">Parameters</TabsTrigger> */}
+        <TabsTrigger value="parameters">Parameters</TabsTrigger>
         <TabsTrigger value="headers">Headers</TabsTrigger>
         <TabsTrigger value="body">Body</TabsTrigger>
       </TabsList>
