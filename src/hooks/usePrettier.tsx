@@ -80,7 +80,7 @@ export function usePrettier(source: string, contentType = '') {
           return source;
         });
 
-      setFormatted(formatted);
+      setFormatted(formatted.trim());
     })();
   }, [source]);
 

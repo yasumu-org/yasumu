@@ -13,10 +13,15 @@ import {
   SelectValue,
 } from '../ui/select';
 import { Additionals } from './additionals';
-import { HttpMethod, useRequestContext } from '@/context/RequestContext';
+import {
+  HttpMethod,
+  useExecuteRequest,
+  useRequestStore,
+} from '@/store/requestStore';
 
 export function RequestInput() {
-  const { url, setURL, method, setMethod, execute } = useRequestContext();
+  const { url, setURL, method, setMethod, parameters } = useRequestStore();
+  const execute = useExecuteRequest();
 
   return (
     <div>
@@ -38,7 +43,7 @@ export function RequestInput() {
         </Select>
         <Input
           type="text"
-          value={url}
+          value={`${url}${parameters.size ? '?' : ''}${parameters.toString()}`}
           onChange={(e) => setURL(e.target.value)}
           placeholder="URL"
           className="w-[70%]"

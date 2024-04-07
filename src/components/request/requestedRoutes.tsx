@@ -1,6 +1,6 @@
 import { ScrollArea } from '../ui/scroll-area';
 
-export function RequestRoutes() {
+export function RequestedRoutes() {
   return (
     <ScrollArea className="h-screen w-48 p-2">
       <h4 className="mb-2 text-base font-medium leading-none">Routes</h4>
