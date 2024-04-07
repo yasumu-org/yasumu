@@ -11,14 +11,9 @@ import {
   TableRow,
 } from '../ui/table';
 import { useRequestStore } from '@/store/requestStore';
-import { useEffect } from 'react';
 
-export function ParameterTable() {
-  const { parameters, setParameters } = useRequestStore();
-
-  useEffect(() => {
-    console.log('parameters changed', parameters);
-  }, [parameters]);
+export function MutableKVTable() {
+  const { headers, setHeaders } = useRequestStore();
 
   return (
     <div className="space-y-2">
@@ -31,7 +26,7 @@ export function ParameterTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {parameters.map((key, value) => (
+          {headers.map((key, value) => (
             <TableRow>
               <TableCell>
                 <Input
@@ -39,8 +34,8 @@ export function ParameterTable() {
                   placeholder="Name"
                   value={key}
                   onChange={(e) => {
-                    const updated = parameters.set(e.target.value, '');
-                    setParameters(updated);
+                    const updated = headers.set(e.target.value, '');
+                    setHeaders(updated);
                   }}
                 />
               </TableCell>
@@ -50,8 +45,8 @@ export function ParameterTable() {
                   placeholder="Value"
                   value={value}
                   onChange={(e) => {
-                    const updated = parameters.set(key, e.target.value);
-                    setParameters(updated);
+                    const updated = headers.set(key, e.target.value);
+                    setHeaders(updated);
                   }}
                 />
               </TableCell>
@@ -61,7 +56,8 @@ export function ParameterTable() {
                   variant="ghost"
                   size="icon"
                   onClick={() => {
-                    parameters.delete(key, value);
+                    headers.delete(key);
+                    setHeaders(headers);
                   }}
                 >
                   <Trash2 className="h-5 w-5 text-destructive" />
@@ -73,15 +69,15 @@ export function ParameterTable() {
       </Table>
       <Button
         onClick={() => {
-          const size = parameters.size + 1;
+          const size = headers.size + 1;
           const key = `param${size}`;
           const value = `value${size}`;
-          const param = parameters.set(key, value);
-          setParameters(param);
+          const param = headers.set(key, value);
+          setHeaders(param);
         }}
         size="sm"
       >
-        Add new parameter
+        Add new
       </Button>
     </div>
   );

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { ReadonlyHeaders } from './headers';
 import { ScrollArea } from '../ui/scroll-area';
-import { Output } from './output';
+import { Output } from './PrettyResponseBodyViewer';
+import { KeyValueTable } from '../tables/KeyValueTable';
 
 interface ExecutionError {
   body: string;
@@ -78,7 +78,7 @@ export function RequestResult() {
             </TabsContent>
             <TabsContent value="headers">
               <ScrollArea className="h-[38vh]">
-                <ReadonlyHeaders headers={response.headers} />
+                <KeyValueTable data={response.headers} />
               </ScrollArea>
             </TabsContent>
           </Tabs>

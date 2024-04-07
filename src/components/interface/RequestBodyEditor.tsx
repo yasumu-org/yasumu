@@ -65,7 +65,7 @@ const ContentType = {
 
 type ContentType = (typeof ContentType)[keyof typeof ContentType];
 
-export function Body() {
+export function RequestBodyEditor() {
   const [bodyType, setBodyType] = useState(types[0]);
   const [contentType, setContentType] = useState<ContentType>(ContentType.json);
 
