@@ -22,10 +22,15 @@ import { Theme } from './theme';
 import { useTheme } from 'next-themes';
 import { useMounted } from '@/hooks/use-mounted';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useLayoutStore } from '@/stores/application/layout.store';
+import { Orientation } from './orientation';
 
 const appearanceFormSchema = z.object({
   theme: z.enum(['light', 'dark'], {
     required_error: 'Please select a theme.',
+  }),
+  orientation: z.enum(['horizontal', 'vertical'], {
+    required_error: 'Please select an orientation.',
   }),
 });
 
@@ -33,23 +38,26 @@ type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
 export function AppearanceForm() {
   const mounted = useMounted();
+  const { orientation, setOrientation } = useLayoutStore();
   const { theme, setTheme } = useTheme();
 
   const form = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceFormSchema),
     defaultValues: {
       theme: (theme ?? 'light') as AppearanceFormValues['theme'],
+      orientation,
     },
   });
 
   function onSubmit(data: AppearanceFormValues) {
-    const { theme } = data;
+    const { theme, orientation } = data;
 
     setTheme(theme);
+    setOrientation(orientation);
 
     toast({
-      title: 'Settings updated successfully.',
-      description: `The theme has been set to ${theme}.`,
+      title: 'Settings updated.',
+      description: 'The settings have been updated successfully.',
       duration: 3000,
     });
   }
@@ -68,6 +76,8 @@ export function AppearanceForm() {
         <Skeleton className="h-10 w-28" />
       </div>
     );
+
+  console.log({ orientation });
 
   return (
     <Form {...form}>
@@ -101,6 +111,48 @@ export function AppearanceForm() {
                       <RadioGroupItem value="dark" className="sr-only" />
                     </FormControl>
                     <Theme dark />
+                  </FormLabel>
+                </FormItem>
+              </RadioGroup>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="orientation"
+          render={({ field }) => (
+            <FormItem className="space-y-1">
+              <FormLabel>Orientation</FormLabel>
+              <FormDescription>
+                Select the orientation of the application.
+              </FormDescription>
+              <FormMessage />
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                className="grid max-w-md grid-cols-2 gap-8 pt-2"
+              >
+                <FormItem>
+                  <FormLabel>
+                    <FormControl>
+                      <RadioGroupItem value="horizontal" className="sr-only" />
+                    </FormControl>
+                    <Orientation
+                      dark={theme === 'dark'}
+                      selected={field.value === 'horizontal'}
+                    />
+                  </FormLabel>
+                </FormItem>
+                <FormItem>
+                  <FormLabel>
+                    <FormControl>
+                      <RadioGroupItem value="vertical" className="sr-only" />
+                    </FormControl>
+                    <Orientation
+                      dark={theme === 'dark'}
+                      vertical
+                      selected={field.value === 'vertical'}
+                    />
                   </FormLabel>
                 </FormItem>
               </RadioGroup>

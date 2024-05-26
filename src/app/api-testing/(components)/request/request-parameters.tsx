@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -11,8 +12,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import { useRequestConfig } from '@/stores/api-testing/request-config.store';
+import { useLayoutStore } from '@/stores/application/layout.store';
 import { Trash } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface IParameter {
   key: string;
@@ -21,9 +25,20 @@ interface IParameter {
 }
 
 export function RequestParameters() {
-  const [parameters, setParameters] = useState<IParameter[]>([
-    { key: '', value: '', enabled: true },
-  ]);
+  const { isVertical } = useLayoutStore();
+  const { url, setUrl } = useRequestConfig();
+  const [parameters, setParameters] = useState<IParameter[]>(() => {
+    try {
+      const urlObject = new URL(url);
+      const searchParams = urlObject.searchParams;
+      const params = Array.from(searchParams.entries()).map(([key, value]) => {
+        return { key, value: value || '', enabled: true };
+      });
+      return params;
+    } catch {
+      return [{ key: '', value: '', enabled: true }];
+    }
+  });
 
   const onEdit = useCallback(
     (index: number, key: string, value: string, enabled: boolean) => {
@@ -47,9 +62,27 @@ export function RequestParameters() {
     setParameters((prev) => [...prev, { key: '', value: '', enabled: true }]);
   }, []);
 
+  useEffect(() => {
+    try {
+      const newUrl = new URL(url);
+      newUrl.search = new URLSearchParams(
+        parameters
+          .filter((param) => param.enabled)
+          .map((param) => [param.key, param.value])
+      ).toString();
+
+      setUrl(newUrl.toString());
+    } catch {}
+  }, [parameters]);
+
   return (
     <>
-      <div className="overflow-y-auto max-h-[30vh] border-y">
+      <div
+        className={cn(
+          'overflow-y-auto border-y',
+          isVertical() ? 'max-h-[30vh]' : 'max-h-[75vh]'
+        )}
+      >
         <Table className="border-x">
           <TableHeader>
             <TableRow>
@@ -76,7 +109,7 @@ export function RequestParameters() {
           </TableBody>
         </Table>
       </div>
-      <Button className="mt-2" onClick={onAdd}>
+      <Button className="mt-2" onClick={onAdd} size="sm">
         Add Parameter
       </Button>
     </>
@@ -107,16 +140,16 @@ function RequestParameter({ data, onDelete, onEdit }: IRequestParameterProps) {
         }}
       />
       <TableCell className="flex items-center gap-2">
-        <Switch
+        <Checkbox
           checked={data.enabled}
           onCheckedChange={(checked) => {
-            onEdit(data.key, data.value, checked);
+            onEdit(data.key, data.value, !!checked);
           }}
         />
         <Button
           variant="ghost"
           size={'sm'}
-          className="hover:bg-destructive"
+          className="hover:bg-destructive hover:text-destructive-foreground"
           onClick={onDelete}
         >
           <Trash className="h-4 w-4" />

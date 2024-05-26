@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -11,6 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import { useLayoutStore } from '@/stores/application/layout.store';
 import { Trash } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
@@ -21,6 +24,7 @@ interface IHeader {
 }
 
 export function RequestHeaders() {
+  const { isVertical } = useLayoutStore();
   const [headers, setHeaders] = useState<IHeader[]>([
     { key: '', value: '', enabled: true },
   ]);
@@ -49,8 +53,13 @@ export function RequestHeaders() {
 
   return (
     <>
-      <div className="overflow-y-auto max-h-[30vh] border-y">
-        <Table className="border">
+      <div
+        className={cn(
+          'overflow-y-auto border-y',
+          isVertical() ? 'max-h-[30vh]' : 'max-h-[75vh]'
+        )}
+      >
+        <Table className="border-x">
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
@@ -76,7 +85,7 @@ export function RequestHeaders() {
           </TableBody>
         </Table>
       </div>
-      <Button className="mt-2" onClick={onAdd}>
+      <Button className="mt-2" onClick={onAdd} size="sm">
         Add Header
       </Button>
     </>
@@ -107,16 +116,16 @@ function RequestHeader({ data, onDelete, onEdit }: IRequestHeaderProps) {
         }}
       />
       <TableCell className="flex items-center gap-2">
-        <Switch
+        <Checkbox
           checked={data.enabled}
           onCheckedChange={(checked) => {
-            onEdit(data.key, data.value, checked);
+            onEdit(data.key, data.value, !!checked);
           }}
         />
         <Button
           variant="ghost"
           size={'sm'}
-          className="hover:bg-destructive"
+          className="hover:bg-destructive hover:text-destructive-foreground"
           onClick={onDelete}
         >
           <Trash className="h-4 w-4" />

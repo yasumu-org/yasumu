@@ -9,7 +9,7 @@ export function Theme({ dark }: IProps) {
     <>
       <div
         className={cn(
-          'items-center rounded-md border-2 border-muted p-1',
+          'items-center rounded-md border-2 border-muted p-1 cursor-pointer',
           dark
             ? 'bg-popover hover:bg-accent hover:text-accent-foreground'
             : 'hover:border-accent'

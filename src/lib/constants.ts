@@ -1,14 +1,23 @@
-export interface IHttpMethod {
-  name: 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
-  color: string;
-}
+export type HttpMethods = (typeof HttpMethods)[keyof typeof HttpMethods];
 
-export const HttpMethods: IHttpMethod[] = [
-  { name: 'GET', color: 'text-green-500' },
-  { name: 'DELETE', color: 'text-red-500' },
-  { name: 'HEAD', color: 'text-purple-500' },
-  { name: 'OPTIONS', color: 'text-pink-500' },
-  { name: 'PATCH', color: 'text-yellow-500' },
-  { name: 'POST', color: 'text-blue-500' },
-  { name: 'PUT', color: 'text-cyan-500' },
-];
+export const HttpMethodColors: Record<HttpMethods, string> = {
+  DELETE: 'text-red-500',
+  GET: 'text-green-500',
+  HEAD: 'text-purple-500',
+  OPTIONS: 'text-pink-500',
+  PATCH: 'text-yellow-500',
+  POST: 'text-blue-500',
+  PUT: 'text-cyan-500',
+};
+
+export const HttpMethods = {
+  DELETE: 'DELETE',
+  GET: 'GET',
+  HEAD: 'HEAD',
+  OPTIONS: 'OPTIONS',
+  PATCH: 'PATCH',
+  POST: 'POST',
+  PUT: 'PUT',
+} as const;
+
+export const HttpMethodsArray = Object.values(HttpMethods) as [HttpMethods];

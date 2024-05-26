@@ -9,40 +9,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { IHttpMethod, HttpMethods } from '@/lib/constants';
+import {
+  HttpMethodColors,
+  HttpMethods,
+  HttpMethodsArray,
+} from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 
 export default function RequestInput() {
-  const [method, setMethod] = useState<IHttpMethod>(HttpMethods[0]);
+  const { method, setMethod, url, setUrl } = useRequestConfig();
 
   return (
     <div className="flex gap-2">
       <div className="flex w-full">
         <Select
-          value={method.name}
+          value={method}
           onValueChange={(value) => {
-            const newMethod = HttpMethods.find((m) => m.name === value);
+            const newMethod = HttpMethods[value as HttpMethods];
             if (newMethod) setMethod(newMethod);
           }}
         >
           <SelectTrigger
             className={cn(
               'w-[150px] rounded-r-none border-r-0 select-none',
-              method.color
+              HttpMethodColors[method]
             )}
           >
             <SelectValue placeholder="Method" />
           </SelectTrigger>
           <SelectContent>
-            {HttpMethods.map((m) => (
-              <SelectItem key={m.name} value={m.name}>
-                <span className={cn('font-semibold', m.color)}>{m.name}</span>
+            {HttpMethodsArray.map((m) => (
+              <SelectItem key={m} value={m}>
+                <span className={cn('font-semibold', HttpMethodColors[m])}>
+                  {m}
+                </span>
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <Input className="rounded-l-none" placeholder="Enter a url..." />
+        <Input
+          className="rounded-l-none"
+          placeholder="Enter a url..."
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
       </div>
       <Button>Send</Button>
     </div>

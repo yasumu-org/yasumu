@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { HttpMethods } from '@/lib/constants';
+import { HttpMethodColors, HttpMethods } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 interface IRequestHistory {
-  method: string;
+  method: HttpMethods;
   url: string;
   name: string;
 }
@@ -41,7 +41,7 @@ export default function HistoryTree() {
     <div className="max-h-[96.5vh] overflow-y-auto flex flex-col">
       <h3 className="text-base font-semibold">Requests</h3>
       {history.map((req) => {
-        const method = HttpMethods.find((m) => m.name === req.method);
+        const method = HttpMethods[req.method];
 
         return (
           <Button
@@ -50,7 +50,12 @@ export default function HistoryTree() {
             variant="ghost"
             size="sm"
           >
-            <span className={cn('text-sm font-semibold', method?.color)}>
+            <span
+              className={cn(
+                'text-sm font-semibold',
+                HttpMethodColors[req.method]
+              )}
+            >
               {req.method}
             </span>
             <span className="text-sm">{req.name}</span>
