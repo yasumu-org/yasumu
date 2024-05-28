@@ -41,8 +41,6 @@ export default function HistoryTree() {
     <div className="max-h-[96.5vh] overflow-y-auto flex flex-col">
       <h3 className="text-base font-semibold">Requests</h3>
       {history.map((req) => {
-        const method = HttpMethods[req.method];
-
         return (
           <Button
             key={req.name}
@@ -51,14 +49,11 @@ export default function HistoryTree() {
             size="sm"
           >
             <span
-              className={cn(
-                'text-sm font-semibold',
-                HttpMethodColors[req.method]
-              )}
+              className={cn('text-xs font-bold', HttpMethodColors[req.method])}
             >
               {req.method}
             </span>
-            <span className="text-sm">{req.name}</span>
+            <span className="text-xs">{req.name}</span>
           </Button>
         );
       })}

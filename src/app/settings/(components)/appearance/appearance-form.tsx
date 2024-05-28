@@ -124,7 +124,8 @@ export function AppearanceForm() {
             <FormItem className="space-y-1">
               <FormLabel>Orientation</FormLabel>
               <FormDescription>
-                Select the orientation of the application.
+                Select the orientation of the application. This only affects the
+                layout of the api testing screen.
               </FormDescription>
               <FormMessage />
               <RadioGroup

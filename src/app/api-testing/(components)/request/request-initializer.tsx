@@ -11,6 +11,8 @@ const ReqTabs = {
   QueryParameters: 'query-parameters',
   Headers: 'headers',
   RequestBody: 'request-body',
+  PreRequestScript: 'pre-request-script',
+  PostRequestScript: 'post-request-script',
 };
 
 export default function RequestInitializer() {
@@ -39,6 +41,18 @@ export default function RequestInitializer() {
             >
               Body
             </TabsTrigger>
+            <TabsTrigger
+              className="select-none"
+              value={ReqTabs.PreRequestScript}
+            >
+              Pre-Request
+            </TabsTrigger>
+            <TabsTrigger
+              className="select-none"
+              value={ReqTabs.PostRequestScript}
+            >
+              Post-Request
+            </TabsTrigger>
           </TabsList>
           <TabsContent value={ReqTabs.QueryParameters}>
             <RequestParameters />
@@ -48,6 +62,12 @@ export default function RequestInitializer() {
           </TabsContent>
           <TabsContent value={ReqTabs.RequestBody}>
             <RequestBody />
+          </TabsContent>
+          <TabsContent value={ReqTabs.PreRequestScript}>
+            Pre-Request script
+          </TabsContent>
+          <TabsContent value={ReqTabs.PostRequestScript}>
+            Post-Request script
           </TabsContent>
         </Tabs>
       </div>
