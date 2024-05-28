@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { Trash } from 'lucide-react';
 import { useCallback, useState } from 'react';
@@ -25,9 +26,7 @@ interface IHeader {
 
 export function RequestHeaders() {
   const { isVertical } = useLayoutStore();
-  const [headers, setHeaders] = useState<IHeader[]>([
-    { key: '', value: '', enabled: true },
-  ]);
+  const { setHeaders, headers } = useRequestConfig();
 
   const onEdit = useCallback(
     (index: number, key: string, value: string, enabled: boolean) => {
@@ -48,7 +47,7 @@ export function RequestHeaders() {
   );
 
   const onAdd = useCallback(() => {
-    setHeaders((prev) => [...prev, { key: '', value: '', enabled: true }]);
+    setHeaders([...headers, { key: '', value: '', enabled: true }]);
   }, []);
 
   return (

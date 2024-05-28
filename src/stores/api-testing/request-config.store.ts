@@ -8,24 +8,30 @@ export const useEnvironment = create((set) => ({
   setVariables: (variables: Record<string, string>) => set({ variables }),
 }));
 
+export interface IParamOrHeader {
+  key: string;
+  value: string;
+  enabled: boolean;
+}
+
 export interface IRequestConfig {
   url: string;
   method: HttpMethods;
-  headers: { key: string; value: string }[];
+  headers: IParamOrHeader[];
   body: string;
   setUrl: (url: string) => void;
   setMethod: (method: HttpMethods) => void;
-  setHeaders: (headers: { key: string; value: string }[]) => void;
+  setHeaders: (headers: IParamOrHeader[]) => void;
   setBody: (body: string) => void;
 }
 
 export const useRequestConfig = create<IRequestConfig>((set) => ({
   url: '',
   method: HttpMethods.GET,
-  headers: [] as { key: string; value: string }[],
+  headers: [{ key: '', value: '', enabled: true }] as IParamOrHeader[],
   body: '{\n  \n}',
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),
-  setHeaders: (headers: { key: string; value: string }[]) => set({ headers }),
+  setHeaders: (headers: IParamOrHeader[]) => set({ headers }),
   setBody: (body: string) => set({ body }),
 }));
