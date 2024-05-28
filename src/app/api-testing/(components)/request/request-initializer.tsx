@@ -21,7 +21,7 @@ export default function RequestInitializer() {
       <RequestTabs />
       <div className="space-y-4 px-2 mt-2">
         <RequestInput />
-        <Tabs defaultValue={ReqTabs.RequestBody}>
+        <Tabs defaultValue={ReqTabs.QueryParameters}>
           <TabsList>
             <TabsTrigger
               className="select-none"

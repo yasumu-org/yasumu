@@ -64,6 +64,20 @@ export function RequestParameters() {
 
   useEffect(() => {
     try {
+      if (!url) return setParameters([]);
+      const _url = new URL(url);
+      const params = Array.from(_url.searchParams.entries()).map(([k, v]) => ({
+        key: k,
+        value: v || '',
+        enabled: true,
+      }));
+
+      setParameters(params);
+    } catch {}
+  }, [url]);
+
+  useEffect(() => {
+    try {
       const newUrl = new URL(url);
       newUrl.search = new URLSearchParams(
         parameters
