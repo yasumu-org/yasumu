@@ -76,19 +76,6 @@ export function RequestParameters() {
     } catch {}
   }, [url]);
 
-  useEffect(() => {
-    try {
-      const newUrl = new URL(url);
-      newUrl.search = new URLSearchParams(
-        parameters
-          .filter((param) => param.enabled)
-          .map((param) => [param.key, param.value])
-      ).toString();
-
-      setUrl(newUrl.toString());
-    } catch {}
-  }, [parameters]);
-
   return (
     <>
       <div

@@ -15,6 +15,16 @@
     "window:allow-unminimize",
     "window:allow-start-dragging",
     "window:allow-start-resize-dragging",
-    "http:default"
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "http://**"
+        },
+        {
+          "url": "https://**"
+        }
+      ]
+    }
   ]
 }

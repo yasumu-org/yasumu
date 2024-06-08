@@ -6,6 +6,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { getResponse } from '@/lib/response-status';
 import { cn } from '@/lib/utils';
+import { useResponse } from '@/stores/api-testing/response.store';
 
 const getStatusColor = (statusCode: number) => {
   switch (true) {
@@ -24,22 +25,22 @@ const getStatusColor = (statusCode: number) => {
   }
 };
 
-export function ResponseStatus({
-  statusCode,
-  statusText,
-}: {
-  statusCode: number;
-  statusText?: string;
-}) {
-  const description = getResponse(statusCode);
+export function ResponseStatus() {
+  const { responseStatus } = useResponse();
+  const description = getResponse(responseStatus);
+
+  if (!responseStatus) return null;
 
   return (
     <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger>
         <span
-          className={cn('uppercase cursor-pointer', getStatusColor(statusCode))}
+          className={cn(
+            'uppercase cursor-pointer',
+            getStatusColor(responseStatus)
+          )}
         >
-          {statusCode} {statusText || description.text}
+          {responseStatus} {description.text}
         </span>
       </HoverCardTrigger>
       <HoverCardContent className="w-fit">

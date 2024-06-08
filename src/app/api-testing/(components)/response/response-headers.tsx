@@ -15,7 +15,7 @@ interface IHeader {
 export function ResponseHeaders({ headers }: { headers: IHeader[] }) {
   return (
     <>
-      <div className="overflow-y-auto max-h-[30vh] border-y">
+      <div className="overflow-y-auto border-y">
         <Table className="border-x">
           <TableHeader>
             <TableRow>

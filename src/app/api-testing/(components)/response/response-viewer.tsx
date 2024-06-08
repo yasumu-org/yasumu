@@ -7,147 +7,11 @@ import { cn } from '@/lib/utils';
 import { ResponseCookies } from './response-cookies';
 import { ResponseStats } from './stats/response-stats';
 import { useLayoutStore } from '@/stores/application/layout.store';
-
-const content = JSON.stringify({
-  name: 'John Doe',
-  age: 30,
-  email: 'john@example.com',
-  address: {
-    street: '123 Main St',
-    city: 'New York',
-  },
-  github: 'https://github.com/johndoe',
-  twitter: 'https://twitter.com/johndoe',
-  linkedIn: 'https://www.linkedin.com/in/johndoe',
-  youtube: 'https://www.youtube.com/johndoe',
-  facebook: 'https://www.facebook.com/johndoe',
-  instagram: 'https://www.instagram.com/johndoe',
-  discord: 'https://discord.gg/johndoe',
-  phoneNumbers: [
-    {
-      type: 'home',
-      number: '212 555-1234',
-    },
-    {
-      type: 'office',
-      number: '646 555-4567',
-    },
-  ],
-  employed: true,
-  children: [
-    {
-      name: 'Jennifer Doe',
-      age: 5,
-    },
-    {
-      name: 'John Doe Jr.',
-      age: 3,
-    },
-    {
-      name: 'John Doe III',
-      age: 1,
-    },
-  ],
-  spouse: {
-    name: 'Jane Doe',
-    age: 28,
-  },
-  hobbies: ['reading', 'swimming', 'biking'],
-  friends: [
-    {
-      name: 'Alice',
-      age: 29,
-    },
-    {
-      name: 'Bob',
-      age: 31,
-    },
-  ],
-  education: {
-    highSchool: 'Springfield High School',
-    college: 'Springfield University',
-  },
-  work: {
-    company: 'ACME Corporation',
-    position: 'Software Engineer',
-  },
-  salary: 100000,
-  bonus: 5000,
-  startDate: '2022-01-01',
-  endDate: '2023-01-01',
-  projects: [
-    {
-      name: 'Project A',
-      startDate: '2022-01-01',
-      endDate: '2022-06-01',
-    },
-    {
-      name: 'Project B',
-      startDate: '2022-07-01',
-      endDate: '2022-12-01',
-    },
-  ],
-  skills: ['JavaScript', 'TypeScript', 'React', 'Node.js'],
-  languages: ['English', 'Spanish'],
-  certifications: [
-    'AWS Certified Solutions Architect',
-    'Google Professional Cloud Architect',
-  ],
-  interests: ['music', 'travel', 'photography'],
-  socialMedia: {
-    twitter: 'https://twitter.com/johndoe',
-    linkedIn: 'https://www.linkedin.com/in/johndoe',
-  },
-  website: 'https://johndoe.com',
-  resume: 'https://johndoe.com/resume',
-});
-
-const headers = [
-  {
-    key: 'Content-Type',
-    value: 'application/json',
-  },
-  {
-    key: 'Content-Length',
-    value: String(content.length),
-  },
-];
-
-const cookies = [
-  {
-    name: 'cookie1',
-    value: 'value1',
-    domain: 'example.com',
-    path: '/',
-    expires: '2022-12-31',
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-  },
-  {
-    name: 'cookie2',
-    value: 'value2',
-    domain: 'example.com',
-    path: '/',
-    expires: '2022-12-31',
-    httpOnly: false,
-    secure: false,
-    sameSite: 'none',
-  },
-  {
-    name: 'cookie3',
-    value: 'value3',
-    domain: 'example.com',
-    path: '/',
-    expires: '2022-12-31',
-    httpOnly: false,
-    secure: true,
-    sameSite: 'lax',
-  },
-];
+import { useResponse } from '@/stores/api-testing/response.store';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
+  const { headers, cookies, body } = useResponse();
 
   return (
     <div className={cn(orientation === 'horizontal' ? 'px-2' : 'p-2')}>
@@ -178,13 +42,13 @@ export default function ResponseViewer() {
           )}
         >
           <TabsContent value="pretty">
-            <PrettyResponseViewer content={content} />
+            <PrettyResponseViewer content={body} />
           </TabsContent>
           <TabsContent value="raw">
             <pre
               className={cn('word-break-break-all whitespace-pre-wrap text-sm')}
             >
-              {content}
+              {body}
             </pre>
           </TabsContent>
           <TabsContent value="headers">

@@ -7,7 +7,7 @@ export function ResponseStats() {
   return (
     <div className="flex items-center gap-4 text-xs font-semibold">
       <NetworkInfo />
-      <ResponseStatus statusCode={200} />
+      <ResponseStatus />
       <ResponseTime />
       <ResponseSize />
     </div>
