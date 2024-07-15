@@ -26,6 +26,7 @@
         }
       ]
     },
-    "websocket:default"
+    "websocket:default",
+    "store:default"
   ]
 }
