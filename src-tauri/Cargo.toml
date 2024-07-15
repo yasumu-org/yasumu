@@ -28,3 +28,5 @@ tauri-plugin-http = { version = "2.0.0-beta.9", features = [
     "json",
     "multipart",
 ] }
+tauri-plugin-websocket = "2.0.0-beta.9"
+tauri-plugin-graphql = "2.0.0"
