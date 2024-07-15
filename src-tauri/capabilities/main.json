@@ -25,6 +25,8 @@
           "url": "https://**"
         }
       ]
-    }
+    },
+    "websocket:default",
+    "store:default"
   ]
 }
