@@ -21,3 +21,9 @@ export const HttpMethods = {
 } as const;
 
 export const HttpMethodsArray = Object.values(HttpMethods) as [HttpMethods];
+
+export const Commands = {
+  GetLocalAddress: 'get_local_address',
+} as const;
+
+export type Commands = (typeof Commands)[keyof typeof Commands];

@@ -29,7 +29,7 @@ export function ResponseTime() {
       <HoverCardTrigger>
         <span className="text-green-500 cursor-pointer">{time}</span>
       </HoverCardTrigger>
-      <HoverCardContent>Response time (TODO)</HoverCardContent>
+      <HoverCardContent>Response time</HoverCardContent>
     </HoverCard>
   );
 }
