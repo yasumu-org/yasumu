@@ -28,7 +28,11 @@ export interface IRequestConfig {
 export const useRequestConfig = create<IRequestConfig>((set) => ({
   url: 'https://jsonplaceholder.typicode.com/posts/1',
   method: HttpMethods.GET,
-  headers: [{ key: '', value: '', enabled: true }] as IParamOrHeader[],
+  headers: [
+    { key: 'Content-Type', value: 'application/json', enabled: true },
+    { key: 'User-Agent', value: 'Yasumu/1.0', enabled: true },
+    { key: '', value: '', enabled: true },
+  ] as IParamOrHeader[],
   body: '{\n  \n}',
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),
