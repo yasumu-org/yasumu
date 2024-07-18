@@ -23,9 +23,9 @@ export default function Page() {
           title="SMTP Server"
           description="Spin up a fake SMTP server for testing"
           action={
-            <ComingSoon name="SMTP Server">
+            <Link href="/smtp">
               <Button>Get started</Button>
-            </ComingSoon>
+            </Link>
           }
         />
       </div>

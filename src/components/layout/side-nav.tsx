@@ -14,7 +14,6 @@ export function SideNav() {
         <SideNavMenu
           link="/smtp"
           name="SMTP Server"
-          comingSoon
           icon={<Mail className="h-5 w-5" />}
         />
         <SideNavMenu

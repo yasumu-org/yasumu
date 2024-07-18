@@ -7,7 +7,7 @@ import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { Globe, GlobeLock } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { Commands } from '@/lib/constants';
+import { Commands } from '@/lib/common/commands';
 import { Separator } from '@/components/ui/separator';
 
 const dummyStats = {
