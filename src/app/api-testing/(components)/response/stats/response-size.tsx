@@ -11,7 +11,21 @@ export function ResponseSize() {
 
   const size = useMemo(() => {
     if (isNaN(responseSize)) return 'N/A';
-    const times = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const times = [
+      'B',
+      'KB',
+      'MB',
+      'GB',
+      'TB',
+      'PB',
+      'EB',
+      'ZB',
+      'YB',
+      'BB',
+      'NB',
+      'DB',
+      'CB',
+    ];
 
     let i = 0;
     let size = responseSize;
@@ -21,7 +35,7 @@ export function ResponseSize() {
       i++;
     }
 
-    return `${size.toFixed(2)} ${times[i]}`;
+    return `${size.toFixed(2)} ${times[i] ?? 'node_modules'}`;
   }, [responseSize]);
 
   return (

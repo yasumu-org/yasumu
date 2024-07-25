@@ -100,7 +100,7 @@ export default function RequestInput() {
       const str = new TextDecoder().decode(value);
 
       responseStore.setBody(str);
-      responseStore.setResponseSize(str.length);
+      responseStore.setResponseSize(value.byteLength);
     } catch (e) {
       console.error(e);
       responseStore.setBody(String(e));

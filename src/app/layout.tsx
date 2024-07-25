@@ -6,6 +6,7 @@ import { SideNav } from '@/components/layout/side-nav';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/components/themes/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { Toaster as Sonner } from '@/components/ui/sonner';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -37,6 +38,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Sonner />
           <Toaster />
           <TooltipProvider>
             <div className="flex flex-col bg-muted/40 w-full px-4">

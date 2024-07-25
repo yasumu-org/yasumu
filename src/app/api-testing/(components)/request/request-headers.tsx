@@ -2,7 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import {
   Table,
@@ -12,11 +18,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { getHeaderDetails } from '@/lib/header-info';
 import { cn } from '@/lib/utils';
 import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { useLayoutStore } from '@/stores/application/layout.store';
-import { Trash } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { Info, Trash } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
 
 interface IHeader {
   key: string;
@@ -106,6 +113,7 @@ function RequestHeader({ data, onDelete, onEdit }: IRequestHeaderProps) {
         onChange={(key) => {
           onEdit(key, data.value, data.enabled);
         }}
+        info
       />
       <RequestHeaderInput
         value={data.value}
@@ -138,20 +146,41 @@ function RequestHeaderInput({
   onChange,
   value,
   placeholder,
+  info,
 }: {
   value: string;
   placeholder: string;
+  info?: boolean;
   onChange: (value: string) => void;
 }) {
+  const details = useMemo(() => {
+    if (!info || !value) return;
+    return getHeaderDetails(value);
+  }, [value, info]);
+
   return (
     <TableCell className="font-medium">
-      <Input
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => {
-          onChange(e.target.value);
-        }}
-      />
+      <div className="flex items-center gap-2">
+        <Input
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+        />
+        {details && (
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger>
+              <Info className="h-4 w-4 cursor-pointer" />
+            </HoverCardTrigger>
+            <HoverCardContent className="w-fit">
+              <h1 className="font-bold text-sm">{details.name}</h1>
+              <Separator orientation="horizontal" />
+              <p>{details.description}</p>
+            </HoverCardContent>
+          </HoverCard>
+        )}
+      </div>
     </TableCell>
   );
 }
