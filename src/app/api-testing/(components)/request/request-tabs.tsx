@@ -7,54 +7,32 @@ import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RequestEnvironment } from './request-environment';
+import { Database } from '@/lib/mock/requests';
+import { useRequestConfig } from '@/stores/api-testing/request-config.store';
+import { useResponse } from '@/stores/api-testing/response.store';
 
 interface ITabs {
   name: string;
   url: string;
   method: HttpMethods;
   active?: boolean;
-  id: number;
+  id: string;
+  body?: string;
 }
 
 export function RequestTabs() {
   const ref = useHorizontalScroll();
 
   const tabs = useMemo(() => {
-    const tabs: ITabs[] = [
-      {
-        name: 'Get all posts',
-        url: 'https://jsonplaceholder.typicode.com/posts',
-        method: 'GET',
-        active: true,
-        id: 0,
-      },
-      {
-        name: 'Create a post',
-        url: 'https://jsonplaceholder.typicode.com/posts',
-        method: 'POST',
-        id: 1,
-      },
-      {
-        name: 'Get a post',
-        url: 'https://jsonplaceholder.typicode.com/posts/1',
-        method: 'GET',
-        id: 2,
-      },
-      {
-        name: 'Update a post',
-        url: 'https://jsonplaceholder.typicode.com/posts/1',
-        method: 'PUT',
-        id: 3,
-      },
-      {
-        name: 'Delete a post',
-        url: 'https://jsonplaceholder.typicode.com/posts/1',
-        method: 'DELETE',
-        id: 4,
-      },
-    ];
+    const tabList: ITabs[] = Database.getData().map((item) => ({
+      id: item.id,
+      method: item.method,
+      name: item.name,
+      url: item.url,
+      body: item.body,
+    }));
 
-    return [tabs, tabs, tabs, tabs, tabs, tabs, tabs, tabs, tabs, tabs].flat();
+    return tabList;
   }, []);
 
   const onScrollLeft = useCallback(() => {
@@ -111,14 +89,25 @@ export function RequestTabs() {
 }
 
 function RequestTab({ tab }: { tab: ITabs }) {
+  const { id, setUrl, setMethod, setBody, setId } = useRequestConfig();
+  const { setBody: setResponseBody } = useResponse();
+  const isActive = tab.id === id;
+
   return (
-    <div
+    <button
       className={cn(
         'text-xs flex items-center gap-2 p-2 cursor-pointer hover:bg-muted/80 min-w-fit',
-        tab.active && 'bg-muted/80 hover:bg-muted/50',
+        isActive && 'bg-muted/80 hover:bg-muted/50',
         'border-x border-muted/80',
         'group'
       )}
+      onClick={() => {
+        setUrl(tab.url);
+        setMethod(tab.method);
+        setId(tab.id);
+        setBody(tab.body ?? '');
+        setResponseBody('');
+      }}
     >
       <span>
         <span className={cn('font-semibold', HttpMethodColors[tab.method])}>
@@ -127,11 +116,8 @@ function RequestTab({ tab }: { tab: ITabs }) {
         {tab.name}
       </span>
       <X
-        className={cn(
-          'h-3 w-3',
-          !tab.active && 'invisible group-hover:visible'
-        )}
+        className={cn('h-3 w-3', !isActive && 'invisible group-hover:visible')}
       />
-    </div>
+    </button>
   );
 }

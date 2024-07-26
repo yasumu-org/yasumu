@@ -6,6 +6,9 @@
     "main"
   ],
   "permissions": [
+    "app:allow-version",
+    "app:allow-name",
+    "app:allow-tauri-version",
     "window:allow-close",
     "window:allow-hide",
     "window:allow-show",
