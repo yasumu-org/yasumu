@@ -8,15 +8,20 @@ import { ResponseCookies } from './response-cookies';
 import { ResponseStats } from './stats/response-stats';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { useResponse } from '@/stores/api-testing/response.store';
+import { LoadingSpinner } from '@/components/layout/loading';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
-  const { headers, cookies, body } = useResponse();
+  const { headers, cookies, body, pending } = useResponse();
 
   return (
     <div className={cn(orientation === 'horizontal' ? 'px-2' : 'p-2')}>
       <Tabs defaultValue="pretty" className="rounded-b-none">
-        <div className="flex items-center justify-between">
+        <div
+          className={cn('flex items-center justify-between', {
+            'opacity-20': pending,
+          })}
+        >
           <TabsList className="rounded-b-none border-x border-t">
             <TabsTrigger value="pretty">Pretty</TabsTrigger>
             <TabsTrigger value="raw">Raw</TabsTrigger>
@@ -35,30 +40,36 @@ export default function ResponseViewer() {
           </TabsList>
           <ResponseStats />
         </div>
-        <div
-          className={cn(
-            'border rounded-b-sm p-2 overflow-y-auto',
-            orientation === 'vertical' ? 'max-h-[400px]' : 'max-h-[90vh]'
-          )}
-        >
-          <TabsContent value="pretty">
-            <PrettyResponseViewer content={body} />
-          </TabsContent>
-          <TabsContent value="raw">
-            <pre
-              className={cn('word-break-break-all whitespace-pre-wrap text-sm')}
-            >
-              {body}
-            </pre>
-          </TabsContent>
-          <TabsContent value="headers">
-            <ResponseHeaders headers={headers} />
-          </TabsContent>
+        {pending ? (
+          <LoadingSpinner className="h-auto" />
+        ) : (
+          <div
+            className={cn(
+              'border rounded-b-sm p-2 overflow-y-auto',
+              orientation === 'vertical' ? 'max-h-[400px]' : 'max-h-[90vh]'
+            )}
+          >
+            <TabsContent value="pretty">
+              <PrettyResponseViewer content={body} />
+            </TabsContent>
+            <TabsContent value="raw">
+              <pre
+                className={cn(
+                  'word-break-break-all whitespace-pre-wrap text-sm'
+                )}
+              >
+                {body}
+              </pre>
+            </TabsContent>
+            <TabsContent value="headers">
+              <ResponseHeaders headers={headers} />
+            </TabsContent>
 
-          <TabsContent value="cookies">
-            <ResponseCookies cookies={cookies} />
-          </TabsContent>
-        </div>
+            <TabsContent value="cookies">
+              <ResponseCookies cookies={cookies} />
+            </TabsContent>
+          </div>
+        )}
       </Tabs>
     </div>
   );

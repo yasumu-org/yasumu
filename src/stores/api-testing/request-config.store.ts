@@ -15,10 +15,12 @@ export interface IParamOrHeader {
 }
 
 export interface IRequestConfig {
+  id: string;
   url: string;
   method: HttpMethods;
   headers: IParamOrHeader[];
   body: string;
+  setId: (id: string) => void;
   setUrl: (url: string) => void;
   setMethod: (method: HttpMethods) => void;
   setHeaders: (headers: IParamOrHeader[]) => void;
@@ -26,6 +28,7 @@ export interface IRequestConfig {
 }
 
 export const useRequestConfig = create<IRequestConfig>((set) => ({
+  id: '',
   url: 'https://jsonplaceholder.typicode.com/posts/1',
   method: HttpMethods.GET,
   headers: [
@@ -34,6 +37,7 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
     { key: '', value: '', enabled: true },
   ] as IParamOrHeader[],
   body: '{\n  \n}',
+  setId: (id: string) => set({ id }),
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),
   setHeaders: (headers: IParamOrHeader[]) => set({ headers }),

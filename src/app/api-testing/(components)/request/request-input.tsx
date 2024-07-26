@@ -31,6 +31,7 @@ export default function RequestInput() {
       setResponseStatus,
       setResponseSize,
       setCookies,
+      setPending,
     } = u;
 
     return {
@@ -40,11 +41,14 @@ export default function RequestInput() {
       setResponseStatus,
       setResponseSize,
       setCookies,
+      setPending,
     };
   });
 
   const dispatchRequest = useCallback(async () => {
     try {
+      responseStore.setPending(true);
+
       const h = new Headers();
 
       headers.forEach((header) => {
@@ -104,6 +108,8 @@ export default function RequestInput() {
     } catch (e) {
       console.error(e);
       responseStore.setBody(String(e));
+    } finally {
+      responseStore.setPending(false);
     }
   }, [url, method, headers, body, responseStore]);
 

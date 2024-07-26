@@ -31,6 +31,7 @@ export interface IResponse {
   certificateCN: string;
   issuerCN: string;
   validUntil: string;
+  pending: boolean;
   setBody: (body: string) => void;
   setHeaders: (headers: IHeader[]) => void;
   setCookies: (cookies: ICookie[]) => void;
@@ -45,18 +46,11 @@ export interface IResponse {
   setCertificateCN: (certificateCN: string) => void;
   setIssuerCN: (issuerCN: string) => void;
   setValidUntil: (validUntil: string) => void;
+  setPending: (pending: boolean) => void;
 }
 
-const defaultResponse = JSON.stringify({
-  userId: 1,
-  id: 1,
-  title:
-    'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-  body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
-});
-
 export const useResponse = create<IResponse>((set) => ({
-  body: defaultResponse,
+  body: '',
   headers: [],
   cookies: [],
   responseTime: 56,
@@ -70,6 +64,7 @@ export const useResponse = create<IResponse>((set) => ({
   certificateCN: '',
   issuerCN: '',
   validUntil: '',
+  pending: false,
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),
@@ -84,4 +79,5 @@ export const useResponse = create<IResponse>((set) => ({
   setCertificateCN: (certificateCN: string) => set({ certificateCN }),
   setIssuerCN: (issuerCN: string) => set({ issuerCN }),
   setValidUntil: (validUntil: string) => set({ validUntil }),
+  setPending: (pending: boolean) => set({ pending }),
 }));
