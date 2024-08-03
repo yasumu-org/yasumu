@@ -1,3 +1,4 @@
+import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
 import { HttpMethods } from '@/lib/constants';
 import { create } from 'zustand';
 
@@ -42,4 +43,14 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
   setMethod: (method: HttpMethods) => set({ method }),
   setHeaders: (headers: IParamOrHeader[]) => set({ headers }),
   setBody: (body: string) => set({ body }),
+}));
+
+export interface IRequestStore {
+  current: YasumuRestEntity | null;
+  setCurrent: (current: YasumuRestEntity | null) => void;
+}
+
+export const useRequestStore = create<IRequestStore>((set) => ({
+  current: null,
+  setCurrent: (current) => set({ current }),
 }));

@@ -9,10 +9,29 @@ import { ResponseStats } from './stats/response-stats';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { useResponse } from '@/stores/api-testing/response.store';
 import { LoadingSpinner } from '@/components/layout/loading';
+import { useRequestStore } from '@/stores/api-testing/request-config.store';
+import { useEffect } from 'react';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
-  const { headers, cookies, body, pending } = useResponse();
+  const { headers, cookies, body, pending, responseSize, responseStatus } =
+    useResponse();
+
+  const { current } = useRequestStore();
+
+  useEffect(() => {
+    if (!current) return;
+
+    current.setResponse({
+      body,
+      headers: headers.map((header) => ({
+        key: header.key,
+        value: header.value,
+      })),
+      size: responseSize,
+      status: responseStatus,
+    });
+  }, [body, headers, responseSize, responseStatus]);
 
   return (
     <div className={cn(orientation === 'horizontal' ? 'px-2' : 'p-2')}>

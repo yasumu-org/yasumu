@@ -5,7 +5,11 @@ import { RequestParameters } from './request-parameters';
 import { RequestHeaders } from './request-headers';
 import { RequestTabs } from './request-tabs';
 import { RequestBody } from './request-body';
-import { useRequestConfig } from '@/stores/api-testing/request-config.store';
+import {
+  useRequestConfig,
+  useRequestStore,
+} from '@/stores/api-testing/request-config.store';
+import { useEffect } from 'react';
 
 const ReqTabs = {
   QueryParameters: 'query-parameters',
@@ -16,7 +20,24 @@ const ReqTabs = {
 };
 
 export default function RequestInitializer() {
-  const requestMethod = useRequestConfig((state) => state.method);
+  const { current } = useRequestStore();
+  const { setId, setUrl, setMethod, setHeaders, setBody } = useRequestConfig();
+
+  useEffect(() => {
+    if (!current) return;
+
+    setId(current.getPath());
+    setUrl(current.getUrl());
+    setMethod(current.getMethod());
+    setHeaders(
+      current.getHeaders().map((header) => ({
+        key: header.key,
+        value: header.value,
+        enabled: true,
+      }))
+    );
+    setBody(current.getBody() ?? '');
+  }, [current]);
 
   return (
     <div>
@@ -34,11 +55,7 @@ export default function RequestInitializer() {
             <TabsTrigger className="select-none" value={ReqTabs.Headers}>
               Headers
             </TabsTrigger>
-            <TabsTrigger
-              className="select-none"
-              value={ReqTabs.RequestBody}
-              disabled={['GET', 'HEAD', 'OPTIONS'].includes(requestMethod)}
-            >
+            <TabsTrigger className="select-none" value={ReqTabs.RequestBody}>
               Body
             </TabsTrigger>
             <TabsTrigger
