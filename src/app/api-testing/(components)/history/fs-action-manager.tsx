@@ -6,34 +6,51 @@ import { FsActionDialog } from './fs-action-dialog';
 import { Yasumu } from '@/lib/api/yasumu';
 import { HttpMethods } from '@/lib/constants';
 import { toast } from 'sonner';
-import { useRequestStore } from '@/stores/api-testing/request-config.store';
+import {
+  useRequestFs,
+  useRequestStore,
+} from '@/stores/api-testing/request-config.store';
 
 export function FsActionManager() {
   const { setCurrent } = useRequestStore();
-  const handleCreateFolder = useCallback(async (name: string) => {
-    try {
-      if (!Yasumu.workspace) return;
-      await Yasumu.workspace.rest.create(name, null);
-    } catch (e) {
-      toast.error('Failed to create group', {
-        description: String(e),
-      });
-    }
-  }, []);
+  const { selectedPath } = useRequestFs();
 
-  const handleCreateFile = useCallback(async (name: string) => {
-    console.log({ name }, 'file', Yasumu.workspace);
+  const handleCreateFolder = useCallback(
+    async (name: string) => {
+      try {
+        if (!Yasumu.workspace) return;
+        await Yasumu.workspace.rest.create(
+          name,
+          null,
+          selectedPath || undefined
+        );
+      } catch (e) {
+        toast.error('Failed to create group', {
+          description: String(e),
+        });
+      }
+    },
+    [selectedPath]
+  );
 
-    try {
-      if (!Yasumu.workspace) return;
-      const entity = await Yasumu.workspace.rest.create(name, HttpMethods.GET);
-      setCurrent(entity);
-    } catch (e) {
-      toast.error('Failed to create request', {
-        description: String(e),
-      });
-    }
-  }, []);
+  const handleCreateFile = useCallback(
+    async (name: string) => {
+      try {
+        if (!Yasumu.workspace) return;
+        const entity = await Yasumu.workspace.rest.create(
+          name,
+          HttpMethods.GET,
+          selectedPath || undefined
+        );
+        setCurrent(entity);
+      } catch (e) {
+        toast.error('Failed to create request', {
+          description: String(e),
+        });
+      }
+    },
+    [selectedPath]
+  );
 
   return (
     <div className="flex items-center gap-1 pr-4">

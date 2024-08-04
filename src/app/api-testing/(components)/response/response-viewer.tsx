@@ -11,15 +11,23 @@ import { useResponse } from '@/stores/api-testing/response.store';
 import { LoadingSpinner } from '@/components/layout/loading';
 import { useRequestStore } from '@/stores/api-testing/request-config.store';
 import { useEffect } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
-  const { headers, cookies, body, pending, responseSize, responseStatus } =
-    useResponse();
+  const {
+    headers,
+    cookies,
+    body,
+    pending,
+    responseSize,
+    responseStatus,
+    responseTime,
+  } = useResponse();
 
   const { current } = useRequestStore();
 
-  useEffect(() => {
+  const save = useDebounceCallback(() => {
     if (!current) return;
 
     current.setResponse({
@@ -30,8 +38,17 @@ export default function ResponseViewer() {
       })),
       size: responseSize,
       status: responseStatus,
+      time: responseTime,
     });
-  }, [body, headers, responseSize, responseStatus]);
+
+    current.save().catch(Object);
+  }, 500);
+
+  useEffect(() => {
+    if (current) {
+      save();
+    }
+  }, [body, headers, responseSize, responseStatus, responseTime]);
 
   return (
     <div className={cn(orientation === 'horizontal' ? 'px-2' : 'p-2')}>

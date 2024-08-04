@@ -41,14 +41,15 @@ export default function RequestInput() {
         value: header.value,
       }))
     );
+
     current.save().catch(Object);
   }, 500);
 
   useEffect(() => {
-    if (!current) return;
-
-    save();
-  }, [method, setMethod, url, setUrl, body, headers]);
+    if (current) {
+      save();
+    }
+  }, [method, url, setUrl, body, headers]);
 
   const responseStore = useResponse((u) => {
     const {
@@ -85,9 +86,11 @@ export default function RequestInput() {
 
       const start = Date.now();
 
+      const meth = method.toUpperCase();
+      const bodyData = meth === 'GET' || meth === 'HEAD' ? undefined : body;
       const res = await fetch(url, {
-        method: method.toUpperCase(),
-        body: !['GET', 'HEAD', 'OPTIONS'].includes(method) ? body : undefined,
+        method: meth,
+        body: bodyData,
         redirect: 'follow',
         maxRedirections: 20,
         cache: 'no-cache',
@@ -147,7 +150,9 @@ export default function RequestInput() {
           value={method}
           onValueChange={(value) => {
             const newMethod = HttpMethods[value as HttpMethods];
-            if (newMethod) setMethod(newMethod);
+            if (newMethod) {
+              setMethod(newMethod);
+            }
           }}
         >
           <SelectTrigger

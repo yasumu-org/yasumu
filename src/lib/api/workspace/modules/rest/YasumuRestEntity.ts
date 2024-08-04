@@ -1,6 +1,7 @@
 import { HttpMethods } from '@/lib/constants';
 import type { YasumuRest } from './YasumuRest';
-import { writeTextFile } from '@tauri-apps/plugin-fs';
+import { remove, rename, writeTextFile } from '@tauri-apps/plugin-fs';
+import { dirname, join } from '@tauri-apps/api/path';
 
 export interface KeyValue<K, V> {
   key: K;
@@ -10,6 +11,7 @@ export interface KeyValue<K, V> {
 export interface YasumuRestEntityResponseCache {
   status: number;
   size: number;
+  time: number;
   headers: Array<KeyValue<string, string>>;
   body: string;
 }
@@ -26,11 +28,16 @@ export interface YasumuRestEntityData {
 
 export class YasumuRestEntity {
   #changed = false;
+  #methodChanged = false;
 
   public constructor(
     public readonly rest: YasumuRest,
     private data: YasumuRestEntityData
   ) {}
+
+  public setPath(path: string) {
+    this.data.path = path;
+  }
 
   public getName() {
     return this.data.name;
@@ -51,6 +58,9 @@ export class YasumuRestEntity {
   public setMethod(method: HttpMethods) {
     if (this.data.method !== method) {
       this.#changed = true;
+      this.#methodChanged = true;
+    } else {
+      this.#methodChanged = false;
     }
 
     this.data.method = method;
@@ -108,9 +118,27 @@ export class YasumuRestEntity {
     this.data.response = response;
   }
 
-  public save() {
-    const data = JSON.stringify(this.data);
-    return writeTextFile(this.data.path, data);
+  public async save() {
+    if (this.#methodChanged) {
+      const name = YasumuRestEntity.getName(this.data.name);
+
+      const newName = await join(
+        await dirname(this.getPath()),
+        `${name}.${this.data.method}`
+      );
+
+      await remove(this.data.path);
+
+      this.data.path = newName;
+
+      const data = JSON.stringify(this.data);
+
+      await writeTextFile(newName, data);
+    } else {
+      const data = JSON.stringify(this.data);
+
+      await writeTextFile(this.data.path, data);
+    }
   }
 
   public static getName(name: string) {

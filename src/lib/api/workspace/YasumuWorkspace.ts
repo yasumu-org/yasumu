@@ -1,5 +1,6 @@
 import { readTextFile, writeTextFile, exists } from '@tauri-apps/plugin-fs';
 import { sep } from '@tauri-apps/api/path';
+import { invoke } from '@tauri-apps/api/core';
 import {
   YasumuRawWorkspaceMetadata,
   YasumuWorkspaceMetadata,
@@ -8,6 +9,7 @@ import type { YasumuCore } from '../yasumu';
 import { YasumuRest } from './modules/rest/YasumuRest';
 import { YasumuSmtp } from './modules/smtp/YasumuSmtp';
 import { YasumuWorkspaceFiles } from './constants';
+import { Commands } from '@/lib/common/commands';
 
 export interface YasumuWorkspaceInit {
   path: string;
@@ -95,6 +97,12 @@ export class YasumuWorkspace {
     } catch {
       // noop
     }
+  }
+
+  public async createSession() {
+    const path = this.getPath();
+
+    await invoke(Commands.SetCurrentWorkspace, { path });
   }
 
   public resolvePath(file: YasumuWorkspaceFiles) {

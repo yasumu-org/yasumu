@@ -30,7 +30,7 @@ export interface IRequestConfig {
 
 export const useRequestConfig = create<IRequestConfig>((set) => ({
   id: '',
-  url: 'https://jsonplaceholder.typicode.com/posts/1',
+  url: '',
   method: HttpMethods.GET,
   headers: [
     { key: 'Content-Type', value: 'application/json', enabled: true },
@@ -53,4 +53,22 @@ export interface IRequestStore {
 export const useRequestStore = create<IRequestStore>((set) => ({
   current: null,
   setCurrent: (current) => set({ current }),
+}));
+
+export interface IRequestFs {
+  copied: string | null;
+  cut: string | null;
+  selectedPath: string | null;
+  setCopied: (copied: string | null) => void;
+  setCut: (cut: string | null) => void;
+  setSelectedPath: (selectedPath: string | null) => void;
+}
+
+export const useRequestFs = create<IRequestFs>((set) => ({
+  copied: null,
+  cut: null,
+  selectedPath: null,
+  setCopied: (copied) => set({ copied }),
+  setCut: (cut) => set({ cut }),
+  setSelectedPath: (selectedPath) => set({ selectedPath }),
 }));

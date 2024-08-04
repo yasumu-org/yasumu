@@ -1,29 +1,33 @@
 import { Store } from '@tauri-apps/plugin-store';
+import { invoke } from '@tauri-apps/api/core';
 import {
   YasumuWorkspace,
   YasumuWorkspaceHistory,
 } from './workspace/YasumuWorkspace';
 import { YasumuWorkspaceFiles } from './workspace/constants';
+import { Commands } from '../common/commands';
 
 export class YasumuCore {
   public readonly store = new Store(YasumuWorkspaceFiles.StorePath);
   public workspace: YasumuWorkspace | null = null;
 
+  public async restoreWorkspace() {
+    const session = await invoke<string | null>(Commands.GetCurrentWorkspace);
+
+    if (session) {
+      return this.openWorkspace(session);
+    }
+  }
+
   public async openWorkspace(path: string) {
-    console.log({
-      opening: path,
-    });
     const workspace = new YasumuWorkspace(this, {
       path,
     });
 
-    console.log({ created: workspace });
-
     await workspace.loadMetadata();
+    await workspace.createSession();
 
     this.workspace = workspace;
-
-    console.log({ workspaceData: this.workspace });
 
     return workspace;
   }

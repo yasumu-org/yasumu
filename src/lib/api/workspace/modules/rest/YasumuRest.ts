@@ -1,8 +1,16 @@
 import { HttpMethods, isHttpMethod } from '@/lib/constants';
-import { type YasumuWorkspace } from '../../YasumuWorkspace';
+import { YasumuWorkspace } from '../../YasumuWorkspace';
 import { YasumuWorkspaceFiles } from '../../constants';
-import { exists, mkdir, readDir, readTextFile } from '@tauri-apps/plugin-fs';
-import { join } from '@tauri-apps/api/path';
+import {
+  exists,
+  mkdir,
+  readDir,
+  readTextFile,
+  remove,
+  rename,
+  copyFile,
+} from '@tauri-apps/plugin-fs';
+import { join, dirname, extname, basename } from '@tauri-apps/api/path';
 import { YasumuRestEntity } from './YasumuRestEntity';
 import { TreeViewElement } from '@/components/magicui/file-tree';
 
@@ -38,7 +46,105 @@ export class YasumuRest {
 
     const data = await readTextFile(path);
 
-    return new YasumuRestEntity(this, JSON.parse(data));
+    try {
+      return new YasumuRestEntity(this, JSON.parse(data));
+    } catch {
+      const id = await basename(path);
+      const name = (await YasumuRestEntity.getName(id)) ?? 'New request';
+      const method = YasumuRestEntity.getMethod(id) ?? HttpMethods.GET;
+
+      const entity = new YasumuRestEntity(this, {
+        name,
+        method,
+        url: '',
+        headers: [],
+        body: null,
+        path,
+        response: null,
+      });
+
+      await entity.save();
+
+      return entity;
+    }
+  }
+
+  public async copy(current: string, target: string) {
+    await this.ensureSelf();
+
+    const hasRequest = await exists(current);
+
+    if (!hasRequest) return;
+
+    const currentName = await basename(current);
+
+    const doesTargetHaveCurrentName = await exists(
+      await join(target, currentName)
+    );
+
+    if (doesTargetHaveCurrentName) {
+      const targetName = await basename(target);
+      target = await join(target, `${targetName} - Copy`);
+    } else {
+      target = await join(target, currentName);
+    }
+
+    await copyFile(current, target);
+  }
+
+  public async move(current: string, target: string) {
+    await this.ensureSelf();
+
+    const hasRequest = await exists(current);
+
+    if (!hasRequest) return;
+
+    const currentName = await basename(current);
+
+    const doesTargetHaveCurrentName = await exists(
+      await join(target, currentName)
+    );
+
+    if (doesTargetHaveCurrentName) {
+      const targetName = await basename(target);
+      target = await join(target, `${targetName} - Copy`);
+    } else {
+      target = await join(target, currentName);
+    }
+
+    await rename(current, target);
+  }
+
+  public async delete(path: string) {
+    await this.ensureSelf();
+
+    const hasRequest = await exists(path);
+
+    if (!hasRequest) return;
+
+    await remove(path, {
+      recursive: true,
+    });
+  }
+
+  public async rename(path: string, newName: string, dir: boolean) {
+    await this.ensureSelf();
+
+    if (!newName) return;
+
+    const hasRequest = await exists(path);
+
+    if (!hasRequest) return;
+
+    const ext = dir ? '' : await extname(path).catch(() => '');
+    const dirName = dir
+      ? (await dirname(path)).replace(await basename(path), '')
+      : await dirname(path);
+
+    const extension = ext ? `.${ext}` : '';
+    const newPath = await join(dirName, `${newName}${extension}`);
+
+    await rename(path, newPath);
   }
 
   public async create(
@@ -148,6 +254,10 @@ export class YasumuRest {
       } satisfies YasumuRestRequest);
     }
 
-    return data;
+    return data.sort((a, b) => {
+      if (a.method === null && b.method !== null) return -1;
+      if (a.method !== null && b.method === null) return 1;
+      return a.name.localeCompare(b.name);
+    });
   }
 }

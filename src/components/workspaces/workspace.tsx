@@ -11,21 +11,17 @@ import { Yasumu } from '@/lib/api/yasumu';
 import { YasumuWorkspaceHistory } from '@/lib/api/workspace/YasumuWorkspace';
 
 export function YasumuWorkspace() {
-  const [currentWorkspaceName, setCurrentWorkspaceName] = useState<
-    string | null
-  >(null);
   const [recentWorkspaces, setRecentWorkspaces] = useState<
     YasumuWorkspaceHistory[]
   >([]);
-  const { currentWorkspace, setCurrentWorkspace } = useWorkspaceStore();
+  const {
+    currentWorkspace,
+    setCurrentWorkspace,
+    currentWorkspaceName,
+    setCurrentWorkspaceName,
+  } = useWorkspaceStore();
 
   useEffect(() => {
-    const workspace = sessionStorage.getItem('yasumu:workspace');
-
-    if (workspace) {
-      handleWorkspaceCreate(workspace).catch(console.error);
-    }
-
     Yasumu.getWorkspacesHistory().then(
       (data) => setRecentWorkspaces(data),
       console.error
@@ -46,12 +42,8 @@ export function YasumuWorkspace() {
       if (res) {
         const workspace = await Yasumu.openWorkspace(res);
 
-        document.title = `Yasumu - ${workspace.metadata.name}`;
-
         setCurrentWorkspace(res);
         setCurrentWorkspaceName(workspace.metadata.name);
-
-        sessionStorage.setItem('yasumu:workspace', res);
       }
     } catch (e) {
       toast.error('Failed to open workspace', {

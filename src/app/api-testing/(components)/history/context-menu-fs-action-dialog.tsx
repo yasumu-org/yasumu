@@ -8,8 +8,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRef, useState } from 'react';
@@ -17,29 +26,62 @@ import { useRef, useState } from 'react';
 interface FsActionDialogProps {
   type: string;
   description: string;
+  value?: string;
+  buttonName: string;
   onCreate: (name: string) => void;
 }
 
-export function FsActionDialog({
+export function ConfirmationDialog({
+  title,
+  description,
+  onConfirm,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+  description: string;
+  onConfirm?: () => void;
+}) {
+  return (
+    <AlertDialog>
+      {children}
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <Button variant="destructive" onClick={onConfirm}>
+              Continue
+            </Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+export function ContextMenuFsActionDialog({
   type,
   description,
   children,
   onCreate,
+  value,
+  buttonName,
 }: React.PropsWithChildren<FsActionDialogProps>) {
   const nameRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        asChild
-        className="w-fit hover:bg-muted-foreground/30 p-1 cursor-pointer"
-      >
-        {children}
-      </DialogTrigger>
+      {children}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create {type}</DialogTitle>
+          <DialogTitle>
+            {buttonName} {type}
+          </DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-1">
@@ -49,6 +91,7 @@ export function FsActionDialog({
             </Label>
             <Input
               ref={nameRef}
+              defaultValue={value}
               id="name"
               type="text"
               className="col-span-3"
@@ -59,7 +102,7 @@ export function FsActionDialog({
         </div>
         <DialogFooter>
           <Button
-            type="submit"
+            type="button"
             onClick={() => {
               const val = nameRef.current?.value ?? '';
               if (!val) return;
@@ -67,7 +110,7 @@ export function FsActionDialog({
               onCreate(val);
             }}
           >
-            Create
+            {buttonName}
           </Button>
         </DialogFooter>
       </DialogContent>

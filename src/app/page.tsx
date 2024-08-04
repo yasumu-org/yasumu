@@ -1,5 +1,5 @@
 import { Content } from '@/components/layout/content';
-import { YasumuWorkspace } from '@/components/layout/workspace';
+import { YasumuWorkspace } from '@/components/workspaces/workspace';
 
 export default function Page() {
   return (

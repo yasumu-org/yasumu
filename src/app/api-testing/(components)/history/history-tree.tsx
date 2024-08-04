@@ -54,8 +54,7 @@ export default function HistoryTree() {
       {tree.map((item) => (
         <Tree
           key={item.id}
-          className="py-2 overflow-hidden rounded-md"
-          initialSelectedId="2"
+          className="py-1 overflow-hidden rounded-md"
           elements={item.children ?? []}
         >
           <RecursiveTreeGenerator tree={Array.isArray(item) ? item : [item]} />

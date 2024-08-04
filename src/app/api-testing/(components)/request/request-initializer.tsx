@@ -10,6 +10,7 @@ import {
   useRequestStore,
 } from '@/stores/api-testing/request-config.store';
 import { useEffect } from 'react';
+import { useResponse } from '@/stores/api-testing/response.store';
 
 const ReqTabs = {
   QueryParameters: 'query-parameters',
@@ -22,6 +23,13 @@ const ReqTabs = {
 export default function RequestInitializer() {
   const { current } = useRequestStore();
   const { setId, setUrl, setMethod, setHeaders, setBody } = useRequestConfig();
+  const {
+    setBody: setResponseBody,
+    setHeaders: setResponseHeaders,
+    setResponseSize,
+    setResponseStatus,
+    setResponseTime,
+  } = useResponse();
 
   useEffect(() => {
     if (!current) return;
@@ -37,6 +45,27 @@ export default function RequestInitializer() {
       }))
     );
     setBody(current.getBody() ?? '');
+
+    const res = current.getResponse();
+
+    if (res) {
+      setResponseBody(res.body);
+      setResponseHeaders(
+        res.headers.map((header) => ({
+          key: header.key,
+          value: header.value,
+        }))
+      );
+      setResponseSize(res.size);
+      setResponseStatus(res.status);
+      setResponseTime(res.time);
+    } else {
+      setResponseBody('');
+      setResponseHeaders([]);
+      setResponseSize(0);
+      setResponseStatus(0);
+      setResponseTime(0);
+    }
   }, [current]);
 
   return (

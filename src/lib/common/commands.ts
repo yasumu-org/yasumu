@@ -1,4 +1,7 @@
 export const Commands = {
+  // Workspace
+  GetCurrentWorkspace: 'get_current_workspace',
+  SetCurrentWorkspace: 'set_current_workspace',
   // Http
   GetLocalAddress: 'get_local_address',
   // Smtp

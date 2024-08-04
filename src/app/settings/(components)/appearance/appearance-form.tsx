@@ -77,8 +77,6 @@ export function AppearanceForm() {
       </div>
     );
 
-  console.log({ orientation });
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
