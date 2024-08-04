@@ -5,7 +5,12 @@ import { RequestParameters } from './request-parameters';
 import { RequestHeaders } from './request-headers';
 import { RequestTabs } from './request-tabs';
 import { RequestBody } from './request-body';
-import { useRequestConfig } from '@/stores/api-testing/request-config.store';
+import {
+  useRequestConfig,
+  useRequestStore,
+} from '@/stores/api-testing/request-config.store';
+import { useEffect } from 'react';
+import { useResponse } from '@/stores/api-testing/response.store';
 
 const ReqTabs = {
   QueryParameters: 'query-parameters',
@@ -16,7 +21,52 @@ const ReqTabs = {
 };
 
 export default function RequestInitializer() {
-  const requestMethod = useRequestConfig((state) => state.method);
+  const { current } = useRequestStore();
+  const { setId, setUrl, setMethod, setHeaders, setBody } = useRequestConfig();
+  const {
+    setBody: setResponseBody,
+    setHeaders: setResponseHeaders,
+    setResponseSize,
+    setResponseStatus,
+    setResponseTime,
+  } = useResponse();
+
+  useEffect(() => {
+    if (!current) return;
+
+    setId(current.getPath());
+    setUrl(current.getUrl());
+    setMethod(current.getMethod());
+    setHeaders(
+      current.getHeaders().map((header) => ({
+        key: header.key,
+        value: header.value,
+        enabled: true,
+      }))
+    );
+    setBody(current.getBody() ?? '');
+
+    const res = current.getResponse();
+
+    if (res) {
+      setResponseBody(res.body);
+      setResponseHeaders(
+        res.headers.map((header) => ({
+          key: header.key,
+          value: header.value,
+        }))
+      );
+      setResponseSize(res.size);
+      setResponseStatus(res.status);
+      setResponseTime(res.time);
+    } else {
+      setResponseBody('');
+      setResponseHeaders([]);
+      setResponseSize(0);
+      setResponseStatus(0);
+      setResponseTime(0);
+    }
+  }, [current]);
 
   return (
     <div>
@@ -34,11 +84,7 @@ export default function RequestInitializer() {
             <TabsTrigger className="select-none" value={ReqTabs.Headers}>
               Headers
             </TabsTrigger>
-            <TabsTrigger
-              className="select-none"
-              value={ReqTabs.RequestBody}
-              disabled={['GET', 'HEAD', 'OPTIONS'].includes(requestMethod)}
-            >
+            <TabsTrigger className="select-none" value={ReqTabs.RequestBody}>
               Body
             </TabsTrigger>
             <TabsTrigger

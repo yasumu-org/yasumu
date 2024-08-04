@@ -31,7 +31,6 @@ export function BootstrapSMTP() {
     try {
       const emails = await yasumu.getEmails();
       setEmails(emails);
-      console.log(emails);
     } catch {}
   };
 

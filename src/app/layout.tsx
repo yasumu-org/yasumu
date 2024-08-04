@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/components/themes/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
+import { YasumuWorkspaceProvider } from '@/components/workspaces/workspace-provider';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -41,10 +42,12 @@ export default function RootLayout({
           <Sonner />
           <Toaster />
           <TooltipProvider>
-            <div className="flex flex-col bg-muted/40 w-full px-4">
-              <SideNav />
-              {children}
-            </div>
+            <YasumuWorkspaceProvider>
+              <div className="flex flex-col bg-muted/40 w-full px-4">
+                <SideNav />
+                {children}
+              </div>
+            </YasumuWorkspaceProvider>
           </TooltipProvider>
         </ThemeProvider>
       </body>

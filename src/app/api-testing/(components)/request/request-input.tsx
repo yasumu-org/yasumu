@@ -15,14 +15,42 @@ import {
   HttpMethodsArray,
 } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { useRequestConfig } from '@/stores/api-testing/request-config.store';
+import {
+  useRequestConfig,
+  useRequestStore,
+} from '@/stores/api-testing/request-config.store';
 import { ICookie, useResponse } from '@/stores/api-testing/response.store';
 import { fetch } from '@tauri-apps/plugin-http';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { parseString } from 'set-cookie-parser';
+import { useDebounceCallback } from 'usehooks-ts';
 
 export default function RequestInput() {
+  const { current } = useRequestStore();
   const { method, setMethod, url, setUrl, body, headers } = useRequestConfig();
+
+  const save = useDebounceCallback(() => {
+    if (!current) return;
+
+    current.setUrl(url);
+    current.setMethod(method);
+    current.setBody(body);
+    current.setHeaders(
+      headers.map((header) => ({
+        key: header.key,
+        value: header.value,
+      }))
+    );
+
+    current.save().catch(Object);
+  }, 500);
+
+  useEffect(() => {
+    if (current) {
+      save();
+    }
+  }, [method, url, setUrl, body, headers]);
+
   const responseStore = useResponse((u) => {
     const {
       setBody,
@@ -58,9 +86,11 @@ export default function RequestInput() {
 
       const start = Date.now();
 
+      const meth = method.toUpperCase();
+      const bodyData = meth === 'GET' || meth === 'HEAD' ? undefined : body;
       const res = await fetch(url, {
-        method: method.toUpperCase(),
-        body: !['GET', 'HEAD', 'OPTIONS'].includes(method) ? body : undefined,
+        method: meth,
+        body: bodyData,
         redirect: 'follow',
         maxRedirections: 20,
         cache: 'no-cache',
@@ -120,7 +150,9 @@ export default function RequestInput() {
           value={method}
           onValueChange={(value) => {
             const newMethod = HttpMethods[value as HttpMethods];
-            if (newMethod) setMethod(newMethod);
+            if (newMethod) {
+              setMethod(newMethod);
+            }
           }}
         >
           <SelectTrigger

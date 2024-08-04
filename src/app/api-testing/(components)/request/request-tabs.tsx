@@ -1,13 +1,12 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useHorizontalScroll } from '@/hooks/use-horizontal-scroll';
 import { HttpMethodColors, HttpMethods } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RequestEnvironment } from './request-environment';
-import { Database } from '@/lib/mock/requests';
 import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { useResponse } from '@/stores/api-testing/response.store';
 
@@ -23,17 +22,7 @@ interface ITabs {
 export function RequestTabs() {
   const ref = useHorizontalScroll();
 
-  const tabs = useMemo(() => {
-    const tabList: ITabs[] = Database.getData().map((item) => ({
-      id: item.id,
-      method: item.method,
-      name: item.name,
-      url: item.url,
-      body: item.body,
-    }));
-
-    return tabList;
-  }, []);
+  const tabs = [] as ITabs[];
 
   const onScrollLeft = useCallback(() => {
     const element = ref.current;

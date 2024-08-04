@@ -31,3 +31,8 @@ export const HttpMethods = {
 } as const;
 
 export const HttpMethodsArray = Object.values(HttpMethods) as [HttpMethods];
+
+export function isHttpMethod(value: string): value is HttpMethods {
+  if (!value) return false;
+  return HttpMethodsArray.includes(value.toUpperCase() as HttpMethods);
+}

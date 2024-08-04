@@ -9,10 +9,46 @@ import { ResponseStats } from './stats/response-stats';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { useResponse } from '@/stores/api-testing/response.store';
 import { LoadingSpinner } from '@/components/layout/loading';
+import { useRequestStore } from '@/stores/api-testing/request-config.store';
+import { useEffect } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
-  const { headers, cookies, body, pending } = useResponse();
+  const {
+    headers,
+    cookies,
+    body,
+    pending,
+    responseSize,
+    responseStatus,
+    responseTime,
+  } = useResponse();
+
+  const { current } = useRequestStore();
+
+  const save = useDebounceCallback(() => {
+    if (!current) return;
+
+    current.setResponse({
+      body,
+      headers: headers.map((header) => ({
+        key: header.key,
+        value: header.value,
+      })),
+      size: responseSize,
+      status: responseStatus,
+      time: responseTime,
+    });
+
+    current.save().catch(Object);
+  }, 500);
+
+  useEffect(() => {
+    if (current) {
+      save();
+    }
+  }, [body, headers, responseSize, responseStatus, responseTime]);
 
   return (
     <div className={cn(orientation === 'horizontal' ? 'px-2' : 'p-2')}>
