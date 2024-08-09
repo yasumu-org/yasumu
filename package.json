@@ -44,6 +44,7 @@
     "@uiw/react-codemirror": "^4.22.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
     "detect-programming-language": "^1.0.4",
     "framer-motion": "^11.3.18",
     "lucide-react": "^0.378.0",

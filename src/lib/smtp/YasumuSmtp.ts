@@ -1,20 +1,23 @@
-import { invoke } from '@tauri-apps/api/core';
-import { Commands } from '../common/commands';
+import { invoke } from "@tauri-apps/api/core";
+import { Commands } from "../common/commands";
 
 export interface YasumuSmtpOptions {
   port: number;
 }
 
 export interface YasumuEmailMessage {
+  id: number;
   from: String;
   to: Array<String>;
   subject: String;
   body: String;
+  read: boolean;
+  created_at: String;
 }
 
 export class YasumuSmtp {
   private _running = false;
-  public readonly EmailChannel = 'new-email';
+  public readonly EmailChannel = "new-email";
   public constructor(private options: YasumuSmtpOptions) {}
 
   public get running() {
