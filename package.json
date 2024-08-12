@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "tauri": "tauri",
-    "ui": "shadcn-ui"
+    "ui": "shadcn-ui",
+    "format": "prettier --write \"./src\""
   },
   "dependencies": {
     "@codemirror/lang-html": "^6.4.9",
@@ -44,6 +45,7 @@
     "@uiw/react-codemirror": "^4.22.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
     "detect-programming-language": "^1.0.4",
     "framer-motion": "^11.3.18",
     "lucide-react": "^0.378.0",
@@ -51,7 +53,7 @@
     "mime-types": "^2.1.35",
     "next": "^14.2.5",
     "next-themes": "^0.3.0",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",

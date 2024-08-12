@@ -11,21 +11,11 @@ import { Yasumu } from '@/lib/api/yasumu';
 import { YasumuWorkspaceHistory } from '@/lib/api/workspace/YasumuWorkspace';
 
 export function YasumuWorkspace() {
-  const [recentWorkspaces, setRecentWorkspaces] = useState<
-    YasumuWorkspaceHistory[]
-  >([]);
-  const {
-    currentWorkspace,
-    setCurrentWorkspace,
-    currentWorkspaceName,
-    setCurrentWorkspaceName,
-  } = useWorkspaceStore();
+  const [recentWorkspaces, setRecentWorkspaces] = useState<YasumuWorkspaceHistory[]>([]);
+  const { currentWorkspace, setCurrentWorkspace, currentWorkspaceName, setCurrentWorkspaceName } = useWorkspaceStore();
 
   useEffect(() => {
-    Yasumu.getWorkspacesHistory().then(
-      (data) => setRecentWorkspaces(data),
-      console.error
-    );
+    Yasumu.getWorkspacesHistory().then((data) => setRecentWorkspaces(data), console.error);
   }, []);
 
   const handleWorkspaceCreate = useCallback(async (path?: string) => {
@@ -57,11 +47,8 @@ export function YasumuWorkspace() {
       {currentWorkspace ? (
         <>
           <p className="text-muted-foreground">
-            Currently on workspace -{' '}
-            <span className="text-primary font-medium">
-              {currentWorkspaceName}
-            </span>
-            . Select an action to get started.
+            Currently on workspace - <span className="text-primary font-medium">{currentWorkspaceName}</span>. Select an
+            action to get started.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4">
             <GetStartedAction
@@ -86,28 +73,17 @@ export function YasumuWorkspace() {
         </>
       ) : (
         <>
-          <p className="text-muted-foreground">
-            Open a workspace to get started.
-          </p>
+          <p className="text-muted-foreground">Open a workspace to get started.</p>
           <div className="mt-4">
-            <Button onClick={() => handleWorkspaceCreate()}>
-              Open Workspace
-            </Button>
+            <Button onClick={() => handleWorkspaceCreate()}>Open Workspace</Button>
             <div className="mt-8 space-y-2">
               <h2 className="text-lg font-semibold">Recent workspaces:</h2>
               {recentWorkspaces.length ? (
                 <>
                   <ul className="pl-4">
                     {recentWorkspaces.map((workspace) => (
-                      <li
-                        key={workspace.path}
-                        className="list-disc text-primary list-inside"
-                      >
-                        <Button
-                          variant="link"
-                          size="sm"
-                          onClick={() => setCurrentWorkspace(workspace.path)}
-                        >
+                      <li key={workspace.path} className="list-disc text-primary list-inside">
+                        <Button variant="link" size="sm" onClick={() => setCurrentWorkspace(workspace.path)}>
                           {workspace.name}
                         </Button>
                       </li>

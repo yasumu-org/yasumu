@@ -26,8 +26,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Accept',
       type: HeaderType.StandardRequest,
-      description:
-        'Media type(s) that is/are acceptable for the response. See Content negotiation.',
+      description: 'Media type(s) that is/are acceptable for the response. See Content negotiation.',
     },
     {
       name: 'Accept-Charset',
@@ -47,14 +46,12 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Accept-Language',
       type: HeaderType.StandardRequest,
-      description:
-        'List of acceptable human languages for response. See Content negotiation.',
+      description: 'List of acceptable human languages for response. See Content negotiation.',
     },
     {
       name: 'Access-Control-Request-Method,Access-Control-Request-Headers',
       type: HeaderType.StandardRequest,
-      description:
-        'Initiates a request for cross-origin resource sharing with Origin (below).',
+      description: 'Initiates a request for cross-origin resource sharing with Origin (below).',
     },
     {
       name: 'Authorization',
@@ -76,8 +73,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Content-Encoding',
       type: HeaderType.StandardRequest,
-      description:
-        'The type of encoding used on the data. See HTTP compression.',
+      description: 'The type of encoding used on the data. See HTTP compression.',
     },
     {
       name: 'Content-Length',
@@ -87,20 +83,17 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Content-MD5',
       type: HeaderType.StandardRequest,
-      description:
-        'A Base64-encoded binary MD5 sum of the content of the request body.',
+      description: 'A Base64-encoded binary MD5 sum of the content of the request body.',
     },
     {
       name: 'Content-Type',
       type: HeaderType.StandardRequest,
-      description:
-        'The Media type of the body of the request (used with POST and PUT requests).',
+      description: 'The Media type of the body of the request (used with POST and PUT requests).',
     },
     {
       name: 'Cookie',
       type: HeaderType.StandardRequest,
-      description:
-        'An HTTP cookie previously sent by the server with Set-Cookie (below).',
+      description: 'An HTTP cookie previously sent by the server with Set-Cookie (below).',
     },
     {
       name: 'Date',
@@ -111,14 +104,12 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Expect',
       type: HeaderType.StandardRequest,
-      description:
-        'Indicates that particular server behaviors are required by the client.',
+      description: 'Indicates that particular server behaviors are required by the client.',
     },
     {
       name: 'Forwarded',
       type: HeaderType.StandardRequest,
-      description:
-        'Disclose original information of a client connecting to a web server through an HTTP proxy.',
+      description: 'Disclose original information of a client connecting to a web server through an HTTP proxy.',
     },
     {
       name: 'From',
@@ -146,14 +137,12 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'If-Modified-Since',
       type: HeaderType.StandardRequest,
-      description:
-        'Allows a 304 Not Modified to be returned if content is unchanged.',
+      description: 'Allows a 304 Not Modified to be returned if content is unchanged.',
     },
     {
       name: 'If-None-Match',
       type: HeaderType.StandardRequest,
-      description:
-        'Allows a 304 Not Modified to be returned if content is unchanged, see HTTP ETag.',
+      description: 'Allows a 304 Not Modified to be returned if content is unchanged, see HTTP ETag.',
     },
     {
       name: 'If-Range',
@@ -164,14 +153,12 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'If-Unmodified-Since',
       type: HeaderType.StandardRequest,
-      description:
-        'Only send the response if the entity has not been modified since a specific time.',
+      description: 'Only send the response if the entity has not been modified since a specific time.',
     },
     {
       name: 'Max-Forwards',
       type: HeaderType.StandardRequest,
-      description:
-        'Limit the number of times the message can be forwarded through proxies or gateways.',
+      description: 'Limit the number of times the message can be forwarded through proxies or gateways.',
     },
     {
       name: 'Origin',
@@ -199,8 +186,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Range',
       type: HeaderType.StandardRequest,
-      description:
-        'Request only part of an entity.  Bytes are numbered from 0.  See Byte serving.',
+      description: 'Request only part of an entity.  Bytes are numbered from 0.  See Byte serving.',
     },
     {
       name: 'Referer',
@@ -234,20 +220,17 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Upgrade',
       type: HeaderType.StandardRequest,
-      description:
-        'Ask the server to upgrade to another protocol.\nMust not be used in HTTP/2.',
+      description: 'Ask the server to upgrade to another protocol.\nMust not be used in HTTP/2.',
     },
     {
       name: 'Via',
       type: HeaderType.StandardRequest,
-      description:
-        'Informs the server of proxies through which the request was sent.',
+      description: 'Informs the server of proxies through which the request was sent.',
     },
     {
       name: 'Warning',
       type: HeaderType.StandardRequest,
-      description:
-        'A general warning about possible problems with the entity body.',
+      description: 'A general warning about possible problems with the entity body.',
     },
   ],
   CommonNonStandardRequestFields: [
@@ -290,8 +273,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Front-End-Https',
       type: HeaderType.NonStandardRequest,
-      description:
-        'Non-standard header field used by Microsoft applications and load-balancers',
+      description: 'Non-standard header field used by Microsoft applications and load-balancers',
     },
     {
       name: 'X-Http-Method-Override',
@@ -332,8 +314,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'X-Request-ID,\nX-Correlation-ID,\nCorrelation-ID',
       type: HeaderType.NonStandardRequest,
-      description:
-        'Correlates HTTP requests between a client and server. Superseded by the traceparent header',
+      description: 'Correlates HTTP requests between a client and server. Superseded by the traceparent header',
     },
     {
       name: 'Save-Data',
@@ -357,20 +338,17 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Access-Control-Allow-Origin,Access-Control-Allow-Credentials,Access-Control-Expose-Headers,Access-Control-Max-Age,Access-Control-Allow-Methods,Access-Control-Allow-Headers',
       type: HeaderType.StandardResponse,
-      description:
-        'Specifying which web sites can participate in cross-origin resource sharing',
+      description: 'Specifying which web sites can participate in cross-origin resource sharing',
     },
     {
       name: 'Accept-Patch',
       type: HeaderType.StandardResponse,
-      description:
-        'Specifies which patch document formats this server supports',
+      description: 'Specifies which patch document formats this server supports',
     },
     {
       name: 'Accept-Ranges',
       type: HeaderType.StandardResponse,
-      description:
-        'What partial content range types this server supports via byte serving',
+      description: 'What partial content range types this server supports via byte serving',
     },
     {
       name: 'Age',
@@ -380,8 +358,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Allow',
       type: HeaderType.StandardResponse,
-      description:
-        'Valid methods for a specified resource. To be used for a 405 Method not allowed',
+      description: 'Valid methods for a specified resource. To be used for a 405 Method not allowed',
     },
     {
       name: 'Alt-Svc',
@@ -410,14 +387,12 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Content-Encoding',
       type: HeaderType.StandardResponse,
-      description:
-        'The type of encoding used on the data. See HTTP compression.',
+      description: 'The type of encoding used on the data. See HTTP compression.',
     },
     {
       name: 'Content-Language',
       type: HeaderType.StandardResponse,
-      description:
-        'The natural language or languages of the intended audience for the enclosed content',
+      description: 'The natural language or languages of the intended audience for the enclosed content',
     },
     {
       name: 'Content-Length',
@@ -432,8 +407,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Content-MD5',
       type: HeaderType.StandardResponse,
-      description:
-        'A Base64-encoded binary MD5 sum of the content of the response',
+      description: 'A Base64-encoded binary MD5 sum of the content of the response',
     },
     {
       name: 'Content-Range',
@@ -448,8 +422,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Date',
       type: HeaderType.StandardResponse,
-      description:
-        'The date and time that the message was sent (in "HTTP-date" format as defined by RFC 9110)',
+      description: 'The date and time that the message was sent (in "HTTP-date" format as defined by RFC 9110)',
     },
     {
       name: 'Delta-Base',
@@ -459,8 +432,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'ETag',
       type: HeaderType.StandardResponse,
-      description:
-        'An identifier for a specific version of a resource, often a message digest',
+      description: 'An identifier for a specific version of a resource, often a message digest',
     },
     {
       name: 'Expires',
@@ -476,8 +448,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Last-Modified',
       type: HeaderType.StandardResponse,
-      description:
-        'The last modified date for the requested object (in "HTTP-date" format as defined by RFC 9110)',
+      description: 'The last modified date for the requested object (in "HTTP-date" format as defined by RFC 9110)',
     },
     {
       name: 'Link',
@@ -488,8 +459,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Location',
       type: HeaderType.StandardResponse,
-      description:
-        'Used in redirection, or when a new resource has been created.',
+      description: 'Used in redirection, or when a new resource has been created.',
     },
     {
       name: 'P3P',
@@ -517,8 +487,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Public-Key-Pins',
       type: HeaderType.StandardResponse,
-      description:
-        "HTTP Public Key Pinning, announces hash of website's authentic TLS certificate",
+      description: "HTTP Public Key Pinning, announces hash of website's authentic TLS certificate",
     },
     {
       name: 'Retry-After',
@@ -563,8 +532,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Upgrade',
       type: HeaderType.StandardResponse,
-      description:
-        'Ask the client to upgrade to another protocol.\nMust not be used in HTTP/2',
+      description: 'Ask the client to upgrade to another protocol.\nMust not be used in HTTP/2',
     },
     {
       name: 'Vary',
@@ -575,20 +543,17 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Via',
       type: HeaderType.StandardResponse,
-      description:
-        'Informs the client of proxies through which the response was sent.',
+      description: 'Informs the client of proxies through which the response was sent.',
     },
     {
       name: 'Warning',
       type: HeaderType.StandardResponse,
-      description:
-        'A general warning about possible problems with the entity body.',
+      description: 'A general warning about possible problems with the entity body.',
     },
     {
       name: 'WWW-Authenticate',
       type: HeaderType.StandardResponse,
-      description:
-        'Indicates the authentication scheme that should be used to access the requested entity.',
+      description: 'Indicates the authentication scheme that should be used to access the requested entity.',
     },
     {
       name: 'X-Frame-Options',
@@ -616,8 +581,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Permissions-Policy',
       type: HeaderType.NonStandardResponse,
-      description:
-        'To allow or disable different features or APIs of the browser.',
+      description: 'To allow or disable different features or APIs of the browser.',
     },
     {
       name: 'Refresh',
@@ -628,8 +592,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'Report-To',
       type: HeaderType.NonStandardResponse,
-      description:
-        'Instructs the user agent to store reporting endpoints for an origin.',
+      description: 'Instructs the user agent to store reporting endpoints for an origin.',
     },
     {
       name: 'Status',
@@ -664,8 +627,7 @@ export const HttpHeaderDetails: HeaderDict = {
     {
       name: 'X-Redirect-By',
       type: HeaderType.NonStandardResponse,
-      description:
-        'Specifies the component that is responsible for a particular redirect.',
+      description: 'Specifies the component that is responsible for a particular redirect.',
     },
     {
       name: 'X-Request-ID, X-Correlation-ID',
@@ -715,7 +677,7 @@ export function getHeaderDetails(headerName: string): HeaderInfo {
       : f.name
           .split(',')
           .map((n) => n.trim().toLowerCase())
-          .includes(headerName.toLowerCase())
+          .includes(headerName.toLowerCase()),
   );
 
   if (!header) {
@@ -728,8 +690,6 @@ export function getHeaderDetails(headerName: string): HeaderInfo {
 
   return {
     ...header,
-    name: header.name.includes(',')
-      ? findName(header.name, headerName)
-      : header.name,
+    name: header.name.includes(',') ? findName(header.name, headerName) : header.name,
   };
 }

@@ -20,7 +20,7 @@ export default function HistoryTree() {
         toast.error('Failed to load requests', {
           description: String(e),
         });
-      }
+      },
     );
   }, []);
 
@@ -38,7 +38,7 @@ export default function HistoryTree() {
         {
           delayMs: 500,
           recursive: true,
-        }
+        },
       );
 
       return () => void unwatch.then((u) => u()).catch(Object);
@@ -52,11 +52,7 @@ export default function HistoryTree() {
         <FsActionManager />
       </div>
       {tree.map((item) => (
-        <Tree
-          key={item.id}
-          className="py-1 overflow-hidden rounded-md"
-          elements={item.children ?? []}
-        >
+        <Tree key={item.id} className="py-1 overflow-hidden rounded-md" elements={item.children ?? []}>
           <RecursiveTreeGenerator tree={Array.isArray(item) ? item : [item]} />
         </Tree>
       ))}

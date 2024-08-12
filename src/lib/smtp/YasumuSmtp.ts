@@ -6,10 +6,13 @@ export interface YasumuSmtpOptions {
 }
 
 export interface YasumuEmailMessage {
+  id: number;
   from: String;
   to: Array<String>;
   subject: String;
   body: String;
+  read: boolean;
+  created_at: String;
 }
 
 export class YasumuSmtp {

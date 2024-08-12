@@ -4,35 +4,25 @@ import { useState } from 'react';
 import { JsonBody } from './json-body';
 import { cn } from '@/lib/utils';
 import { useLayoutStore } from '@/stores/application/layout.store';
-
-const BodyType = {
-  None: 'none',
-  JSON: 'json',
-  FormData: 'formdata',
-} as const;
-
-type BodyType = (typeof BodyType)[keyof typeof BodyType];
+import { TextBody } from './text-body';
+import { useRequestConfig } from '@/stores/api-testing/request-config.store';
+import { BodyMode } from '@/lib/constants';
 
 export function RequestBody() {
   const { isVertical } = useLayoutStore();
-  const [bodyType, setBodyType] = useState<BodyType>('none');
+  const { bodyMode, setBodyMode } = useRequestConfig();
 
   return (
-    <div
-      className={cn(
-        'overflow-y-auto',
-        isVertical() ? 'max-h-[35vh]' : 'max-h-[75vh]'
-      )}
-    >
+    <div className={cn('overflow-y-auto', isVertical() ? 'max-h-[35vh]' : 'max-h-[75vh]')}>
       <RadioGroup
-        value={bodyType}
+        value={bodyMode}
         orientation="horizontal"
         className="flex"
         onValueChange={(value) => {
-          setBodyType(value as BodyType);
+          setBodyMode(value as BodyMode);
         }}
       >
-        {Object.entries(BodyType).map(([key, value]) => {
+        {Object.entries(BodyMode).map(([key, value]) => {
           return (
             <div className="flex items-center space-x-2" key={value}>
               <RadioGroupItem value={value} id={value} />
@@ -43,8 +33,11 @@ export function RequestBody() {
           );
         })}
       </RadioGroup>
-      {bodyType === BodyType.JSON && <JsonBody />}
-      {bodyType === BodyType.FormData && <div>FormData</div>}
+      {bodyMode === BodyMode.Binary && <div>Binary</div>}
+      {bodyMode === BodyMode.Text && <TextBody />}
+      {bodyMode === BodyMode.JSON && <JsonBody />}
+      {bodyMode === BodyMode.MultipartFormData && <div>FormData (Multipart)</div>}
+      {bodyMode === BodyMode.UrlencodedFormData && <div>FormData (URL-Encoded)</div>}
     </div>
   );
 }

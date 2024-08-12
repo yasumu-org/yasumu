@@ -9,5 +9,4 @@ export const YasumuWorkspaceFiles = {
   Grpc: 'grpc',
 } as const;
 
-export type YasumuWorkspaceFiles =
-  (typeof YasumuWorkspaceFiles)[keyof typeof YasumuWorkspaceFiles];
+export type YasumuWorkspaceFiles = (typeof YasumuWorkspaceFiles)[keyof typeof YasumuWorkspaceFiles];

@@ -3,12 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import RequestInput from './request-input';
 import { RequestParameters } from './request-parameters';
 import { RequestHeaders } from './request-headers';
-import { RequestTabs } from './request-tabs';
-import { RequestBody } from './request-body';
-import {
-  useRequestConfig,
-  useRequestStore,
-} from '@/stores/api-testing/request-config.store';
+import { RequestTabs } from '../env/request-tabs';
+import { RequestBody } from '../body/request-body';
+import { useRequestConfig, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { useEffect } from 'react';
 import { useResponse } from '@/stores/api-testing/response.store';
 
@@ -42,9 +39,9 @@ export default function RequestInitializer() {
         key: header.key,
         value: header.value,
         enabled: true,
-      }))
+      })),
     );
-    setBody(current.getBody() ?? '');
+    setBody(current.getBody() ?? {});
 
     const res = current.getResponse();
 
@@ -54,7 +51,7 @@ export default function RequestInitializer() {
         res.headers.map((header) => ({
           key: header.key,
           value: header.value,
-        }))
+        })),
       );
       setResponseSize(res.size);
       setResponseStatus(res.status);
@@ -75,10 +72,7 @@ export default function RequestInitializer() {
         <RequestInput />
         <Tabs defaultValue={ReqTabs.QueryParameters}>
           <TabsList>
-            <TabsTrigger
-              className="select-none"
-              value={ReqTabs.QueryParameters}
-            >
+            <TabsTrigger className="select-none" value={ReqTabs.QueryParameters}>
               Parameters
             </TabsTrigger>
             <TabsTrigger className="select-none" value={ReqTabs.Headers}>
@@ -87,16 +81,10 @@ export default function RequestInitializer() {
             <TabsTrigger className="select-none" value={ReqTabs.RequestBody}>
               Body
             </TabsTrigger>
-            <TabsTrigger
-              className="select-none"
-              value={ReqTabs.PreRequestScript}
-            >
+            <TabsTrigger className="select-none" value={ReqTabs.PreRequestScript}>
               Pre-Request
             </TabsTrigger>
-            <TabsTrigger
-              className="select-none"
-              value={ReqTabs.PostRequestScript}
-            >
+            <TabsTrigger className="select-none" value={ReqTabs.PostRequestScript}>
               Post-Request
             </TabsTrigger>
           </TabsList>
@@ -109,12 +97,8 @@ export default function RequestInitializer() {
           <TabsContent value={ReqTabs.RequestBody}>
             <RequestBody />
           </TabsContent>
-          <TabsContent value={ReqTabs.PreRequestScript}>
-            Pre-Request script
-          </TabsContent>
-          <TabsContent value={ReqTabs.PostRequestScript}>
-            Post-Request script
-          </TabsContent>
+          <TabsContent value={ReqTabs.PreRequestScript}>Pre-Request script</TabsContent>
+          <TabsContent value={ReqTabs.PostRequestScript}>Post-Request script</TabsContent>
         </Tabs>
       </div>
     </div>

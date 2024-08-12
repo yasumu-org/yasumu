@@ -1,10 +1,7 @@
 import { readTextFile, writeTextFile, exists } from '@tauri-apps/plugin-fs';
 import { sep } from '@tauri-apps/api/path';
 import { invoke } from '@tauri-apps/api/core';
-import {
-  YasumuRawWorkspaceMetadata,
-  YasumuWorkspaceMetadata,
-} from './YasumuWorkspaceMetadata';
+import { YasumuRawWorkspaceMetadata, YasumuWorkspaceMetadata } from './YasumuWorkspaceMetadata';
 import type { YasumuCore } from '../yasumu';
 import { YasumuRest } from './modules/rest/YasumuRest';
 import { YasumuSmtp } from './modules/smtp/YasumuSmtp';
@@ -27,7 +24,7 @@ export class YasumuWorkspace {
 
   public constructor(
     public readonly yasumu: YasumuCore,
-    private readonly options: YasumuWorkspaceInit
+    private readonly options: YasumuWorkspaceInit,
   ) {
     this.rest = new YasumuRest(this);
     this.smtp = new YasumuSmtp(this);
@@ -38,10 +35,7 @@ export class YasumuWorkspace {
   }
 
   public async loadMetadata() {
-    const path = YasumuWorkspace.resolvePath(
-      this.options.path,
-      YasumuWorkspaceFiles.Metadata
-    );
+    const path = YasumuWorkspace.resolvePath(this.options.path, YasumuWorkspaceFiles.Metadata);
 
     const hasMetadata = await exists(path);
 
@@ -66,10 +60,7 @@ export class YasumuWorkspace {
   }
 
   public async writeMetadata() {
-    const path = YasumuWorkspace.resolvePath(
-      this.options.path,
-      YasumuWorkspaceFiles.Metadata
-    );
+    const path = YasumuWorkspace.resolvePath(this.options.path, YasumuWorkspaceFiles.Metadata);
 
     await writeTextFile(path, JSON.stringify(this.metadata));
   }
@@ -78,9 +69,7 @@ export class YasumuWorkspace {
     try {
       const history = await this.yasumu.getWorkspacesHistory();
 
-      const index = history.findIndex(
-        (item) => item.path === this.options.path
-      );
+      const index = history.findIndex((item) => item.path === this.options.path);
 
       if (index !== -1) {
         history[index].name = this.metadata.name;

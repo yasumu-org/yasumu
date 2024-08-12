@@ -8,12 +8,7 @@ import { Yasumu } from '@/lib/api/yasumu';
 
 export function YasumuWorkspaceProvider({ children }: React.PropsWithChildren) {
   const [loading, setLoading] = useState(true);
-  const {
-    currentWorkspace,
-    currentWorkspaceName,
-    setCurrentWorkspace,
-    setCurrentWorkspaceName,
-  } = useWorkspaceStore();
+  const { currentWorkspace, currentWorkspaceName, setCurrentWorkspace, setCurrentWorkspaceName } = useWorkspaceStore();
 
   const router = useRouter();
 

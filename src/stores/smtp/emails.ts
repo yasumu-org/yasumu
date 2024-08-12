@@ -6,6 +6,8 @@ export interface IEmailStore {
   setEmails: (emails: YasumuEmailMessage[]) => void;
   unreadCount: number;
   setUnreadCount: (count: number) => void;
+  selectedEmail: YasumuEmailMessage | null;
+  setSelectedEmail: (email: YasumuEmailMessage | null) => void;
 }
 
 export const useEmailStore = create<IEmailStore>((set) => ({
@@ -13,6 +15,8 @@ export const useEmailStore = create<IEmailStore>((set) => ({
   setUnreadCount: (count) => set({ unreadCount: count }),
   emails: [],
   setEmails: (emails) => set({ emails }),
+  selectedEmail: null,
+  setSelectedEmail: (email) => set({ selectedEmail: email }),
 }));
 
 export interface IYasumuSmtpStore {

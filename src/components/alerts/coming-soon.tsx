@@ -22,9 +22,7 @@ export function ComingSoon({ children, name }: IProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>This feature is coming soon!</AlertDialogTitle>
           <AlertDialogDescription>
-            We are working hard to bring{' '}
-            <span className="font-bold underline">{name}</span> to you soon.
-            Stay tuned!
+            We are working hard to bring <span className="font-bold underline">{name}</span> to you soon. Stay tuned!
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

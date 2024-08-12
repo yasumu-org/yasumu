@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@/components/ui/resizable';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useMounted } from '@/hooks/use-mounted';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { LoadingSpinner } from './loading';

@@ -31,10 +31,7 @@ export function FsActionDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        asChild
-        className="w-fit hover:bg-muted-foreground/30 p-1 cursor-pointer"
-      >
+      <DialogTrigger asChild className="w-fit hover:bg-muted-foreground/30 p-1 cursor-pointer">
         {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
