@@ -31,7 +31,7 @@ export interface IResponse {
   certificateCN: string;
   issuerCN: string;
   validUntil: string;
-  pending: boolean;
+  abortController: AbortController | null;
   setBody: (body: string) => void;
   setHeaders: (headers: IHeader[]) => void;
   setCookies: (cookies: ICookie[]) => void;
@@ -46,7 +46,7 @@ export interface IResponse {
   setCertificateCN: (certificateCN: string) => void;
   setIssuerCN: (issuerCN: string) => void;
   setValidUntil: (validUntil: string) => void;
-  setPending: (pending: boolean) => void;
+  setAbortController: (controller: AbortController | null) => void;
 }
 
 export const useResponse = create<IResponse>((set) => ({
@@ -64,7 +64,7 @@ export const useResponse = create<IResponse>((set) => ({
   certificateCN: '',
   issuerCN: '',
   validUntil: '',
-  pending: false,
+  abortController: null,
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),
@@ -79,5 +79,5 @@ export const useResponse = create<IResponse>((set) => ({
   setCertificateCN: (certificateCN: string) => set({ certificateCN }),
   setIssuerCN: (issuerCN: string) => set({ issuerCN }),
   setValidUntil: (validUntil: string) => set({ validUntil }),
-  setPending: (pending: boolean) => set({ pending }),
+  setAbortController: (abortController: AbortController | null) => set({ abortController }),
 }));

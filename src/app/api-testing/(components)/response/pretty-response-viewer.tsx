@@ -16,10 +16,7 @@ export default function PrettyResponseViewer({ content }: { content: string }) {
   const { theme } = useTheme();
   const editor = useRef<HTMLDivElement>(null);
   const { code, parser } = usePrettier(content, 'application/json');
-  const extensions: Extension[] = useMemo(
-    () => [javascript(), html(), xml(), json()],
-    []
-  );
+  const extensions: Extension[] = useMemo(() => [javascript(), html(), xml(), json()], []);
 
   const { setContainer } = useCodeMirror({
     container: editor.current,

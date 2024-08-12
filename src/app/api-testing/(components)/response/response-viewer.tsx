@@ -15,15 +15,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
-  const {
-    headers,
-    cookies,
-    body,
-    pending,
-    responseSize,
-    responseStatus,
-    responseTime,
-  } = useResponse();
+  const { headers, cookies, body, abortController, responseSize, responseStatus, responseTime } = useResponse();
 
   const { current } = useRequestStore();
 
@@ -55,47 +47,35 @@ export default function ResponseViewer() {
       <Tabs defaultValue="pretty" className="rounded-b-none">
         <div
           className={cn('flex items-center justify-between', {
-            'opacity-20': pending,
+            'opacity-20': abortController != null,
           })}
         >
           <TabsList className="rounded-b-none border-x border-t">
             <TabsTrigger value="pretty">Pretty</TabsTrigger>
             <TabsTrigger value="raw">Raw</TabsTrigger>
             <TabsTrigger value="headers">
-              Headers{' '}
-              <span className="text-green-500 text-sm ml-2">
-                ({headers.length})
-              </span>
+              Headers <span className="text-green-500 text-sm ml-2">({headers.length})</span>
             </TabsTrigger>
             <TabsTrigger value="cookies">
-              Cookies{' '}
-              <span className="text-green-500 text-sm ml-2">
-                ({cookies.length})
-              </span>
+              Cookies <span className="text-green-500 text-sm ml-2">({cookies.length})</span>
             </TabsTrigger>
           </TabsList>
           <ResponseStats />
         </div>
-        {pending ? (
+        {abortController != null ? (
           <LoadingSpinner className="h-auto" />
         ) : (
           <div
             className={cn(
               'border rounded-b-sm p-2 overflow-y-auto',
-              orientation === 'vertical' ? 'max-h-[400px]' : 'max-h-[90vh]'
+              orientation === 'vertical' ? 'max-h-[400px]' : 'max-h-[90vh]',
             )}
           >
             <TabsContent value="pretty">
               <PrettyResponseViewer content={body} />
             </TabsContent>
             <TabsContent value="raw">
-              <pre
-                className={cn(
-                  'word-break-break-all whitespace-pre-wrap text-sm'
-                )}
-              >
-                {body}
-              </pre>
+              <pre className={cn('word-break-break-all whitespace-pre-wrap text-sm')}>{body}</pre>
             </TabsContent>
             <TabsContent value="headers">
               <ResponseHeaders headers={headers} />

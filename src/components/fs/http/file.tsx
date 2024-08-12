@@ -6,10 +6,7 @@ export interface FileUIProps {
   method?: HttpMethods;
 }
 
-export function FileUI({
-  method,
-  ...rest
-}: FileUIProps & React.ComponentProps<typeof FileItem>) {
+export function FileUI({ method, ...rest }: FileUIProps & React.ComponentProps<typeof FileItem>) {
   const color = method && HttpMethodColors[method];
 
   return (

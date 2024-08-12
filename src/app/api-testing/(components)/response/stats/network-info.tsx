@@ -1,8 +1,4 @@
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { Globe, GlobeLock } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';

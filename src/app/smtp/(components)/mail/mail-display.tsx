@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { format } from "date-fns";
-import { Separator } from "@/components/ui/separator";
-import { YasumuEmailMessage } from "@/lib/smtp/YasumuSmtp";
+import { format } from 'date-fns';
+import { Separator } from '@/components/ui/separator';
+import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
 
 interface MailDisplayProps {
   mail: YasumuEmailMessage | null;
@@ -26,20 +26,16 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             </div>
             {mail.created_at && (
               <div className="ml-auto text-xs text-muted-foreground">
-                {format(new Date(mail.created_at as string), "PPpp")}
+                {format(new Date(mail.created_at as string), 'PPpp')}
               </div>
             )}
           </div>
           <Separator />
-          <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
-            {mail.body}
-          </div>
+          <div className="flex-1 whitespace-pre-wrap p-4 text-sm">{mail.body}</div>
           <Separator className="mt-auto" />
         </div>
       ) : (
-        <div className="p-8 text-center text-muted-foreground">
-          No message selected
-        </div>
+        <div className="p-8 text-center text-muted-foreground">No message selected</div>
       )}
     </div>
   );

@@ -9,10 +9,7 @@ import {
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
 import { Trash2 } from 'lucide-react';
-import {
-  ConfirmationDialog,
-  ContextMenuFsActionDialog,
-} from './context-menu-fs-action-dialog';
+import { ConfirmationDialog, ContextMenuFsActionDialog } from './context-menu-fs-action-dialog';
 import { DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { TreeViewElement } from '@/components/magicui/file-tree';
@@ -50,7 +47,7 @@ export function FsContextMenu({
             name,
             // @ts-ignore
             isGroup ? null : HttpMethods.GET,
-            item.id
+            item.id,
           );
         }
       } catch (e) {
@@ -63,7 +60,7 @@ export function FsContextMenu({
         setIsGroup(false);
       }
     },
-    [item, isFile, isUpdate, isGroup]
+    [item, isFile, isUpdate, isGroup],
   );
 
   return (
@@ -73,9 +70,7 @@ export function FsContextMenu({
       onConfirm={onDelete}
     >
       <ContextMenuFsActionDialog
-        value={
-          isUpdate && isFile ? YasumuRestEntity.getName(item.name) ?? '' : ''
-        }
+        value={isUpdate && isFile ? (YasumuRestEntity.getName(item.name) ?? '') : ''}
         description={`${isUpdate ? 'Rename' : 'Create'} the request${isGroup ? ' group' : ''}`}
         type={isGroup ? 'Request Group' : 'Request'}
         onCreate={handleUpdate}

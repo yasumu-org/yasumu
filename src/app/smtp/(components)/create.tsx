@@ -14,13 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
-export function CreateSmtp({
-  port,
-  setPort,
-}: {
-  port: string;
-  setPort: (port: string) => void;
-}) {
+export function CreateSmtp({ port, setPort }: { port: string; setPort: (port: string) => void }) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = useCallback(() => {
@@ -48,17 +42,10 @@ export function CreateSmtp({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create SMTP Server</DialogTitle>
-          <DialogDescription>
-            Create a new SMTP server on your local machine.
-          </DialogDescription>
+          <DialogDescription>Create a new SMTP server on your local machine.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <Argument
-            value={port}
-            onChange={setPort}
-            name="Port"
-            description="Port number to run the SMTP server on."
-          />
+          <Argument value={port} onChange={setPort} name="Port" description="Port number to run the SMTP server on." />
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleOpen}>

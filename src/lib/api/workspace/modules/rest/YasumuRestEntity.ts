@@ -2,6 +2,7 @@ import { HttpMethods } from '@/lib/constants';
 import type { YasumuRest } from './YasumuRest';
 import { remove, rename, writeTextFile } from '@tauri-apps/plugin-fs';
 import { dirname, join } from '@tauri-apps/api/path';
+import { BodyType } from '@/stores/api-testing/request-config.store';
 
 export interface KeyValue<K, V> {
   key: K;
@@ -21,7 +22,7 @@ export interface YasumuRestEntityData {
   method: HttpMethods;
   url: string;
   headers: Array<KeyValue<string, string>>;
-  body: string | null;
+  body: BodyType | null;
   path: string;
   response: YasumuRestEntityResponseCache | null;
 }
@@ -32,7 +33,7 @@ export class YasumuRestEntity {
 
   public constructor(
     public readonly rest: YasumuRest,
-    private data: YasumuRestEntityData
+    private data: YasumuRestEntityData,
   ) {}
 
   public setPath(path: string) {
@@ -94,7 +95,7 @@ export class YasumuRestEntity {
     return this.data.body;
   }
 
-  public setBody(body: string | null) {
+  public setBody(body: BodyType | null) {
     if (this.data.body !== body) {
       this.#changed = true;
     }
@@ -122,10 +123,7 @@ export class YasumuRestEntity {
     if (this.#methodChanged) {
       const name = YasumuRestEntity.getName(this.data.name);
 
-      const newName = await join(
-        await dirname(this.getPath()),
-        `${name}.${this.data.method}`
-      );
+      const newName = await join(await dirname(this.getPath()), `${name}.${this.data.method}`);
 
       await remove(this.data.path);
 

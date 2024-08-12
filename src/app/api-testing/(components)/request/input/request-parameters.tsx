@@ -2,81 +2,88 @@
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { getHeaderDetails } from '@/lib/header-info';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { useLayoutStore } from '@/stores/application/layout.store';
-import { Info, Trash } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { Trash } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
-interface IHeader {
+interface IParameter {
   key: string;
   value: string;
   enabled: boolean;
 }
 
-export function RequestHeaders() {
+export function RequestParameters() {
   const { isVertical } = useLayoutStore();
-  const { setHeaders, headers } = useRequestConfig();
+  const { url, setUrl } = useRequestConfig();
+  const [parameters, setParameters] = useState<IParameter[]>(() => {
+    try {
+      const urlObject = new URL(url);
+      const searchParams = urlObject.searchParams;
+      const params = Array.from(searchParams.entries()).map(([key, value]) => {
+        return { key, value: value || '', enabled: true };
+      });
+      return params;
+    } catch {
+      return [{ key: '', value: '', enabled: true }];
+    }
+  });
 
   const onEdit = useCallback(
     (index: number, key: string, value: string, enabled: boolean) => {
-      const newHeaders = [...headers];
-      newHeaders[index] = { ...newHeaders[index], key, value, enabled };
-      setHeaders(newHeaders);
+      const newParameters = [...parameters];
+      newParameters[index] = { ...newParameters[index], key, value, enabled };
+      setParameters(newParameters);
     },
-    [headers]
+    [parameters],
   );
 
   const onDelete = useCallback(
     (index: number) => {
-      const newHeaders = [...headers];
-      newHeaders.splice(index, 1);
-      setHeaders(newHeaders);
+      const newParameters = [...parameters];
+      newParameters.splice(index, 1);
+      setParameters(newParameters);
     },
-    [headers]
+    [parameters],
   );
 
   const onAdd = useCallback(() => {
-    setHeaders([...headers, { key: '', value: '', enabled: true }]);
+    setParameters((prev) => [...prev, { key: '', value: '', enabled: true }]);
   }, []);
+
+  useEffect(() => {
+    try {
+      if (!url) return setParameters([]);
+      const _url = new URL(url);
+      const params = Array.from(_url.searchParams.entries()).map(([k, v]) => ({
+        key: k,
+        value: v || '',
+        enabled: true,
+      }));
+
+      setParameters(params);
+    } catch {}
+  }, [url]);
 
   return (
     <>
-      <div
-        className={cn(
-          'overflow-y-auto border-y',
-          isVertical() ? 'max-h-[30vh]' : 'max-h-[75vh]'
-        )}
-      >
+      <div className={cn('overflow-y-auto border-y', isVertical() ? 'max-h-[30vh]' : 'max-h-[75vh]')}>
         <Table className="border-x">
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Key</TableHead>
               <TableHead>Value</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {headers.map((parameter, index) => {
+            {parameters.map((parameter, index) => {
               return (
-                <RequestHeader
+                <RequestParameter
                   key={`${parameter.key}-${index}`}
                   data={parameter}
                   onDelete={() => {
@@ -92,30 +99,29 @@ export function RequestHeaders() {
         </Table>
       </div>
       <Button className="mt-2" onClick={onAdd} size="sm">
-        Add Header
+        Add Parameter
       </Button>
     </>
   );
 }
 
-interface IRequestHeaderProps {
-  data: IHeader;
+interface IRequestParameterProps {
+  data: IParameter;
   onEdit: (key: string, value: string, enabled: boolean) => void;
   onDelete: () => void;
 }
 
-function RequestHeader({ data, onDelete, onEdit }: IRequestHeaderProps) {
+function RequestParameter({ data, onDelete, onEdit }: IRequestParameterProps) {
   return (
     <TableRow>
-      <RequestHeaderInput
+      <RequestParameterInput
         value={data.key}
-        placeholder="Name"
+        placeholder="Key"
         onChange={(key) => {
           onEdit(key, data.value, data.enabled);
         }}
-        info
       />
-      <RequestHeaderInput
+      <RequestParameterInput
         value={data.value}
         placeholder="Value"
         onChange={(value) => {
@@ -142,45 +148,24 @@ function RequestHeader({ data, onDelete, onEdit }: IRequestHeaderProps) {
   );
 }
 
-function RequestHeaderInput({
+function RequestParameterInput({
   onChange,
   value,
   placeholder,
-  info,
 }: {
   value: string;
   placeholder: string;
-  info?: boolean;
   onChange: (value: string) => void;
 }) {
-  const details = useMemo(() => {
-    if (!info || !value) return;
-    return getHeaderDetails(value);
-  }, [value, info]);
-
   return (
     <TableCell className="font-medium">
-      <div className="flex items-center gap-2">
-        <Input
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-          }}
-        />
-        {details && (
-          <HoverCard openDelay={100} closeDelay={100}>
-            <HoverCardTrigger>
-              <Info className="h-4 w-4 cursor-pointer" />
-            </HoverCardTrigger>
-            <HoverCardContent className="w-fit">
-              <h1 className="font-bold text-sm">{details.name}</h1>
-              <Separator orientation="horizontal" />
-              <p>{details.description}</p>
-            </HoverCardContent>
-          </HoverCard>
-        )}
-      </div>
+      <Input
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+      />
     </TableCell>
   );
 }

@@ -1,26 +1,35 @@
+import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
 import { create } from 'zustand';
 
 export interface IRequestHistory {
-  method: string;
-  url: string;
-  body: string;
-  headers: { key: string; value: string }[];
+  history: YasumuRestEntity[];
+  addHistory: (history: YasumuRestEntity) => void;
+  removeHistory: (history: YasumuRestEntity) => void;
+  removeHistoryByPath: (path: string) => void;
+  clearHistory: () => void;
 }
 
-export const useRequestHistory = create((set) => ({
-  history: [] as IRequestHistory[],
-  setHistory: (history: IRequestHistory[]) => set({ history }),
-}));
-
-export const useOpenRequestHistory = create((set) => ({
-  history: [] as IRequestHistory[],
-  setHistory: (history: IRequestHistory[]) => set({ history }),
-  close: (history: IRequestHistory) =>
-    set((state: any) => ({
-      history: state.history.filter((h: any) => h !== history),
-    })),
-  open: (history: IRequestHistory) =>
-    set((state: any) => ({
-      history: [...state.history, history],
-    })),
+export const useRequestHistory = create<IRequestHistory>((set) => ({
+  history: [],
+  addHistory: (history: YasumuRestEntity) =>
+    set((state) => {
+      if (state.history.some((h) => h.getPath() === history.getPath())) return state;
+      return { history: [...state.history, history] };
+    }),
+  removeHistory: (history: YasumuRestEntity) =>
+    set((state) => {
+      const index = state.history.findIndex((h) => h.getPath() === history.getPath());
+      if (index === -1) return state;
+      state.history.splice(index, 1);
+      return { history: [...state.history] };
+    }),
+  removeHistoryByPath: (path: string) => {
+    set((state) => {
+      const index = state.history.findIndex((h) => h.getPath() === path);
+      if (index === -1) return state;
+      state.history.splice(index, 1);
+      return { history: [...state.history] };
+    });
+  },
+  clearHistory: () => set({ history: [] }),
 }));

@@ -14,9 +14,9 @@ export function JsonBody() {
 
   const { setContainer } = useCodeMirror({
     container: editor.current,
-    value: body,
+    value: body.json || '',
     onChange(value) {
-      setBody(value);
+      setBody({ json: value });
     },
     theme: theme === 'dark' ? 'dark' : 'light',
     editable: true,
