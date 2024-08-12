@@ -21,6 +21,6 @@ export const useLayoutStore = create<ILayoutConfig>()(
     {
       name: 'app-layout-config',
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );

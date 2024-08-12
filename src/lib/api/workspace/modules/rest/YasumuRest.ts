@@ -1,15 +1,7 @@
 import { HttpMethods, isHttpMethod } from '@/lib/constants';
 import { YasumuWorkspace } from '../../YasumuWorkspace';
 import { YasumuWorkspaceFiles } from '../../constants';
-import {
-  exists,
-  mkdir,
-  readDir,
-  readTextFile,
-  remove,
-  rename,
-  copyFile,
-} from '@tauri-apps/plugin-fs';
+import { exists, mkdir, readDir, readTextFile, remove, rename, copyFile } from '@tauri-apps/plugin-fs';
 import { join, dirname, extname, basename } from '@tauri-apps/api/path';
 import { YasumuRestEntity } from './YasumuRestEntity';
 import { TreeViewElement } from '@/components/magicui/file-tree';
@@ -78,9 +70,7 @@ export class YasumuRest {
 
     const currentName = await basename(current);
 
-    const doesTargetHaveCurrentName = await exists(
-      await join(target, currentName)
-    );
+    const doesTargetHaveCurrentName = await exists(await join(target, currentName));
 
     if (doesTargetHaveCurrentName) {
       const targetName = await basename(target);
@@ -101,9 +91,7 @@ export class YasumuRest {
 
     const currentName = await basename(current);
 
-    const doesTargetHaveCurrentName = await exists(
-      await join(target, currentName)
-    );
+    const doesTargetHaveCurrentName = await exists(await join(target, currentName));
 
     if (doesTargetHaveCurrentName) {
       const targetName = await basename(target);
@@ -137,9 +125,7 @@ export class YasumuRest {
     if (!hasRequest) return;
 
     const ext = dir ? '' : await extname(path).catch(() => '');
-    const dirName = dir
-      ? (await dirname(path)).replace(await basename(path), '')
-      : await dirname(path);
+    const dirName = dir ? (await dirname(path)).replace(await basename(path), '') : await dirname(path);
 
     const extension = ext ? `.${ext}` : '';
     const newPath = await join(dirName, `${newName}${extension}`);
@@ -147,20 +133,12 @@ export class YasumuRest {
     await rename(path, newPath);
   }
 
-  public async create(
-    name: string,
-    method: null,
-    basePath?: string
-  ): Promise<void>;
-  public async create(
-    name: string,
-    method: HttpMethods,
-    basePath?: string
-  ): Promise<YasumuRestEntity>;
+  public async create(name: string, method: null, basePath?: string): Promise<void>;
+  public async create(name: string, method: HttpMethods, basePath?: string): Promise<YasumuRestEntity>;
   public async create(
     name: string,
     method: HttpMethods | null,
-    basePath = this.getPath()
+    basePath = this.getPath(),
   ): Promise<YasumuRestEntity | void> {
     await this.ensureSelf();
 

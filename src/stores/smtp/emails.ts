@@ -1,5 +1,5 @@
-import { YasumuEmailMessage, YasumuSmtp } from "@/lib/smtp/YasumuSmtp";
-import { create } from "zustand";
+import { YasumuEmailMessage, YasumuSmtp } from '@/lib/smtp/YasumuSmtp';
+import { create } from 'zustand';
 
 export interface IEmailStore {
   emails: YasumuEmailMessage[];

@@ -1,5 +1,5 @@
 import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
-import { HttpMethods } from '@/lib/constants';
+import { BodyMode, HttpMethods } from '@/lib/constants';
 import { create } from 'zustand';
 
 export const useEnvironment = create((set) => ({
@@ -15,17 +15,27 @@ export interface IParamOrHeader {
   enabled: boolean;
 }
 
+export interface BodyType {
+  json: string | null;
+  text: string | null;
+  binary: string | null;
+  formData: IParamOrHeader[];
+  urlencoded: IParamOrHeader[];
+}
+
 export interface IRequestConfig {
   id: string;
   url: string;
   method: HttpMethods;
   headers: IParamOrHeader[];
-  body: string;
+  body: BodyType;
+  bodyMode: BodyMode;
   setId: (id: string) => void;
   setUrl: (url: string) => void;
   setMethod: (method: HttpMethods) => void;
   setHeaders: (headers: IParamOrHeader[]) => void;
-  setBody: (body: string) => void;
+  setBody: (body: Partial<BodyType>) => void;
+  setBodyMode: (bodyMode: BodyMode) => void;
 }
 
 export const useRequestConfig = create<IRequestConfig>((set) => ({
@@ -37,12 +47,20 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
     { key: 'User-Agent', value: 'Yasumu/1.0', enabled: true },
     { key: '', value: '', enabled: true },
   ] as IParamOrHeader[],
-  body: '{\n  \n}',
+  body: {
+    binary: null,
+    formData: [],
+    json: null,
+    text: null,
+    urlencoded: [],
+  },
+  bodyMode: BodyMode.None,
   setId: (id: string) => set({ id }),
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),
   setHeaders: (headers: IParamOrHeader[]) => set({ headers }),
-  setBody: (body: string) => set({ body }),
+  setBody: (body: Partial<BodyType>) => set((old) => ({ body: { ...old.body, ...body } })),
+  setBodyMode: (bodyMode: BodyMode) => set({ bodyMode }),
 }));
 
 export interface IRequestStore {

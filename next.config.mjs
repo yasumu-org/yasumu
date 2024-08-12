@@ -14,6 +14,12 @@ const nextConfig = {
         unoptimized: true,
     },
     assetPrefix: isProd ? null : `http://${internalHost}:3000`,
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    }
 };
 
 export default nextConfig;

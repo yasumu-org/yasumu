@@ -10,8 +10,6 @@ export interface IWorkspaceConfig {
 export const useWorkspaceStore = create<IWorkspaceConfig>((set) => ({
   currentWorkspace: null,
   currentWorkspaceName: null,
-  setCurrentWorkspace: (workspace: string) =>
-    set({ currentWorkspace: workspace }),
-  setCurrentWorkspaceName: (workspace: string) =>
-    set({ currentWorkspaceName: workspace }),
+  setCurrentWorkspace: (workspace: string) => set({ currentWorkspace: workspace }),
+  setCurrentWorkspaceName: (workspace: string) => set({ currentWorkspaceName: workspace }),
 }));

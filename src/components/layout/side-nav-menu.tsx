@@ -50,7 +50,7 @@ export function SideNavMenu({ icon, name, link, active, comingSoon }: IProps) {
           comingSoon={comingSoon ? name : undefined}
           className={cn(
             'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8',
-            isActive && 'bg-accent text-accent-foreground'
+            isActive && 'bg-accent text-accent-foreground',
           )}
         >
           {icon}

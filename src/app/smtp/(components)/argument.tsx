@@ -18,11 +18,7 @@ export function Argument({
       <Label htmlFor={name} className="text-right">
         {name}
       </Label>
-      {description && (
-        <Label className="text-sm text-muted-foreground font-normal mb-2">
-          {description}
-        </Label>
-      )}
+      {description && <Label className="text-sm text-muted-foreground font-normal mb-2">{description}</Label>}
       <Input
         id={name}
         value={value}

@@ -6,10 +6,7 @@ import { FsActionDialog } from './fs-action-dialog';
 import { Yasumu } from '@/lib/api/yasumu';
 import { HttpMethods } from '@/lib/constants';
 import { toast } from 'sonner';
-import {
-  useRequestFs,
-  useRequestStore,
-} from '@/stores/api-testing/request-config.store';
+import { useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
 
 export function FsActionManager() {
   const { setCurrent } = useRequestStore();
@@ -19,29 +16,21 @@ export function FsActionManager() {
     async (name: string) => {
       try {
         if (!Yasumu.workspace) return;
-        await Yasumu.workspace.rest.create(
-          name,
-          null,
-          selectedPath || undefined
-        );
+        await Yasumu.workspace.rest.create(name, null, selectedPath || undefined);
       } catch (e) {
         toast.error('Failed to create group', {
           description: String(e),
         });
       }
     },
-    [selectedPath]
+    [selectedPath],
   );
 
   const handleCreateFile = useCallback(
     async (name: string) => {
       try {
         if (!Yasumu.workspace) return;
-        const entity = await Yasumu.workspace.rest.create(
-          name,
-          HttpMethods.GET,
-          selectedPath || undefined
-        );
+        const entity = await Yasumu.workspace.rest.create(name, HttpMethods.GET, selectedPath || undefined);
         setCurrent(entity);
       } catch (e) {
         toast.error('Failed to create request', {
@@ -49,16 +38,12 @@ export function FsActionManager() {
         });
       }
     },
-    [selectedPath]
+    [selectedPath],
   );
 
   return (
     <div className="flex items-center gap-1 pr-4">
-      <FsActionDialog
-        type="Request"
-        onCreate={handleCreateFile}
-        description="Create a new request."
-      >
+      <FsActionDialog type="Request" onCreate={handleCreateFile} description="Create a new request.">
         <FilePlus2 className="h-6 w-6" />
       </FsActionDialog>
       <FsActionDialog

@@ -1,18 +1,14 @@
-"use client";
-import { Input } from "@/components/ui/input";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { MailDisplay } from "./mail-display";
-import { Search } from "lucide-react";
-import { MailList } from "./mail-list";
-import { YasumuEmailMessage } from "@/lib/smtp/YasumuSmtp";
-import { useEmailStore } from "@/stores/smtp/emails";
+'use client';
+import { Input } from '@/components/ui/input';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { MailDisplay } from './mail-display';
+import { Search } from 'lucide-react';
+import { MailList } from './mail-list';
+import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
+import { useEmailStore } from '@/stores/smtp/emails';
 
 interface MailProps {
   mails: YasumuEmailMessage[];
@@ -26,9 +22,7 @@ export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
       <ResizablePanelGroup
         direction="horizontal"
         onLayout={(sizes: number[]) => {
-          document.cookie = `react-resizable-panels:layout:mail=${JSON.stringify(
-            sizes
-          )}`;
+          document.cookie = `react-resizable-panels:layout:mail=${JSON.stringify(sizes)}`;
         }}
         className="h-full max-h-[800px] items-stretch"
       >
@@ -37,16 +31,10 @@ export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
             <div className="flex items-center px-4 py-2">
               <h1 className="text-xl font-bold">Inbox</h1>
               <TabsList className="ml-auto">
-                <TabsTrigger
-                  value="all"
-                  className="text-zinc-600 dark:text-zinc-200"
-                >
+                <TabsTrigger value="all" className="text-zinc-600 dark:text-zinc-200">
                   All mail
                 </TabsTrigger>
-                <TabsTrigger
-                  value="unread"
-                  className="text-zinc-600 dark:text-zinc-200"
-                >
+                <TabsTrigger value="unread" className="text-zinc-600 dark:text-zinc-200">
                   Unread
                 </TabsTrigger>
               </TabsList>
@@ -70,12 +58,7 @@ export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
-          <MailDisplay
-            mail={
-              mails.find((item) => item.id === (selectedEmail?.id || null)) ||
-              null
-            }
-          />
+          <MailDisplay mail={mails.find((item) => item.id === (selectedEmail?.id || null)) || null} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>

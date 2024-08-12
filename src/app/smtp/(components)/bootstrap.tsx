@@ -65,9 +65,7 @@ export function BootstrapSMTP() {
       {yasumu?.running ? (
         <div>
           <Card>
-            <CardHeader>
-              SMTP Server is running on port {yasumu.getPort()}
-            </CardHeader>
+            <CardHeader>SMTP Server is running on port {yasumu.getPort()}</CardHeader>
             <CardFooter>
               <Link href="/smtp/mail">
                 <Button>View Emails</Button>

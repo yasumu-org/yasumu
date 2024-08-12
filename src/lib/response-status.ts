@@ -2,8 +2,7 @@ export const HttpStatusCodes = {
   100: {
     code: 100,
     text: 'Continue',
-    description:
-      'The server has received the request headers and the client should proceed to send the request body.',
+    description: 'The server has received the request headers and the client should proceed to send the request body.',
   },
   101: {
     code: 101,
@@ -13,14 +12,12 @@ export const HttpStatusCodes = {
   102: {
     code: 102,
     text: 'Processing',
-    description:
-      'The server has received and is processing the request, but no response is available yet.',
+    description: 'The server has received and is processing the request, but no response is available yet.',
   },
   103: {
     code: 103,
     text: 'Early Hints',
-    description:
-      'Used to return some response headers before final HTTP message.',
+    description: 'Used to return some response headers before final HTTP message.',
   },
   200: {
     code: 200,
@@ -35,8 +32,7 @@ export const HttpStatusCodes = {
   202: {
     code: 202,
     text: 'Accepted',
-    description:
-      'The request is accepted for processing, but the processing is not complete.',
+    description: 'The request is accepted for processing, but the processing is not complete.',
   },
   203: {
     code: 203,
@@ -47,14 +43,12 @@ export const HttpStatusCodes = {
   204: {
     code: 204,
     text: 'No Content',
-    description:
-      'A status code and a header are given in the response, but there is no entity-body in the reply.',
+    description: 'A status code and a header are given in the response, but there is no entity-body in the reply.',
   },
   205: {
     code: 205,
     text: 'Reset Content',
-    description:
-      'The browser should clear the form used for this transaction for additional input.',
+    description: 'The browser should clear the form used for this transaction for additional input.',
   },
   206: {
     code: 206,
@@ -82,8 +76,7 @@ export const HttpStatusCodes = {
   300: {
     code: 300,
     text: 'Multiple Choices',
-    description:
-      'A link list. The user can select a link and go to that location. Maximum five addresses.',
+    description: 'A link list. The user can select a link and go to that location. Maximum five addresses.',
   },
   301: {
     code: 301,
@@ -109,8 +102,7 @@ export const HttpStatusCodes = {
   305: {
     code: 305,
     text: 'Use Proxy',
-    description:
-      'The requested URL must be accessed through the proxy mentioned in the Location header.',
+    description: 'The requested URL must be accessed through the proxy mentioned in the Location header.',
   },
   306: {
     code: 306,
@@ -161,20 +153,17 @@ export const HttpStatusCodes = {
   406: {
     code: 406,
     text: 'Not Acceptable',
-    description:
-      'The server can only generate a response that is not accepted by the client.',
+    description: 'The server can only generate a response that is not accepted by the client.',
   },
   407: {
     code: 407,
     text: 'Proxy Authentication Required',
-    description:
-      'You must authenticate with a proxy server before this request can be served.',
+    description: 'You must authenticate with a proxy server before this request can be served.',
   },
   408: {
     code: 408,
     text: 'Request Timeout',
-    description:
-      'The request took longer than the server was prepared to wait.',
+    description: 'The request took longer than the server was prepared to wait.',
   },
   409: {
     code: 409,
@@ -189,20 +178,17 @@ export const HttpStatusCodes = {
   411: {
     code: 411,
     text: 'Length Required',
-    description:
-      'The "Content-Length" is not defined. The server will not accept the request without it.',
+    description: 'The "Content-Length" is not defined. The server will not accept the request without it.',
   },
   412: {
     code: 412,
     text: 'Precondition Failed',
-    description:
-      'The pre-condition given in the request evaluated to false by the server.',
+    description: 'The pre-condition given in the request evaluated to false by the server.',
   },
   413: {
     code: 413,
     text: 'Request Entity Too Large',
-    description:
-      'The server will not accept the request, because the request entity is too large.',
+    description: 'The server will not accept the request, because the request entity is too large.',
   },
   414: {
     code: 414,
@@ -213,20 +199,17 @@ export const HttpStatusCodes = {
   415: {
     code: 415,
     text: 'Unsupported Media Type',
-    description:
-      'The server will not accept the request, because the media type is not supported.',
+    description: 'The server will not accept the request, because the media type is not supported.',
   },
   416: {
     code: 416,
     text: 'Requested Range Not Satisfiable',
-    description:
-      'The client has asked for a portion of the file, but the server cannot supply that portion.',
+    description: 'The client has asked for a portion of the file, but the server cannot supply that portion.',
   },
   417: {
     code: 417,
     text: 'Expectation Failed',
-    description:
-      'The server cannot meet the requirements of the Expect request-header field.',
+    description: 'The server cannot meet the requirements of the Expect request-header field.',
   },
   418: {
     code: 418,
@@ -236,14 +219,12 @@ export const HttpStatusCodes = {
   421: {
     code: 421,
     text: 'Misdirected Request',
-    description:
-      'The request was directed at a server that is not able to produce a response.',
+    description: 'The request was directed at a server that is not able to produce a response.',
   },
   422: {
     code: 422,
     text: 'Unprocessable Entity',
-    description:
-      'The request was well-formed but was unable to be followed due to semantic errors.',
+    description: 'The request was well-formed but was unable to be followed due to semantic errors.',
   },
   423: {
     code: 423,
@@ -258,14 +239,12 @@ export const HttpStatusCodes = {
   425: {
     code: 425,
     text: 'Too Early',
-    description:
-      'Indicates that the server is unwilling to risk processing a request that might be replayed.',
+    description: 'Indicates that the server is unwilling to risk processing a request that might be replayed.',
   },
   426: {
     code: 426,
     text: 'Upgrade Required',
-    description:
-      'The client should switch to a different protocol such as TLS/1.0.',
+    description: 'The client should switch to a different protocol such as TLS/1.0.',
   },
   428: {
     code: 428,
@@ -275,8 +254,7 @@ export const HttpStatusCodes = {
   429: {
     code: 429,
     text: 'Too Many Requests',
-    description:
-      'The user has sent too many requests in a given amount of time.',
+    description: 'The user has sent too many requests in a given amount of time.',
   },
   431: {
     code: 431,
@@ -287,8 +265,7 @@ export const HttpStatusCodes = {
   451: {
     code: 451,
     text: 'Unavailable For Legal Reasons',
-    description:
-      'The user requests an illegal resource, such as a web page censored by a government.',
+    description: 'The user requests an illegal resource, such as a web page censored by a government.',
   },
   500: {
     code: 500,
@@ -322,38 +299,32 @@ export const HttpStatusCodes = {
   505: {
     code: 505,
     text: 'HTTP Version Not Supported',
-    description:
-      'The server does not support the HTTP protocol version used in the request.',
+    description: 'The server does not support the HTTP protocol version used in the request.',
   },
   506: {
     code: 506,
     text: 'Variant Also Negotiates',
-    description:
-      'Transparent content negotiation for the request results in a circular reference.',
+    description: 'Transparent content negotiation for the request results in a circular reference.',
   },
   507: {
     code: 507,
     text: 'Insufficient Storage',
-    description:
-      'The server is unable to store the representation needed to complete the request.',
+    description: 'The server is unable to store the representation needed to complete the request.',
   },
   508: {
     code: 508,
     text: 'Loop Detected',
-    description:
-      'The server detected an infinite loop while processing the request.',
+    description: 'The server detected an infinite loop while processing the request.',
   },
   510: {
     code: 510,
     text: 'Not Extended',
-    description:
-      'Further extensions to the request are required for the server to fulfill it.',
+    description: 'Further extensions to the request are required for the server to fulfill it.',
   },
   511: {
     code: 511,
     text: 'Network Authentication Required',
-    description:
-      'The 511 status code indicates that the client needs to authenticate to gain network access.',
+    description: 'The 511 status code indicates that the client needs to authenticate to gain network access.',
   },
 } as const;
 

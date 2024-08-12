@@ -1,6 +1,6 @@
-import { Content } from "@/components/layout/content";
-import { Mail } from "../(components)/mail/mail";
-import { mails } from "./data";
+import { Content } from '@/components/layout/content';
+import { Mail } from '../(components)/mail/mail';
+import { mails } from './data';
 
 export default function Page() {
   return (

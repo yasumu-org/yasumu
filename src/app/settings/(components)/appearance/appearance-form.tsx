@@ -7,15 +7,7 @@ import { z } from 'zod';
 
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from '@/components/ui/use-toast';
 import { Theme } from './theme';
@@ -86,9 +78,7 @@ export function AppearanceForm() {
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Theme</FormLabel>
-              <FormDescription>
-                Select the theme for the application.
-              </FormDescription>
+              <FormDescription>Select the theme for the application.</FormDescription>
               <FormMessage />
               <RadioGroup
                 onValueChange={field.onChange}
@@ -122,8 +112,7 @@ export function AppearanceForm() {
             <FormItem className="space-y-1">
               <FormLabel>Orientation</FormLabel>
               <FormDescription>
-                Select the orientation of the application. This only affects the
-                layout of the api testing screen.
+                Select the orientation of the application. This only affects the layout of the api testing screen.
               </FormDescription>
               <FormMessage />
               <RadioGroup
@@ -136,10 +125,7 @@ export function AppearanceForm() {
                     <FormControl>
                       <RadioGroupItem value="horizontal" className="sr-only" />
                     </FormControl>
-                    <Orientation
-                      dark={theme === 'dark'}
-                      selected={field.value === 'horizontal'}
-                    />
+                    <Orientation dark={theme === 'dark'} selected={field.value === 'horizontal'} />
                   </FormLabel>
                 </FormItem>
                 <FormItem>
@@ -147,11 +133,7 @@ export function AppearanceForm() {
                     <FormControl>
                       <RadioGroupItem value="vertical" className="sr-only" />
                     </FormControl>
-                    <Orientation
-                      dark={theme === 'dark'}
-                      vertical
-                      selected={field.value === 'vertical'}
-                    />
+                    <Orientation dark={theme === 'dark'} vertical selected={field.value === 'vertical'} />
                   </FormLabel>
                 </FormItem>
               </RadioGroup>

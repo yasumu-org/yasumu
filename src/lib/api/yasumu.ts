@@ -1,9 +1,6 @@
 import { Store } from '@tauri-apps/plugin-store';
 import { invoke } from '@tauri-apps/api/core';
-import {
-  YasumuWorkspace,
-  YasumuWorkspaceHistory,
-} from './workspace/YasumuWorkspace';
+import { YasumuWorkspace, YasumuWorkspaceHistory } from './workspace/YasumuWorkspace';
 import { YasumuWorkspaceFiles } from './workspace/constants';
 import { Commands } from '../common/commands';
 
@@ -39,9 +36,7 @@ export class YasumuCore {
   }
 
   public async getWorkspacesHistory() {
-    const history =
-      (await this.store.get<YasumuWorkspaceHistory[]>('yasumu:workspaces')) ??
-      [];
+    const history = (await this.store.get<YasumuWorkspaceHistory[]>('yasumu:workspaces')) ?? [];
 
     return history;
   }
