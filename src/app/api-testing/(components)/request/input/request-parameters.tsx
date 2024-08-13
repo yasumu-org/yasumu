@@ -84,7 +84,7 @@ export function RequestParameters() {
             {parameters.map((parameter, index) => {
               return (
                 <RequestParameter
-                  key={`${parameter.key}-${index}`}
+                  key={index}
                   data={parameter}
                   onDelete={() => {
                     onDelete(index);
