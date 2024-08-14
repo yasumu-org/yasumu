@@ -43,6 +43,7 @@
     "@tauri-apps/plugin-http": "^2.0.0-rc.0",
     "@tauri-apps/plugin-store": "^2.0.0-rc.0",
     "@uiw/react-codemirror": "^4.22.1",
+    "@yasumu/core": "^0.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
