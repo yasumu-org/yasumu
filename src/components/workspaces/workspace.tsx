@@ -8,6 +8,7 @@ import { GetStartedAction } from '../cards/get-started-action';
 import Link from 'next/link';
 import { Yasumu } from '@/lib/yasumu';
 import { YasumuWorkspaceHistory } from '@yasumu/core';
+import { Separator } from '../ui/separator';
 
 export function YasumuWorkspace() {
   const [recentWorkspaces, setRecentWorkspaces] = useState<YasumuWorkspaceHistory[]>([]);
@@ -45,29 +46,63 @@ export function YasumuWorkspace() {
     <>
       {currentWorkspace ? (
         <>
-          <p className="text-muted-foreground">
-            Currently on workspace - <span className="text-primary font-medium">{currentWorkspaceName}</span>. Select an
-            action to get started.
+          <p className="text-muted-foreground text-xl">
+            You are currently on workspace <span className="text-primary font-medium">{currentWorkspaceName}</span>.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-4">
-            <GetStartedAction
-              title="API Testing"
-              description="Get started by testing your REST API"
-              action={
-                <Link href="/api-testing">
-                  <Button>Get started</Button>
-                </Link>
-              }
-            />
-            <GetStartedAction
-              title="SMTP Server"
-              description="Spin up a fake SMTP server for testing"
-              action={
-                <Link href="/smtp">
-                  <Button>Get started</Button>
-                </Link>
-              }
-            />
+
+          <div className="space-y-4">
+            <Separator className="my-4" />
+            <h2 className="text-lg font-semibold">Get started:</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              <GetStartedAction
+                title="API Testing"
+                description="Get started by testing your REST API"
+                action={
+                  <Link href="/api-testing">
+                    <Button>Get started</Button>
+                  </Link>
+                }
+              />
+              <GetStartedAction
+                title="SMTP Server"
+                description="Spin up a fake SMTP server for testing"
+                action={
+                  <Link href="/smtp">
+                    <Button>Get started</Button>
+                  </Link>
+                }
+              />
+              <GetStartedAction
+                title="GraphQL"
+                comingSoon
+                description="Interactive GraphQL playground"
+                action={
+                  <Link href="/graphql">
+                    <Button>Get started</Button>
+                  </Link>
+                }
+              />
+              <GetStartedAction
+                title="WebSocket"
+                comingSoon
+                description="Interactive WebSocket playground"
+                action={
+                  <Link href="/websocket">
+                    <Button>Get started</Button>
+                  </Link>
+                }
+              />
+              <GetStartedAction
+                title="Socket.IO"
+                comingSoon
+                description="Interactive Socket.IO playground"
+                action={
+                  <Link href="/socketio">
+                    <Button>Get started</Button>
+                  </Link>
+                }
+              />
+            </div>
           </div>
         </>
       ) : (
@@ -82,7 +117,7 @@ export function YasumuWorkspace() {
                   <ul className="pl-4">
                     {recentWorkspaces.map((workspace) => (
                       <li key={workspace.path} className="list-disc text-primary list-inside">
-                        <Button variant="link" size="sm" onClick={() => setCurrentWorkspace(workspace.path)}>
+                        <Button variant="link" size="sm" onClick={() => handleWorkspaceCreate(workspace.path)}>
                           {workspace.name}
                         </Button>
                       </li>

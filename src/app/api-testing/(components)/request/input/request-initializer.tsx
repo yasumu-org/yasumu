@@ -41,6 +41,7 @@ export default function RequestInitializer() {
         enabled: true,
       })),
     );
+    // @ts-expect-error
     setBody(current.getBody() ?? {});
 
     const res = current.getResponse();

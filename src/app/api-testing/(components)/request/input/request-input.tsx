@@ -22,6 +22,7 @@ export default function RequestInput() {
 
     current.setUrl(url);
     current.setMethod(method);
+    // @ts-expect-error
     current.setBody(body);
     current.setHeaders(
       headers.map((header) => ({

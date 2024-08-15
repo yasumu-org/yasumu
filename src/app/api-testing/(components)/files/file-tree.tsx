@@ -10,6 +10,7 @@ import { FsContextMenu } from './fs-context-menu';
 import { useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { useRequestHistory } from '@/stores/api-testing/request-history.store';
+import { open } from '@tauri-apps/plugin-shell';
 
 export function RecursiveTreeGenerator({ tree }: { tree: TreeViewElement[] }) {
   const { setCurrent, current } = useRequestStore();
@@ -38,7 +39,18 @@ export function RecursiveTreeGenerator({ tree }: { tree: TreeViewElement[] }) {
 
         if (isDir) {
           return (
-            <FsContextMenu key={item.id} onDelete={() => handleDelete(item.id)} item={item}>
+            <FsContextMenu
+              key={item.id}
+              onDelete={() => handleDelete(item.id)}
+              item={item}
+              onOpenExternal={() => {
+                open(item.id).catch((e) => {
+                  toast.error('Failed to open the file explorer', {
+                    description: String(e),
+                  });
+                });
+              }}
+            >
               <Folder
                 value={item.id}
                 element={item.name}
@@ -57,7 +69,19 @@ export function RecursiveTreeGenerator({ tree }: { tree: TreeViewElement[] }) {
         }
 
         return (
-          <FsContextMenu key={item.id} isFile item={item} onDelete={() => handleDelete(item.id)}>
+          <FsContextMenu
+            key={item.id}
+            isFile
+            item={item}
+            onDelete={() => handleDelete(item.id)}
+            onOpenExternal={() => {
+              open(item.id).catch((e) => {
+                toast.error('Failed to open the file explorer', {
+                  description: String(e),
+                });
+              });
+            }}
+          >
             <FileUI
               value={item.id}
               method={YasumuRestEntity.getMethod(item.name)}

@@ -23,12 +23,14 @@ export function FsContextMenu({
   isFile,
   onDelete,
   item,
+  onOpenExternal,
 }: React.PropsWithChildren<{
   isFile?: boolean;
   item: TreeViewElement;
   onNewFile?: (name: string) => void;
   onRename?: (name: string) => void;
   onDelete?: () => void;
+  onOpenExternal?: () => void;
 }>) {
   const { setCopied, setCut, copied, cut } = useRequestFs();
   const [isUpdate, setIsUpdate] = useState(false);
@@ -104,6 +106,9 @@ export function FsContextMenu({
                 </DialogTrigger>
               </>
             )}
+            <ContextMenuItem className="cursor-pointer" onClick={onOpenExternal}>
+              Open in File Explorer
+            </ContextMenuItem>
             <DialogTrigger asChild>
               <ContextMenuItem
                 className="cursor-pointer"
