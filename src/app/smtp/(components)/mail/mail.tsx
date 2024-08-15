@@ -7,11 +7,11 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { MailDisplay } from './mail-display';
 import { Search } from 'lucide-react';
 import { MailList } from './mail-list';
-import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
+// import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
 import { useEmailStore } from '@/stores/smtp/emails';
 
 interface MailProps {
-  mails: YasumuEmailMessage[];
+  mails: any[];
   defaultLayout: number[] | undefined;
 }
 
@@ -58,6 +58,7 @@ export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
+          {/* @ts-ignore */}
           <MailDisplay mail={mails.find((item) => item.id === (selectedEmail?.id || null)) || null} />
         </ResizablePanel>
       </ResizablePanelGroup>

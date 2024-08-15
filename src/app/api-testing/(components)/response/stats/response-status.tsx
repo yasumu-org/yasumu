@@ -1,6 +1,6 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Separator } from '@/components/ui/separator';
-import { getResponse } from '@/lib/response-status';
+import { getResponse } from '@yasumu/core';
 import { cn } from '@/lib/utils';
 import { useResponse } from '@/stores/api-testing/response.store';
 

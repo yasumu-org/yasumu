@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -13,9 +13,8 @@ import { ConfirmationDialog, ContextMenuFsActionDialog } from './context-menu-fs
 import { DialogTrigger } from '@/components/ui/dialog';
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { TreeViewElement } from '@/components/magicui/file-tree';
-import { Yasumu } from '@/lib/api/yasumu';
-import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
-import { HttpMethods } from '@/lib/constants';
+import { Yasumu } from '@/lib/yasumu';
+import { YasumuRestEntity } from '@yasumu/core';
 import { toast } from 'sonner';
 import { useRequestFs } from '@/stores/api-testing/request-config.store';
 
@@ -24,12 +23,14 @@ export function FsContextMenu({
   isFile,
   onDelete,
   item,
+  onOpenExternal,
 }: React.PropsWithChildren<{
   isFile?: boolean;
   item: TreeViewElement;
   onNewFile?: (name: string) => void;
   onRename?: (name: string) => void;
   onDelete?: () => void;
+  onOpenExternal?: () => void;
 }>) {
   const { setCopied, setCut, copied, cut } = useRequestFs();
   const [isUpdate, setIsUpdate] = useState(false);
@@ -105,6 +106,9 @@ export function FsContextMenu({
                 </DialogTrigger>
               </>
             )}
+            <ContextMenuItem className="cursor-pointer" onClick={onOpenExternal}>
+              Open in File Explorer
+            </ContextMenuItem>
             <DialogTrigger asChild>
               <ContextMenuItem
                 className="cursor-pointer"

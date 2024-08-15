@@ -3,8 +3,8 @@
 import { FilePlus2, FolderPlus } from 'lucide-react';
 import { useCallback } from 'react';
 import { FsActionDialog } from './fs-action-dialog';
-import { Yasumu } from '@/lib/api/yasumu';
-import { HttpMethods } from '@/lib/constants';
+import { Yasumu } from '@/lib/yasumu';
+import { HttpMethods } from '@yasumu/core';
 import { toast } from 'sonner';
 import { useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
 

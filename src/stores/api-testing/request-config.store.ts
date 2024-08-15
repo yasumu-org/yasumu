@@ -1,5 +1,4 @@
-import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
-import { BodyMode, HttpMethods } from '@/lib/constants';
+import { YasumuRestEntity, BodyMode, HttpMethods } from '@yasumu/core';
 import { create } from 'zustand';
 
 export const useEnvironment = create((set) => ({

@@ -4,11 +4,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useEmailStore, useYasumuSmtp } from '@/stores/smtp/emails';
 import { Card, CardFooter, CardHeader } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { YasumuSmtp } from '@/lib/smtp/YasumuSmtp';
-import { listen } from '@tauri-apps/api/event';
 import { CreateSmtp } from './create';
 import Link from 'next/link';
 import { Rocket } from 'lucide-react';
+import { Yasumu } from '@/lib/yasumu';
 
 export function BootstrapSMTP() {
   const { setEmails } = useEmailStore();
@@ -18,7 +17,8 @@ export function BootstrapSMTP() {
   useEffect(() => {
     if (!yasumu) return;
 
-    const dispose = listen(yasumu.EmailChannel, handleEmailReceived);
+    // @ts-ignore
+    const dispose = Yasumu.events.listen(yasumu.EmailChannel, handleEmailReceived);
 
     return () => {
       dispose.then((d) => d());
@@ -29,30 +29,31 @@ export function BootstrapSMTP() {
     if (!yasumu) return;
 
     try {
+      // @ts-ignore
       const emails = await yasumu.getEmails();
       setEmails(emails);
     } catch {}
   };
 
   const startSmtp = useCallback(async () => {
-    if (yasumu) return toast.info('SMTP server is already running.');
-
-    try {
-      const yasumu = new YasumuSmtp({ port: Number(port) || 5566 });
-      // @ts-ignore
-      globalThis.yasumu = yasumu;
-      await yasumu.start();
-      setYasumu(yasumu);
-      toast.success(`SMTP server started on port ${yasumu.getPort()}`);
-    } catch (e) {
-      toast.error(`Failed to start SMTP server: ${String(e)}`);
-    }
+    // if (yasumu) return toast.info('SMTP server is already running.');
+    // try {
+    //   const yasumu = new YasumuSmtp({ port: Number(port) || 5566 });
+    //   // @ts-ignore
+    //   globalThis.yasumu = yasumu;
+    //   await yasumu.start();
+    //   setYasumu(yasumu);
+    //   toast.success(`SMTP server started on port ${yasumu.getPort()}`);
+    // } catch (e) {
+    //   toast.error(`Failed to start SMTP server: ${String(e)}`);
+    // }
   }, [port, yasumu]);
 
   const stopSmtp = useCallback(async () => {
     if (!yasumu) return;
 
     try {
+      // @ts-ignore
       await yasumu.stop();
       setYasumu(null);
     } catch (e) {
@@ -62,9 +63,11 @@ export function BootstrapSMTP() {
 
   return (
     <div className="py-8">
+      {/* @ts-ignore */}
       {yasumu?.running ? (
         <div>
           <Card>
+            {/* @ts-ignore */}
             <CardHeader>SMTP Server is running on port {yasumu.getPort()}</CardHeader>
             <CardFooter>
               <Link href="/smtp/mail">

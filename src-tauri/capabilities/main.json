@@ -130,6 +130,14 @@
         }
       ]
     },
-    "dialog:default"
+    "dialog:default",
+    {
+      "identifier": "shell:allow-open",
+      "allow": [
+        {
+          "path": "**/*"
+        }
+      ]
+    }
   ]
 }

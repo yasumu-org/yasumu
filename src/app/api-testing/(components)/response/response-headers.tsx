@@ -3,7 +3,7 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { getHeaderDetails } from '@/lib/header-info';
+import { getHeaderDetails } from '@yasumu/core';
 import { Info } from 'lucide-react';
 import { useMemo } from 'react';
 

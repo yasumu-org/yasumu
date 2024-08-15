@@ -2,9 +2,9 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { Globe, GlobeLock } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
-import { Commands } from '@/lib/common/commands';
+import { Commands } from '@yasumu/core';
 import { Separator } from '@/components/ui/separator';
+import { Yasumu } from '@/lib/yasumu';
 
 const dummyStats = {
   localAddress: '192.168.1.1',
@@ -62,7 +62,7 @@ export function NetworkInfo() {
   const isSecure = useMemo(() => url.startsWith('https://'), [url]);
 
   useEffect(() => {
-    invoke(Commands.GetLocalAddress).then((res) => {
+    Yasumu.commands.invoke(Commands.GetLocalAddress).then((res) => {
       setLocalIp(res as string);
     }, Object);
   }, []);

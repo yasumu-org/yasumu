@@ -2,10 +2,10 @@
 
 import { format } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
-import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
+// import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
 
 interface MailDisplayProps {
-  mail: YasumuEmailMessage | null;
+  mail: any | null;
 }
 
 export function MailDisplay({ mail }: MailDisplayProps) {
