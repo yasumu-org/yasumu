@@ -5,7 +5,6 @@ import { Folder, TreeViewElement } from '@/components/magicui/file-tree';
 import { YasumuRestEntity } from '@yasumu/core';
 import { Yasumu } from '@/lib/yasumu';
 import { useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
-import { dirname } from '@tauri-apps/api/path';
 import { toast } from 'sonner';
 import { FsContextMenu } from './fs-context-menu';
 import { useCallback } from 'react';
@@ -68,7 +67,7 @@ export function RecursiveTreeGenerator({ tree }: { tree: TreeViewElement[] }) {
               })}
               handleSelect={async () => {
                 try {
-                  const path = await dirname(item.id);
+                  const path = await Yasumu.path.dirname(item.id);
                   setSelectedPath(path);
                 } catch {
                   //

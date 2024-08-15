@@ -4,10 +4,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useEmailStore, useYasumuSmtp } from '@/stores/smtp/emails';
 import { Card, CardFooter, CardHeader } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { listen } from '@tauri-apps/api/event';
 import { CreateSmtp } from './create';
 import Link from 'next/link';
 import { Rocket } from 'lucide-react';
+import { Yasumu } from '@/lib/yasumu';
 
 export function BootstrapSMTP() {
   const { setEmails } = useEmailStore();
@@ -18,7 +18,7 @@ export function BootstrapSMTP() {
     if (!yasumu) return;
 
     // @ts-ignore
-    const dispose = listen(yasumu.EmailChannel, handleEmailReceived);
+    const dispose = Yasumu.events.listen(yasumu.EmailChannel, handleEmailReceived);
 
     return () => {
       dispose.then((d) => d());

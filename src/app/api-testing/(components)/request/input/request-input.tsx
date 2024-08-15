@@ -7,12 +7,11 @@ import { BodyMode, HttpMethods, HttpMethodsArray } from '@yasumu/core';
 import { cn } from '@/lib/utils';
 import { useRequestConfig, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { ICookie, useResponse } from '@/stores/api-testing/response.store';
-import { getName, getVersion } from '@tauri-apps/api/app';
-import { fetch } from '@tauri-apps/plugin-http';
 import { useCallback, useEffect } from 'react';
 import { parseString } from 'set-cookie-parser';
 import { useDebounceCallback } from 'usehooks-ts';
 import { HttpMethodColors } from '@/lib/constants';
+import { Yasumu } from '@/lib/yasumu';
 
 export default function RequestInput() {
   const { current } = useRequestStore();
@@ -89,8 +88,8 @@ export default function RequestInput() {
 
       if (!h.has('User-Agent')) {
         try {
-          const name = await getName();
-          const version = await getVersion();
+          const name = await Yasumu.app.getName();
+          const version = await Yasumu.app.getVersion();
           h.append('User-Agent', `${name}/${version}`);
         } catch {
           //
@@ -155,10 +154,11 @@ export default function RequestInput() {
       }
 
       const res = await Promise.race([
-        fetch(url, {
+        Yasumu.fetch(url, {
           method: method.toUpperCase(),
           body: bodyData,
           redirect: 'follow',
+          // @ts-ignore
           maxRedirections: 20,
           cache: 'no-cache',
           credentials: 'omit',

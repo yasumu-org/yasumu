@@ -5,7 +5,6 @@ import { FsActionManager } from './fs-action-manager';
 import { useCallback, useEffect, useState } from 'react';
 import { Yasumu } from '@/lib/yasumu';
 import { toast } from 'sonner';
-import { watch } from '@tauri-apps/plugin-fs';
 
 export default function HistoryTree() {
   const [tree, setTree] = useState<TreeViewElement[]>([]);
@@ -30,7 +29,7 @@ export default function HistoryTree() {
     const path = Yasumu.workspace?.rest.getPath();
 
     if (path) {
-      const unwatch = watch(
+      const unwatch = Yasumu.fs.watch(
         path,
         async () => {
           await loadTree(true);

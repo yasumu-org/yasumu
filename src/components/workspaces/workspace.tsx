@@ -1,7 +1,6 @@
 'use client';
 
 import { useWorkspaceStore } from '@/stores/application/workspace.store';
-import { open } from '@tauri-apps/plugin-dialog';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
@@ -22,7 +21,7 @@ export function YasumuWorkspace() {
     try {
       const res =
         path ??
-        (await open({
+        (await Yasumu.dialog.open({
           directory: true,
           multiple: false,
           title: 'Open Yasumu Workspace',

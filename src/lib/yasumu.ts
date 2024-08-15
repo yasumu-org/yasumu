@@ -12,10 +12,9 @@ import {
   EventsCommon,
   ScriptsCommon,
   FetchCommon,
-  CommandCommon,
-  ProcessCommon,
 } from '@yasumu/core';
 import * as app from '@tauri-apps/api/app';
+import { invoke, addPluginListener } from '@tauri-apps/api/core';
 
 export const Yasumu = createYasumu({
   fetch: fetch as FetchCommon,
@@ -36,6 +35,17 @@ export const Yasumu = createYasumu({
       return null as unknown as T;
     },
   } satisfies ScriptsCommon,
-  commands: {} as CommandCommon,
-  process: {} as ProcessCommon,
+  commands: {
+    invoke,
+    addPluginListener,
+  },
+  // TODO: use tauri process api
+  process: {
+    async exit(code) {
+      window.close();
+    },
+    async relaunch() {
+      window.location.reload();
+    },
+  },
 });
