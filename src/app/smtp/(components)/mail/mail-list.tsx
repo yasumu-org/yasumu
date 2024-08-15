@@ -4,14 +4,14 @@ import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEmailStore } from '@/stores/smtp/emails';
-import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
+// import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
 
 interface MailListProps {
-  items: YasumuEmailMessage[];
+  items: any[];
 }
 
 export function MailList({ items }: MailListProps) {
-  const { selectedEmail, setSelectedEmail } = useEmailStore();
+  const { selectedEmail, setSelectedEmail } = useEmailStore() as any;
 
   return (
     <ScrollArea className="h-screen">

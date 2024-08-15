@@ -1,10 +1,10 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ComingSoon } from '../alerts/coming-soon';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface IProps {
   link?: string;
@@ -19,20 +19,26 @@ function LinkWrapper({
   children,
   className,
   comingSoon,
+  title,
 }: {
   link?: string;
   children: React.ReactNode;
   className: string;
   comingSoon?: string;
+  title?: string;
 }) {
   if (comingSoon || !link) {
-    const el = <button className={className}>{children}</button>;
+    const el = (
+      <button className={className} title={title}>
+        {children}
+      </button>
+    );
     if (!comingSoon) return el;
     return <ComingSoon name={comingSoon}>{el}</ComingSoon>;
   }
 
   return (
-    <Link href={link} className={className}>
+    <Link href={link} className={className} title={title}>
       {children}
     </Link>
   );
@@ -43,15 +49,16 @@ export function SideNavMenu({ icon, name, link, active, comingSoon }: IProps) {
   const isActive = active ?? pathname === link;
 
   return (
-    <Tooltip delayDuration={100}>
+    <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>
         <LinkWrapper
           link={link}
           comingSoon={comingSoon ? name : undefined}
           className={cn(
-            'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8',
+            'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-white md:h-8 md:w-8',
             isActive && 'bg-accent text-accent-foreground',
           )}
+          title={name}
         >
           {icon}
           <span className="sr-only">{name}</span>

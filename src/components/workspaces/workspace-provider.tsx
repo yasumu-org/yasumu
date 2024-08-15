@@ -4,7 +4,7 @@ import { useWorkspaceStore } from '@/stores/application/workspace.store';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 import { LoadingSpinner } from '../layout/loading';
-import { Yasumu } from '@/lib/api/yasumu';
+import { Yasumu } from '@/lib/yasumu';
 
 export function YasumuWorkspaceProvider({ children }: React.PropsWithChildren) {
   const [loading, setLoading] = useState(true);

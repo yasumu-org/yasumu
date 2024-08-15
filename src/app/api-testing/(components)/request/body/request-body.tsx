@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { TextBody } from './text-body';
 import { useRequestConfig } from '@/stores/api-testing/request-config.store';
-import { BodyMode } from '@/lib/constants';
+import { BodyMode } from '@yasumu/core';
 
 export function RequestBody() {
   const { isVertical } = useLayoutStore();

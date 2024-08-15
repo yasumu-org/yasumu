@@ -1,6 +1,7 @@
 import { File as FileItem } from '@/components/magicui/file-tree';
-import { HttpMethodColors, HttpMethods } from '@/lib/constants';
+import { HttpMethods } from '@yasumu/core';
 import { cn } from '@/lib/utils';
+import { HttpMethodColors } from '@/lib/constants';
 
 export interface FileUIProps {
   method?: HttpMethods;
