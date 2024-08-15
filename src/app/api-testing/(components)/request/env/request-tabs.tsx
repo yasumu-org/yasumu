@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { RequestEnvironment } from './request-environment';
 import { useRequestStore } from '@/stores/api-testing/request-config.store';
 import { useRequestHistory } from '@/stores/api-testing/request-history.store';
-import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
+import { HttpMethods, YasumuRestEntity } from '@yasumu/core';
 
 export function RequestTabs() {
   const ref = useHorizontalScroll();
@@ -73,7 +73,7 @@ function RequestTab({ tab }: { tab: YasumuRestEntity }) {
       }}
     >
       <span>
-        <span className={cn('font-semibold', HttpMethodColors[tab.getMethod()])}>{tab.getMethod()}</span>{' '}
+        <span className={cn('font-semibold', HttpMethodColors[tab.getMethod() as HttpMethods])}>{tab.getMethod()}</span>{' '}
         {tab.getName()}
       </span>
       <X

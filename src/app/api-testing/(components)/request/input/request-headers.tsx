@@ -5,14 +5,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { getHeaderDetails } from '@/lib/header-info';
+import { getHeaderDetails } from '@yasumu/core';
 import { cn } from '@/lib/utils';
 import { useRequestConfig } from '@/stores/api-testing/request-config.store';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { Info, Trash } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 interface IHeader {
   key: string;

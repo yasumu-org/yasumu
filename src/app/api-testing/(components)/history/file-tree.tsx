@@ -2,8 +2,8 @@
 
 import { FileUI } from '@/components/fs/http/file';
 import { Folder, TreeViewElement } from '@/components/magicui/file-tree';
-import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
-import { Yasumu } from '@/lib/api/yasumu';
+import { YasumuRestEntity } from '@yasumu/core';
+import { Yasumu } from '@/lib/yasumu';
 import { useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { dirname } from '@tauri-apps/api/path';
 import { toast } from 'sonner';

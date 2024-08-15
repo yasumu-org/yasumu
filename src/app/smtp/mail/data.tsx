@@ -1,6 +1,6 @@
-import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
+// import { YasumuEmailMessage } from '@yasumu/core';
 
-export const mails: YasumuEmailMessage[] = [
+export const mails: any[] = [
   {
     id: 1,
     from: 'williamsmith@example.com',

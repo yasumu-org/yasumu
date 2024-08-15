@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BodyMode, HttpMethodColors, HttpMethods, HttpMethodsArray } from '@/lib/constants';
+import { BodyMode, HttpMethods, HttpMethodsArray } from '@yasumu/core';
 import { cn } from '@/lib/utils';
 import { useRequestConfig, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { ICookie, useResponse } from '@/stores/api-testing/response.store';
@@ -12,6 +12,7 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { useCallback, useEffect } from 'react';
 import { parseString } from 'set-cookie-parser';
 import { useDebounceCallback } from 'usehooks-ts';
+import { HttpMethodColors } from '@/lib/constants';
 
 export default function RequestInput() {
   const { current } = useRequestStore();

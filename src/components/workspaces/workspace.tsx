@@ -7,8 +7,8 @@ import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { GetStartedAction } from '../cards/get-started-action';
 import Link from 'next/link';
-import { Yasumu } from '@/lib/api/yasumu';
-import { YasumuWorkspaceHistory } from '@/lib/api/workspace/YasumuWorkspace';
+import { Yasumu } from '@/lib/yasumu';
+import { YasumuWorkspaceHistory } from '@yasumu/core';
 
 export function YasumuWorkspace() {
   const [recentWorkspaces, setRecentWorkspaces] = useState<YasumuWorkspaceHistory[]>([]);

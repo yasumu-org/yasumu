@@ -1,4 +1,4 @@
-import { YasumuRestEntity } from '@/lib/api/workspace/modules/rest/YasumuRestEntity';
+import { YasumuRestEntity } from '@yasumu/core';
 import { create } from 'zustand';
 
 export interface IRequestHistory {

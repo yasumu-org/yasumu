@@ -1,6 +1,6 @@
 'use client';
 import { LoadingSpinner } from '@/components/layout/loading';
-import { getName, getVersion, getTauriVersion } from '@tauri-apps/api/app';
+import { Yasumu } from '@/lib/yasumu';
 import { useEffect, useState } from 'react';
 
 interface IMetadata {
@@ -14,9 +14,9 @@ export function YasumuVersion() {
 
   useEffect(() => {
     (async () => {
-      const name = await getName().catch(() => 'Unknown');
-      const version = await getVersion().catch(() => '0.0.0');
-      const tauriVersion = await getTauriVersion().catch(() => '0.0.0');
+      const name = await Yasumu.app.getName().catch(() => 'Unknown');
+      const version = await Yasumu.app.getVersion().catch(() => '0.0.0');
+      const tauriVersion = await Yasumu.app.getRuntimeVersion().catch(() => '0.0.0');
 
       setMetadata({
         name,

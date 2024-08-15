@@ -3,7 +3,7 @@ import { Tree, TreeViewElement } from '@/components/magicui/file-tree';
 import { RecursiveTreeGenerator } from './file-tree';
 import { FsActionManager } from './fs-action-manager';
 import { useCallback, useEffect, useState } from 'react';
-import { Yasumu } from '@/lib/api/yasumu';
+import { Yasumu } from '@/lib/yasumu';
 import { toast } from 'sonner';
 import { watch } from '@tauri-apps/plugin-fs';
 
