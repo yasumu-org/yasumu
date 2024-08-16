@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Yasumu } from '@/lib/yasumu';
 import { YasumuWorkspaceHistory } from '@yasumu/core';
 import { Separator } from '../ui/separator';
+import { Trash2 } from 'lucide-react';
 
 export function YasumuWorkspace() {
   const [recentWorkspaces, setRecentWorkspaces] = useState<YasumuWorkspaceHistory[]>([]);
@@ -114,17 +115,22 @@ export function YasumuWorkspace() {
               <h2 className="text-lg font-semibold">Recent workspaces:</h2>
               {recentWorkspaces.length ? (
                 <>
-                  <ul className="pl-4">
+                  <ul>
                     {recentWorkspaces.map((workspace) => (
-                      <li key={workspace.path} className="list-disc text-primary list-inside">
-                        <Button variant="link" size="sm" onClick={() => handleWorkspaceCreate(workspace.path)}>
-                          {workspace.name}
+                      <li key={workspace.path}>
+                        <Button
+                          variant="link"
+                          size="sm"
+                          onClick={() => handleWorkspaceCreate(workspace.path)}
+                          className="text-muted-foreground"
+                        >
+                          {workspace.path}
                         </Button>
                       </li>
                     ))}
                   </ul>
                   <Button
-                    variant="ghost"
+                    variant="destructive"
                     size="sm"
                     onClick={() => {
                       Yasumu.clearWorkspacesHistory().then(() => {
@@ -132,6 +138,7 @@ export function YasumuWorkspace() {
                       });
                     }}
                   >
+                    <Trash2 className="h-4 w-4" />
                     Clear recent workspaces
                   </Button>
                 </>

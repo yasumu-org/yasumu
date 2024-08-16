@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BodyMode, HttpMethods, HttpMethodsArray } from '@yasumu/core';
-import { cn } from '@/lib/utils';
+import { cn, IS_AUDIO, IS_BINARY_DATA, IS_IMAGE, IS_VIDEO } from '@/lib/utils';
 import { useRequestConfig, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { ICookie, useResponse } from '@/stores/api-testing/response.store';
 import { useCallback, useEffect } from 'react';
@@ -50,6 +50,7 @@ export default function RequestInput() {
       setCookies,
       setAbortController,
       abortController,
+      setUrl,
     } = u;
 
     return {
@@ -61,6 +62,7 @@ export default function RequestInput() {
       setCookies,
       setAbortController,
       abortController,
+      setUrl,
     };
   });
 
@@ -188,6 +190,7 @@ export default function RequestInput() {
 
       const end = Math.abs(Date.now() - start);
 
+      responseStore.setUrl(res.url);
       responseStore.setResponseStatus(res.status);
       responseStore.setResponseTime(end);
 
@@ -215,11 +218,22 @@ export default function RequestInput() {
 
       responseStore.setHeaders(resHeaders);
 
-      const value = await res.arrayBuffer();
-      const str = new TextDecoder().decode(value);
+      const contentType = res.headers.get('Content-Type') || '';
 
-      responseStore.setBody(str);
-      responseStore.setResponseSize(value.byteLength);
+      const isTextRenderable =
+        !IS_AUDIO(contentType) && !IS_VIDEO(contentType) && !IS_IMAGE(contentType) && !IS_BINARY_DATA(contentType);
+
+      if (isTextRenderable) {
+        const value = await res.arrayBuffer();
+        const str = new TextDecoder().decode(value);
+
+        responseStore.setBody(str);
+        responseStore.setResponseSize(Number(res.headers.get('Content-Length')) || value.byteLength);
+      } else {
+        responseStore.setBody('');
+        const len = Number(res.headers.get('Content-Length')) || 0;
+        responseStore.setResponseSize(len);
+      }
     } catch (e) {
       console.error(e);
       responseStore.setBody(String(e));

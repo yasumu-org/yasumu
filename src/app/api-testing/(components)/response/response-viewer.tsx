@@ -10,8 +10,9 @@ import { useLayoutStore } from '@/stores/application/layout.store';
 import { useResponse } from '@/stores/api-testing/response.store';
 import { LoadingSpinner } from '@/components/layout/loading';
 import { useRequestStore } from '@/stores/api-testing/request-config.store';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
+import { ResponseAttachmentGuard } from './response-attachment-guard';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
@@ -41,6 +42,15 @@ export default function ResponseViewer() {
       save();
     }
   }, [body, headers, responseSize, responseStatus, responseTime]);
+
+  const contentType = useMemo(() => {
+    try {
+      const header = headers.find((header) => header.key.toLowerCase() === 'content-type');
+      return header?.value || null;
+    } catch {
+      return null;
+    }
+  }, [headers]);
 
   return (
     <div className={cn(orientation === 'horizontal' ? 'px-2' : 'p-2')}>
@@ -72,10 +82,14 @@ export default function ResponseViewer() {
             )}
           >
             <TabsContent value="pretty">
-              <PrettyResponseViewer content={body} />
+              <ResponseAttachmentGuard contentType={contentType}>
+                <PrettyResponseViewer content={body} />
+              </ResponseAttachmentGuard>
             </TabsContent>
             <TabsContent value="raw">
-              <pre className={cn('word-break-break-all whitespace-pre-wrap text-sm')}>{body}</pre>
+              <ResponseAttachmentGuard contentType={contentType}>
+                <pre className={cn('word-break-break-all whitespace-pre-wrap text-sm')}>{body}</pre>
+              </ResponseAttachmentGuard>
             </TabsContent>
             <TabsContent value="headers">
               <ResponseHeaders headers={headers} />

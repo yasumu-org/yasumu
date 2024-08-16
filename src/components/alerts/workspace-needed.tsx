@@ -14,16 +14,16 @@ interface IProps {
   children: React.ReactNode;
 }
 
-export function ComingSoon({ children, name }: IProps) {
+export function WorkspaceRequired({ children, name }: IProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>This feature is coming soon!</AlertDialogTitle>
+          <AlertDialogTitle>Not in a Workspace!</AlertDialogTitle>
           <AlertDialogDescription>
-            We are working hard to bring <span className="font-bold text-destructive">{name}</span> to you soon. Stay
-            tuned!
+            You need to open a workspace in order to use <span className="font-bold text-destructive">{name}</span>.
+            Please open a workspace first.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
