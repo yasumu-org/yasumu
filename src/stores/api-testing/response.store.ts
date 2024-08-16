@@ -32,6 +32,7 @@ export interface IResponse {
   issuerCN: string;
   validUntil: string;
   abortController: AbortController | null;
+  url: string;
   setBody: (body: string) => void;
   setHeaders: (headers: IHeader[]) => void;
   setCookies: (cookies: ICookie[]) => void;
@@ -47,9 +48,11 @@ export interface IResponse {
   setIssuerCN: (issuerCN: string) => void;
   setValidUntil: (validUntil: string) => void;
   setAbortController: (controller: AbortController | null) => void;
+  setUrl: (url: string) => void;
 }
 
 export const useResponse = create<IResponse>((set) => ({
+  url: '',
   body: '',
   headers: [],
   cookies: [],
@@ -80,4 +83,5 @@ export const useResponse = create<IResponse>((set) => ({
   setIssuerCN: (issuerCN: string) => set({ issuerCN }),
   setValidUntil: (validUntil: string) => set({ validUntil }),
   setAbortController: (abortController: AbortController | null) => set({ abortController }),
+  setUrl: (url: string) => set({ url }),
 }));

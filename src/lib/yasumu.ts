@@ -15,6 +15,7 @@ import {
 } from '@yasumu/core';
 import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
+import * as shell from '@tauri-apps/plugin-shell';
 
 export const Yasumu = createYasumu({
   fetch: fetch as FetchCommon,
@@ -48,4 +49,5 @@ export const Yasumu = createYasumu({
       window.location.reload();
     },
   },
+  shell,
 });

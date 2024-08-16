@@ -23,6 +23,9 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "copyright": "Yasumu Org.",
+    "shortDescription": "Yasumu is a customizable, free and open-source application to test various types of APIs.",
+    "longDescription": "Yasumu is a free and open-source application to test various types of APIs. It is a lightweight alternative to postman, insomnia, and bruno. It follows simple user interface to provide better user experience without causing a lot of confusion.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
