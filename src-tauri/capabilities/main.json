@@ -150,6 +150,7 @@
           "path": "**/*"
         }
       ]
-    }
+    },
+    "process:default"
   ]
 }

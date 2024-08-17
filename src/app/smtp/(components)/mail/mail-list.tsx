@@ -4,14 +4,16 @@ import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEmailStore } from '@/stores/smtp/emails';
-// import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
+import { YasumuMail } from '@yasumu/core';
 
 interface MailListProps {
-  items: any[];
+  items: (YasumuMail & {
+    read?: boolean;
+  })[];
 }
 
 export function MailList({ items }: MailListProps) {
-  const { selectedEmail, setSelectedEmail } = useEmailStore() as any;
+  const { selectedEmail, setSelectedEmail } = useEmailStore();
 
   return (
     <ScrollArea className="h-screen">
@@ -31,16 +33,18 @@ export function MailList({ items }: MailListProps) {
                   <div className="font-semibold">{item.from}</div>
                   {!item.read && <span className="flex h-2 w-2 rounded-full bg-blue-600" />}
                 </div>
-                <div
-                  className={cn(
-                    'ml-auto text-xs',
-                    selectedEmail?.id === item.id ? 'text-foreground' : 'text-muted-foreground',
-                  )}
-                >
-                  {formatDistanceToNow(new Date(item.created_at as string), {
-                    addSuffix: true,
-                  })}
-                </div>
+                {item.date && (
+                  <div
+                    className={cn(
+                      'ml-auto text-xs',
+                      selectedEmail?.id === item.id ? 'text-foreground' : 'text-muted-foreground',
+                    )}
+                  >
+                    {formatDistanceToNow(new Date(item.date as string), {
+                      addSuffix: true,
+                    })}
+                  </div>
+                )}
               </div>
               <div className="text-xs font-medium">{item.subject}</div>
             </div>

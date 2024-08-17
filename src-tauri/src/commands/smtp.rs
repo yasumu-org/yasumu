@@ -1,13 +1,26 @@
 use mailin_embedded::{response, Handler, Response, Server};
+use mailparse::{parse_mail, MailHeaderMap};
+use serde::Serialize;
 use std::collections::VecDeque;
 use std::io::Error;
 use std::sync::{Arc, RwLock};
 use tauri::{Emitter, State};
 use tokio::task::JoinHandle;
+use uuid::Uuid;
+
+#[derive(Clone, Serialize)]
+pub struct YasumuMail {
+    pub id: String,
+    pub from: String,
+    pub to: String,
+    pub subject: String,
+    pub body: String,
+    pub date: String,
+}
 
 #[derive(Clone)]
 pub struct SmtpHandler {
-    messages: Arc<RwLock<VecDeque<String>>>,
+    messages: Arc<RwLock<VecDeque<YasumuMail>>>,
     window: Option<tauri::Window>,
     current_data: Arc<RwLock<String>>,
 }
@@ -21,7 +34,7 @@ impl SmtpHandler {
         }
     }
 
-    fn get_messages(&self) -> Vec<String> {
+    fn get_messages(&self) -> Vec<YasumuMail> {
         self.messages.read().unwrap().clone().into()
     }
 
@@ -69,13 +82,42 @@ impl Handler for SmtpHandler {
         Ok(())
     }
 
-    // TODO: parse properly
     fn data_end(&mut self) -> Response {
         let accumulated_str = self.current_data.read().unwrap().clone();
-        self.messages.write().unwrap().push_back(accumulated_str);
-        self.emit_new_email();
+        let parsed = parse_mail(accumulated_str.as_ref());
 
-        response::OK
+        let result = match parsed {
+            Ok(mail) => {
+                let email = YasumuMail {
+                    body: mail.get_body().unwrap_or("".to_string()),
+                    from: mail
+                        .get_headers()
+                        .get_first_value("From")
+                        .unwrap_or("".to_string()),
+                    id: Uuid::new_v4().to_string(),
+                    subject: mail
+                        .get_headers()
+                        .get_first_value("Subject")
+                        .unwrap_or("".to_string()),
+                    to: mail
+                        .get_headers()
+                        .get_first_value("To")
+                        .unwrap_or("".to_string()),
+                    date: mail
+                        .get_headers()
+                        .get_first_value("Date")
+                        .unwrap_or("".to_string()),
+                };
+                self.messages.write().unwrap().push_front(email);
+                self.emit_new_email();
+                response::OK
+            }
+            Err(_) => {
+                return response::INTERNAL_ERROR;
+            }
+        };
+
+        result
     }
 }
 
@@ -103,15 +145,26 @@ impl ServerState {
 }
 
 #[tauri::command]
-pub async fn start_smtp_server(state: State<'_, ServerState>, port: u32) -> Result<(), String> {
+pub async fn is_smtp_server_running(state: State<'_, ServerState>) -> Result<bool, String> {
+    Ok(state.handle.read().unwrap().is_some())
+}
+
+#[tauri::command]
+pub async fn start_smtp_server(
+    window: tauri::Window,
+    state: State<'_, ServerState>,
+    port: u32,
+) -> Result<(), String> {
     let mut handle_guard = state.handle.write().unwrap();
 
     if handle_guard.is_some() {
         return Err("Server is already running".into());
     }
 
-    let handler = state.get_handler();
+    let mut handler = state.get_handler();
     let addr = format!("127.0.0.1:{}", port);
+
+    handler.window = Some(window);
 
     let handle = tokio::spawn(async move {
         let mut server = Server::new(handler);
@@ -140,6 +193,12 @@ pub async fn stop_smtp_server(
 }
 
 #[tauri::command]
-pub fn get_emails(state: State<'_, ServerState>) -> Vec<String> {
+pub fn get_emails(state: State<'_, ServerState>) -> Vec<YasumuMail> {
     state.get_handler().get_messages()
+}
+
+#[tauri::command]
+pub fn clear_emails(state: State<'_, ServerState>) -> Result<(), String> {
+    state.get_handler().messages.write().unwrap().clear();
+    Ok(())
 }

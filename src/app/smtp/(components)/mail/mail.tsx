@@ -5,18 +5,44 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { MailDisplay } from './mail-display';
-import { Search } from 'lucide-react';
+import { RefreshCcw, Search, Trash2 } from 'lucide-react';
 import { MailList } from './mail-list';
-// import { YasumuEmailMessage } from '@/lib/smtp/YasumuSmtp';
 import { useEmailStore } from '@/stores/smtp/emails';
+import { Button } from '@/components/ui/button';
+import { useCallback, useEffect } from 'react';
+import { Yasumu } from '@/lib/yasumu';
 
 interface MailProps {
-  mails: any[];
   defaultLayout: number[] | undefined;
 }
 
-export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
-  const { selectedEmail } = useEmailStore();
+export function Mail({ defaultLayout = [32, 48] }: MailProps) {
+  const { selectedEmail, emails, setEmails } = useEmailStore();
+
+  const handleClearAll = useCallback(async () => {
+    const smtp = Yasumu.workspace?.smtp;
+    if (!smtp) return;
+
+    try {
+      await smtp.clear();
+      setEmails([]);
+    } catch {}
+  }, []);
+
+  const handleRefresh = useCallback(async () => {
+    const smtp = Yasumu.workspace?.smtp;
+    if (!smtp) return;
+
+    try {
+      const emails = await smtp.fetch();
+      setEmails(emails);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    handleRefresh();
+  }, []);
+
   return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
@@ -28,7 +54,7 @@ export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
       >
         <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
           <Tabs defaultValue="all">
-            <div className="flex items-center px-4 py-2">
+            <div className="flex items-center px-4 py-2 gap-4">
               <h1 className="text-xl font-bold">Inbox</h1>
               <TabsList className="ml-auto">
                 <TabsTrigger value="all" className="text-zinc-600 dark:text-zinc-200">
@@ -38,6 +64,12 @@ export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
                   Unread
                 </TabsTrigger>
               </TabsList>
+              <Button size="icon" onClick={handleRefresh}>
+                <RefreshCcw className="h-5 w-5" />
+              </Button>
+              <Button size="icon" variant={'destructive'} onClick={handleClearAll}>
+                <Trash2 className="h-5 w-5" />
+              </Button>
             </div>
             <Separator />
             <div className="bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -49,17 +81,17 @@ export function Mail({ mails, defaultLayout = [32, 48] }: MailProps) {
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <MailList items={mails} />
+              <MailList items={emails} />
             </TabsContent>
             <TabsContent value="unread" className="m-0">
-              <MailList items={mails.filter((item) => !item.read)} />
+              {/* <MailList items={emails.filter((item) => !item.read)} /> */}
+              <MailList items={emails} />
             </TabsContent>
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
-          {/* @ts-ignore */}
-          <MailDisplay mail={mails.find((item) => item.id === (selectedEmail?.id || null)) || null} />
+          <MailDisplay mail={emails.find((item) => item.id === (selectedEmail?.id || null)) || null} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>
