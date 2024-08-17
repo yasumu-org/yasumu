@@ -74,12 +74,17 @@ export function RecursiveTreeGenerator({ tree }: { tree: TreeViewElement[] }) {
             isFile
             item={item}
             onDelete={() => handleDelete(item.id)}
-            onOpenExternal={() => {
-              open(item.id).catch((e) => {
-                toast.error('Failed to open the file explorer', {
-                  description: String(e),
+            onOpenExternal={async () => {
+              try {
+                const dirname = await Yasumu.path.dirname(item.id);
+                await open(dirname).catch((e) => {
+                  toast.error('Failed to open the file explorer', {
+                    description: String(e),
+                  });
                 });
-              });
+              } catch {
+                //
+              }
             }}
           >
             <FileUI
