@@ -37,10 +37,10 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@tauri-apps/api": "^2.0.0-rc.0",
+    "@tauri-apps/api": "^2.0.0-rc.1",
     "@tauri-apps/plugin-dialog": "^2.0.0-rc.0",
-    "@tauri-apps/plugin-fs": "^2.0.0-rc.0",
-    "@tauri-apps/plugin-http": "^2.0.0-rc.0",
+    "@tauri-apps/plugin-fs": "^2.0.0-rc.1",
+    "@tauri-apps/plugin-http": "^2.0.0-rc.1",
     "@tauri-apps/plugin-process": "^2.0.0-rc.0",
     "@tauri-apps/plugin-shell": "^2.0.0-rc.0",
     "@tauri-apps/plugin-store": "^2.0.0-rc.0",
@@ -71,7 +71,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.0.0-rc.0",
+    "@tauri-apps/cli": "^2.0.0-rc.1",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.15",
