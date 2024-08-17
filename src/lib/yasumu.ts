@@ -16,6 +16,7 @@ import {
 import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
+import * as process from '@tauri-apps/plugin-process';
 
 export const Yasumu = createYasumu({
   fetch: fetch as FetchCommon,
@@ -40,14 +41,6 @@ export const Yasumu = createYasumu({
     invoke,
     addPluginListener,
   },
-  // TODO: use tauri process api
-  process: {
-    async exit(code) {
-      window.close();
-    },
-    async relaunch() {
-      window.location.reload();
-    },
-  },
+  process,
   shell,
 });

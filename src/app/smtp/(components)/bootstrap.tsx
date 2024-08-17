@@ -11,65 +11,70 @@ import { Yasumu } from '@/lib/yasumu';
 
 export function BootstrapSMTP() {
   const { setEmails } = useEmailStore();
-  const { setYasumu, yasumu } = useYasumuSmtp();
-  const [port, setPort] = useState('5566');
+  const { port, setPort, running, setRunning } = useYasumuSmtp();
 
   useEffect(() => {
-    if (!yasumu) return;
+    if (!Yasumu.workspace?.smtp) return;
 
-    // @ts-ignore
-    const dispose = Yasumu.events.listen(yasumu.EmailChannel, handleEmailReceived);
+    const dispose = Yasumu.workspace.smtp.onUpdate(handleEmailReceived);
 
     return () => {
       dispose.then((d) => d());
     };
-  }, [yasumu]);
+  }, []);
 
   const handleEmailReceived = async () => {
-    if (!yasumu) return;
+    if (!Yasumu.workspace?.smtp) return;
 
     try {
-      // @ts-ignore
-      const emails = await yasumu.getEmails();
+      const emails = await Yasumu.workspace.smtp.fetch();
       setEmails(emails);
     } catch {}
   };
 
   const startSmtp = useCallback(async () => {
-    // if (yasumu) return toast.info('SMTP server is already running.');
-    // try {
-    //   const yasumu = new YasumuSmtp({ port: Number(port) || 5566 });
-    //   // @ts-ignore
-    //   globalThis.yasumu = yasumu;
-    //   await yasumu.start();
-    //   setYasumu(yasumu);
-    //   toast.success(`SMTP server started on port ${yasumu.getPort()}`);
-    // } catch (e) {
-    //   toast.error(`Failed to start SMTP server: ${String(e)}`);
-    // }
-  }, [port, yasumu]);
-
-  const stopSmtp = useCallback(async () => {
-    if (!yasumu) return;
+    const isRunning = await Yasumu.workspace?.smtp.isRunning();
+    if (isRunning) return toast.info('SMTP server is already running.');
 
     try {
-      // @ts-ignore
-      await yasumu.stop();
-      setYasumu(null);
+      const smtp = Yasumu.workspace!.smtp;
+      const smtpPort = Number(port) || 5566;
+
+      smtp.start({ port: smtpPort });
+      setRunning(true);
+      toast.success(`SMTP server started on port ${smtpPort}`);
+    } catch (e) {
+      toast.error(`Failed to start SMTP server: ${String(e)}`);
+    }
+  }, [port]);
+
+  const stopSmtp = useCallback(async () => {
+    if (!Yasumu.workspace?.smtp) return;
+
+    try {
+      await Yasumu.workspace.smtp.stop();
+      setRunning(false);
     } catch (e) {
       toast.error(`Failed to stop SMTP server: ${String(e)}`);
     }
-  }, [yasumu]);
+  }, []);
+
+  useEffect(() => {
+    if (!Yasumu.workspace?.smtp) return;
+
+    Yasumu.workspace.smtp.isRunning().then((running) => {
+      console.log({ running });
+      setRunning(running);
+    }, console.error);
+  }, []);
 
   return (
     <div className="py-8">
-      {/* @ts-ignore */}
-      {yasumu?.running ? (
+      {running ? (
         <div>
           <Card>
-            {/* @ts-ignore */}
-            <CardHeader>SMTP Server is running on port {yasumu.getPort()}</CardHeader>
-            <CardFooter>
+            <CardHeader>SMTP Server is running on port {port}</CardHeader>
+            <CardFooter className="flex items-center gap-4">
               <Link href="/smtp/mail">
                 <Button>View Emails</Button>
               </Link>

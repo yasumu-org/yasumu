@@ -6,7 +6,6 @@ export default function Page() {
     <Content>
       <h1 className="text-xl font-medium">SMTP Server</h1>
       <p>Local SMTP server for development and testing.</p>
-
       <BootstrapSMTP />
     </Content>
   );
