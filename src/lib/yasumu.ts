@@ -4,22 +4,14 @@ import * as events from '@tauri-apps/api/event';
 import * as path from '@tauri-apps/api/path';
 import * as fs from '@tauri-apps/plugin-fs';
 import * as dialog from '@tauri-apps/plugin-dialog';
-import {
-  createYasumu,
-  FileSystemCommon,
-  StoreCommon,
-  PathCommon,
-  EventsCommon,
-  ScriptsCommon,
-  FetchCommon,
-} from '@yasumu/core';
+import { createYasumu, FileSystemCommon, StoreCommon, PathCommon, EventsCommon, ScriptsCommon } from '@yasumu/core';
 import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
 import * as process from '@tauri-apps/plugin-process';
 
 export const Yasumu = createYasumu({
-  fetch: fetch as FetchCommon,
+  fetch,
   fs: fs as unknown as FileSystemCommon,
   app: {
     getName: app.getName,

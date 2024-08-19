@@ -25,6 +25,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::workspace::set_current_workspace,
             commands::workspace::get_current_workspace,
+            commands::workspace::clear_current_workspace_session,
             commands::network::get_local_address,
             commands::smtp::is_smtp_server_running,
             commands::smtp::start_smtp_server,
