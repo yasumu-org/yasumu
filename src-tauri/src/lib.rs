@@ -32,6 +32,7 @@ pub fn run() {
             commands::smtp::stop_smtp_server,
             commands::smtp::get_emails,
             commands::smtp::clear_emails,
+            commands::smtp::get_smtp_port,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
