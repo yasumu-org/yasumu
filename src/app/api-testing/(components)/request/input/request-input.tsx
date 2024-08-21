@@ -156,35 +156,18 @@ export default function RequestInput() {
           break;
       }
 
-      const res = await Promise.race([
-        Yasumu.fetch(url, {
-          method: method.toUpperCase(),
-          body: bodyData,
-          redirect: 'follow',
-          // @ts-ignore
-          maxRedirections: 20,
-          cache: 'no-cache',
-          credentials: 'omit',
-          connectTimeout: 60_000,
-          headers: h,
-          // This does not work for some reason
-          // signal: controller.signal,
-        }),
-        new Promise<null>((resolve, reject) => {
-          controller.signal.onabort = () => {
-            reject(new Error('Request was aborted'));
-          };
-
-          setTimeout(
-            (controller) => {
-              if (controller.signal.aborted) return resolve(null);
-              reject(new Error('Request timed out'));
-            },
-            60_000,
-            controller,
-          );
-        }),
-      ]);
+      const res = await Yasumu.fetch(url, {
+        method: method.toUpperCase(),
+        body: bodyData,
+        redirect: 'follow',
+        // @ts-ignore
+        maxRedirections: 20,
+        cache: 'no-cache',
+        credentials: 'omit',
+        connectTimeout: 60_000,
+        headers: h,
+        signal: controller.signal,
+      });
 
       if (!res) throw new Error('Failed to fetch response');
 
