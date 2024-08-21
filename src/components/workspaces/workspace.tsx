@@ -54,7 +54,7 @@ export function YasumuWorkspace() {
           <div className="space-y-4">
             <Separator className="my-4" />
             <h2 className="text-lg font-semibold">Get started:</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
               <GetStartedAction
                 title="API Testing"
                 description="Get started by testing your REST API"

@@ -65,7 +65,7 @@ export function SideNavMenu({ icon, name, link, active, comingSoon, unchecked }:
       alertWorkspace={!unchecked && !currentWorkspace}
       comingSoon={comingSoon ? name : undefined}
       className={cn(
-        'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-white md:h-8 md:w-8',
+        'flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-black dark:hover:text-white md:h-8 md:w-8',
         isActive && 'bg-accent text-accent-foreground',
       )}
       title={name}
