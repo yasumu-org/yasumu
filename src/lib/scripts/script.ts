@@ -1,6 +1,7 @@
 export function evaluateUnsafe<T>(script: string, contextData: string): T {
   // TODO: use tanxium runtime to evaluate the script
   return eval(`let fn = (async function() {
+      "use strict";
       let window = undefined;
       let context = ${contextData};
       let globalThis = { context };
@@ -23,7 +24,6 @@ export function evaluateUnsafe<T>(script: string, contextData: string): T {
       let XMLHttpRequest = undefined;
       let requestAnimationFrame = undefined;
       let cancelAnimationFrame = undefined;
-      let eval = undefined;
       ${script}
     });
 
