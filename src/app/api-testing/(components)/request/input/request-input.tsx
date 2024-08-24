@@ -83,6 +83,11 @@ export default function RequestInput() {
       const controller = new AbortController();
       responseStore.setAbortController(controller);
 
+      const contextData: Record<string, any> = {
+        response: {},
+        request: {},
+      };
+
       const h = new Headers();
 
       headers.forEach((header) => {
@@ -156,6 +161,11 @@ export default function RequestInput() {
           break;
       }
 
+      contextData.request.headers = Array.from(h.entries()).map(([key, value]) => ({ key, value }));
+      contextData.request.url = url;
+      contextData.request.method = method;
+      contextData.request.body = typeof bodyData === 'string' ? bodyData : undefined;
+
       const res = await Yasumu.fetch(url, {
         method: method.toUpperCase(),
         body: bodyData,
@@ -177,8 +187,8 @@ export default function RequestInput() {
       responseStore.setResponseStatus(res.status);
       responseStore.setResponseTime(end);
 
-      const cookies: ICookie[] = res.headers.getSetCookie().map((c) => {
-        const data = parseString(c);
+      const cookies: ICookie[] = res.headers.getSetCookie().map((cookie) => {
+        const data = parseString(cookie);
 
         return {
           name: data.name,
@@ -210,13 +220,25 @@ export default function RequestInput() {
         const value = await res.arrayBuffer();
         const str = new TextDecoder().decode(value);
 
+        const bodySize = Number(res.headers.get('Content-Length')) || value.byteLength;
+
+        contextData.response.body = str;
+        contextData.response.contentLength = bodySize;
+
         responseStore.setBody(str);
-        responseStore.setResponseSize(Number(res.headers.get('Content-Length')) || value.byteLength);
+        responseStore.setResponseSize(bodySize);
       } else {
         responseStore.setBody('');
         const len = Number(res.headers.get('Content-Length')) || 0;
+        contextData.response.contentLength = len;
         responseStore.setResponseSize(len);
       }
+
+      contextData.response.headers = resHeaders;
+      contextData.response.cookies = cookies;
+      contextData.response.responseTime = end;
+
+      queueMicrotask(async () => {});
     } catch (e) {
       console.error(e);
       responseStore.setBody(String(e));
