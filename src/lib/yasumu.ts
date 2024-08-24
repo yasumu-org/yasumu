@@ -9,7 +9,7 @@ import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
 import * as process from '@tauri-apps/plugin-process';
-import { evaluateUnsafe } from './script';
+import { evaluateUnsafe } from './scripts/script';
 
 export const Yasumu = createYasumu({
   fetch,

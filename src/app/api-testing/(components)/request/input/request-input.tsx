@@ -12,10 +12,11 @@ import { parseString } from 'set-cookie-parser';
 import { useDebounceCallback } from 'usehooks-ts';
 import { HttpMethodColors } from '@/lib/constants';
 import { Yasumu } from '@/lib/yasumu';
+import { evaluateScript } from '@/lib/scripts/evaluator';
 
 export default function RequestInput() {
   const { current } = useRequestStore();
-  const { method, setMethod, url, setUrl, body, headers, bodyMode } = useRequestConfig();
+  const { method, setMethod, url, setUrl, body, headers, bodyMode, id, script: preRequestScript } = useRequestConfig();
 
   const save = useDebounceCallback(() => {
     if (!current) return;
@@ -51,6 +52,7 @@ export default function RequestInput() {
       setAbortController,
       abortController,
       setUrl,
+      script,
     } = u;
 
     return {
@@ -63,6 +65,7 @@ export default function RequestInput() {
       setAbortController,
       abortController,
       setUrl,
+      postRequestScript: script,
     };
   });
 
@@ -83,12 +86,17 @@ export default function RequestInput() {
       const controller = new AbortController();
       responseStore.setAbortController(controller);
 
+      const h = new Headers();
+
       const contextData: Record<string, any> = {
         response: {},
-        request: {},
+        request: {
+          id,
+          url,
+          method,
+          headers: h,
+        },
       };
-
-      const h = new Headers();
 
       headers.forEach((header) => {
         if (header.enabled && header.key && header.value) h.append(header.key, header.value);
@@ -161,10 +169,11 @@ export default function RequestInput() {
           break;
       }
 
-      contextData.request.headers = Array.from(h.entries()).map(([key, value]) => ({ key, value }));
-      contextData.request.url = url;
-      contextData.request.method = method;
-      contextData.request.body = typeof bodyData === 'string' ? bodyData : undefined;
+      contextData.request.body = bodyData;
+
+      if (!!preRequestScript?.trim().length) {
+        await evaluateScript(preRequestScript, contextData, 'Pre-request script');
+      }
 
       const res = await Yasumu.fetch(url, {
         method: method.toUpperCase(),
@@ -234,11 +243,19 @@ export default function RequestInput() {
         responseStore.setResponseSize(len);
       }
 
-      contextData.response.headers = resHeaders;
+      contextData.response.headers = res.headers;
+      contextData.response.status = res.status;
+      contextData.response.statusText = res.statusText;
+      contextData.response.redirected = res.redirected;
+      contextData.response.type = res.type;
+      contextData.response.url = res.url;
+      contextData.response.ok = res.ok;
       contextData.response.cookies = cookies;
       contextData.response.responseTime = end;
 
-      queueMicrotask(async () => {});
+      if (!!responseStore.postRequestScript?.trim().length) {
+        await evaluateScript(responseStore.postRequestScript, contextData, 'Post-request script');
+      }
     } catch (e) {
       console.error(e);
       responseStore.setBody(String(e));
@@ -248,7 +265,7 @@ export default function RequestInput() {
       }
       responseStore.setAbortController(null);
     }
-  }, [url, method, headers, body, responseStore]);
+  }, [url, method, headers, body, responseStore, id, preRequestScript]);
 
   return (
     <div className="flex gap-2">

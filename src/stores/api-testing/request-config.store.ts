@@ -29,12 +29,14 @@ export interface IRequestConfig {
   headers: IParamOrHeader[];
   body: BodyType;
   bodyMode: BodyMode;
+  script: string;
   setId: (id: string) => void;
   setUrl: (url: string) => void;
   setMethod: (method: HttpMethods) => void;
   setHeaders: (headers: IParamOrHeader[]) => void;
   setBody: (body: Partial<BodyType>) => void;
   setBodyMode: (bodyMode: BodyMode) => void;
+  setScript: (script: string) => void;
 }
 
 export const useRequestConfig = create<IRequestConfig>((set) => ({
@@ -54,12 +56,14 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
     urlencoded: [],
   },
   bodyMode: BodyMode.None,
+  script: '',
   setId: (id: string) => set({ id }),
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),
   setHeaders: (headers: IParamOrHeader[]) => set({ headers }),
   setBody: (body: Partial<BodyType>) => set((old) => ({ body: { ...old.body, ...body } })),
   setBodyMode: (bodyMode: BodyMode) => set({ bodyMode }),
+  setScript: (script: string) => set({ script }),
 }));
 
 export interface IRequestStore {

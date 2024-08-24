@@ -1,15 +1,9 @@
-import { Yasumu } from './yasumu';
-
 export function evaluateUnsafe<T>(script: string, contextData: string): T {
-  const yasumu = Yasumu;
-
-  void yasumu;
-
   // TODO: use tanxium runtime to evaluate the script
   return eval(`let fn = (async function() {
       let window = undefined;
       let context = ${contextData};
-      let globalThis = { Yasumu: yasumu, context };
+      let globalThis = { context };
       let global = globalThis;
       let self = globalThis;
       let document = undefined;
