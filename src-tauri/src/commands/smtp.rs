@@ -20,6 +20,7 @@ pub struct YasumuMail {
 
 #[derive(Clone)]
 pub struct SmtpHandler {
+    port: Option<u32>,
     messages: Arc<RwLock<VecDeque<YasumuMail>>>,
     window: Option<tauri::Window>,
     current_data: Arc<RwLock<String>>,
@@ -31,6 +32,7 @@ impl SmtpHandler {
             messages: Arc::new(RwLock::new(VecDeque::new())),
             window,
             current_data: Arc::new(RwLock::new(String::new())),
+            port: None,
         }
     }
 
@@ -165,6 +167,7 @@ pub async fn start_smtp_server(
     let addr = format!("127.0.0.1:{}", port);
 
     handler.window = Some(window);
+    handler.port = Some(port);
 
     let handle = tokio::spawn(async move {
         let mut server = Server::new(handler);
@@ -201,4 +204,9 @@ pub fn get_emails(state: State<'_, ServerState>) -> Vec<YasumuMail> {
 pub fn clear_emails(state: State<'_, ServerState>) -> Result<(), String> {
     state.get_handler().messages.write().unwrap().clear();
     Ok(())
+}
+
+#[tauri::command]
+pub fn get_smtp_port(state: State<'_, ServerState>) -> Option<u32> {
+    state.get_handler().port
 }

@@ -12,10 +12,11 @@ import { parseString } from 'set-cookie-parser';
 import { useDebounceCallback } from 'usehooks-ts';
 import { HttpMethodColors } from '@/lib/constants';
 import { Yasumu } from '@/lib/yasumu';
+import { evaluateScript } from '@/lib/scripts/evaluator';
 
 export default function RequestInput() {
   const { current } = useRequestStore();
-  const { method, setMethod, url, setUrl, body, headers, bodyMode } = useRequestConfig();
+  const { method, setMethod, url, setUrl, body, headers, bodyMode, id, script: preRequestScript } = useRequestConfig();
 
   const save = useDebounceCallback(() => {
     if (!current) return;
@@ -51,6 +52,7 @@ export default function RequestInput() {
       setAbortController,
       abortController,
       setUrl,
+      script,
     } = u;
 
     return {
@@ -63,6 +65,7 @@ export default function RequestInput() {
       setAbortController,
       abortController,
       setUrl,
+      postRequestScript: script,
     };
   });
 
@@ -84,6 +87,16 @@ export default function RequestInput() {
       responseStore.setAbortController(controller);
 
       const h = new Headers();
+
+      const contextData: Record<string, any> = {
+        response: {},
+        request: {
+          id,
+          url,
+          method,
+          headers: h,
+        },
+      };
 
       headers.forEach((header) => {
         if (header.enabled && header.key && header.value) h.append(header.key, header.value);
@@ -156,35 +169,24 @@ export default function RequestInput() {
           break;
       }
 
-      const res = await Promise.race([
-        Yasumu.fetch(url, {
-          method: method.toUpperCase(),
-          body: bodyData,
-          redirect: 'follow',
-          // @ts-ignore
-          maxRedirections: 20,
-          cache: 'no-cache',
-          credentials: 'omit',
-          connectTimeout: 60_000,
-          headers: h,
-          // This does not work for some reason
-          // signal: controller.signal,
-        }),
-        new Promise<null>((resolve, reject) => {
-          controller.signal.onabort = () => {
-            reject(new Error('Request was aborted'));
-          };
+      contextData.request.body = bodyData;
 
-          setTimeout(
-            (controller) => {
-              if (controller.signal.aborted) return resolve(null);
-              reject(new Error('Request timed out'));
-            },
-            60_000,
-            controller,
-          );
-        }),
-      ]);
+      if (!!preRequestScript?.trim().length) {
+        await evaluateScript(preRequestScript, contextData, 'Pre-request script');
+      }
+
+      const res = await Yasumu.fetch(url, {
+        method: method.toUpperCase(),
+        body: bodyData,
+        redirect: 'follow',
+        // @ts-ignore
+        maxRedirections: 20,
+        cache: 'no-cache',
+        credentials: 'omit',
+        connectTimeout: 60_000,
+        headers: h,
+        signal: controller.signal,
+      });
 
       if (!res) throw new Error('Failed to fetch response');
 
@@ -194,8 +196,8 @@ export default function RequestInput() {
       responseStore.setResponseStatus(res.status);
       responseStore.setResponseTime(end);
 
-      const cookies: ICookie[] = res.headers.getSetCookie().map((c) => {
-        const data = parseString(c);
+      const cookies: ICookie[] = res.headers.getSetCookie().map((cookie) => {
+        const data = parseString(cookie);
 
         return {
           name: data.name,
@@ -227,12 +229,32 @@ export default function RequestInput() {
         const value = await res.arrayBuffer();
         const str = new TextDecoder().decode(value);
 
+        const bodySize = Number(res.headers.get('Content-Length')) || value.byteLength;
+
+        contextData.response.body = str;
+        contextData.response.contentLength = bodySize;
+
         responseStore.setBody(str);
-        responseStore.setResponseSize(Number(res.headers.get('Content-Length')) || value.byteLength);
+        responseStore.setResponseSize(bodySize);
       } else {
         responseStore.setBody('');
         const len = Number(res.headers.get('Content-Length')) || 0;
+        contextData.response.contentLength = len;
         responseStore.setResponseSize(len);
+      }
+
+      contextData.response.headers = res.headers;
+      contextData.response.status = res.status;
+      contextData.response.statusText = res.statusText;
+      contextData.response.redirected = res.redirected;
+      contextData.response.type = res.type;
+      contextData.response.url = res.url;
+      contextData.response.ok = res.ok;
+      contextData.response.cookies = cookies;
+      contextData.response.responseTime = end;
+
+      if (!!responseStore.postRequestScript?.trim().length) {
+        await evaluateScript(responseStore.postRequestScript, contextData, 'Post-request script');
       }
     } catch (e) {
       console.error(e);
@@ -243,7 +265,7 @@ export default function RequestInput() {
       }
       responseStore.setAbortController(null);
     }
-  }, [url, method, headers, body, responseStore]);
+  }, [url, method, headers, body, responseStore, id, preRequestScript]);
 
   return (
     <div className="flex gap-2">
