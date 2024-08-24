@@ -8,6 +8,8 @@ import { RequestBody } from '../body/request-body';
 import { useRequestConfig, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { useEffect } from 'react';
 import { useResponse } from '@/stores/api-testing/response.store';
+import { PreRequestScript } from '../script/pre-request';
+import { PostRequestScript } from '../script/post-request';
 
 const ReqTabs = {
   QueryParameters: 'query-parameters',
@@ -98,8 +100,12 @@ export default function RequestInitializer() {
           <TabsContent value={ReqTabs.RequestBody}>
             <RequestBody />
           </TabsContent>
-          <TabsContent value={ReqTabs.PreRequestScript}>Pre-Request script</TabsContent>
-          <TabsContent value={ReqTabs.PostRequestScript}>Post-Request script</TabsContent>
+          <TabsContent value={ReqTabs.PreRequestScript}>
+            <PreRequestScript />
+          </TabsContent>
+          <TabsContent value={ReqTabs.PostRequestScript}>
+            <PostRequestScript />
+          </TabsContent>
         </Tabs>
       </div>
     </div>

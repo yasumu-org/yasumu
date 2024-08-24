@@ -9,6 +9,7 @@ import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
 import * as process from '@tauri-apps/plugin-process';
+import { evaluateUnsafe } from './scripts/script';
 
 export const Yasumu = createYasumu({
   fetch,
@@ -25,8 +26,9 @@ export const Yasumu = createYasumu({
   path: path as unknown as PathCommon,
   events: events as EventsCommon,
   scripts: {
-    async evaluate<T>(): Promise<T> {
-      return null as unknown as T;
+    // TODO: use tanxium runtime to evaluate the script
+    async evaluate<T>(script: string, contextData: string): Promise<T> {
+      return evaluateUnsafe<T>(script, contextData);
     },
   } satisfies ScriptsCommon,
   commands: {
