@@ -83,7 +83,6 @@ export function prepareScript(code: string, ctx: string) {
   try {
     void ${fnName}();
   } catch(e) {
-   console.log(typeof e.stack, e.stack);
     const err = e && e.stack ? e.stack : String(e);
     
     Yasumu.context.__meta.console.push({
@@ -105,7 +104,7 @@ export interface ConsoleStream {
 
 export interface YasumuPostEvaluationData {
   store: Record<string, unknown>;
-  requestHeaders: null;
+  requestHeaders: Array<[string, string]> | null;
   console: ConsoleStream[];
 }
 
