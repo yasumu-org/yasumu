@@ -4,50 +4,56 @@ use boa_engine::{
 use tauri;
 
 #[tauri::command]
-pub fn evaluate_javascript(code: &str, app: tauri::AppHandle) -> Result<String, String> {
-    let src = Source::from_bytes(code.as_bytes());
-    let mut ctx = Context::default();
-    let package = app.package_info();
-    let app_version = format!(
-        "{} {} {}",
-        package.version.major, package.version.minor, package.version.patch
-    );
+pub async fn evaluate_javascript(app: tauri::AppHandle, code: &str) -> Result<String, String> {
+    let code = code.to_string();
 
-    let tanxium_version = ObjectInitializer::new(&mut ctx)
-        .property(
-            js_str!("yasumu"),
-            JsString::from(app_version),
-            Attribute::all(),
-        )
-        .property(
-            js_str!("tauri"),
-            JsString::from(tauri::VERSION),
-            Attribute::all(),
-        )
-        .build();
+    let handle = tokio::spawn(async move {
+        let src = Source::from_bytes(code.as_bytes());
+        let mut ctx = Context::default();
+        let package = app.package_info();
+        let app_version = format!(
+            "{} {} {}",
+            package.version.major, package.version.minor, package.version.patch
+        );
 
-    let tanxium = ObjectInitializer::new(&mut ctx)
-        .property(js_str!("versions"), tanxium_version, Attribute::all())
-        .build();
+        let tanxium_version = ObjectInitializer::new(&mut ctx)
+            .property(
+                js_str!("yasumu"),
+                JsString::from(app_version),
+                Attribute::all(),
+            )
+            .property(
+                js_str!("tauri"),
+                JsString::from(tauri::VERSION),
+                Attribute::all(),
+            )
+            .build();
 
-    ctx.register_global_property(js_str!("Tanxium"), tanxium, Attribute::all())
-        .expect("Failed to register Tanxium global object");
+        let tanxium = ObjectInitializer::new(&mut ctx)
+            .property(js_str!("versions"), tanxium_version, Attribute::all())
+            .build();
 
-    // enable strict mode
-    ctx.strict(true);
+        ctx.register_global_property(js_str!("Tanxium"), tanxium, Attribute::all())
+            .expect("Failed to register Tanxium global object");
 
-    // make sure the scripts do not run forever
-    let limits = ctx.runtime_limits_mut();
+        // enable strict mode
+        ctx.strict(true);
 
-    limits.set_loop_iteration_limit(100_000_000);
-    limits.set_recursion_limit(1000);
-    limits.set_stack_size_limit(1000);
+        // make sure the scripts do not run forever
+        let limits = ctx.runtime_limits_mut();
 
-    let result = ctx.eval(src);
+        limits.set_loop_iteration_limit(100_000_000);
+        limits.set_recursion_limit(1000);
+        limits.set_stack_size_limit(1000);
 
-    if let Ok(result) = result {
-        Ok(format!("{}", result.display()))
-    } else {
-        Err(format!("{}", result.unwrap_err()))
-    }
+        let result = ctx.eval(src);
+
+        if let Ok(result) = result {
+            Ok(format!("{}", result.display()))
+        } else {
+            Err(format!("{}", result.unwrap_err()))
+        }
+    });
+
+    handle.await.unwrap()
 }

@@ -12,7 +12,6 @@ import { parseString } from 'set-cookie-parser';
 import { useDebounceCallback } from 'usehooks-ts';
 import { HttpMethodColors } from '@/lib/constants';
 import { Yasumu } from '@/lib/yasumu';
-import { evaluateScript } from '@/lib/scripts/evaluator';
 
 export default function RequestInput() {
   const { current } = useRequestStore();
@@ -172,7 +171,9 @@ export default function RequestInput() {
       contextData.request.body = bodyData;
 
       if (!!preRequestScript?.trim().length) {
-        await evaluateScript(preRequestScript, contextData, 'Pre-request script');
+        const result = await Yasumu.scripts.run(preRequestScript, Yasumu.scripts.createContextData(contextData));
+
+        console.log('Pre request script result', result);
       }
 
       const res = await Yasumu.fetch(url, {
@@ -254,7 +255,12 @@ export default function RequestInput() {
       contextData.response.responseTime = end;
 
       if (!!responseStore.postRequestScript?.trim().length) {
-        await evaluateScript(responseStore.postRequestScript, contextData, 'Post-request script');
+        const result = await Yasumu.scripts.run(
+          responseStore.postRequestScript,
+          Yasumu.scripts.createContextData(contextData),
+        );
+
+        console.log('Post request script result', result);
       }
     } catch (e) {
       console.error(e);

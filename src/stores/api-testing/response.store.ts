@@ -70,7 +70,7 @@ export const useResponse = create<IResponse>((set) => ({
   issuerCN: '',
   validUntil: '',
   abortController: null,
-  script: '',
+  script: 'console.log("response script")',
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),

@@ -56,7 +56,7 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
     urlencoded: [],
   },
   bodyMode: BodyMode.None,
-  script: '',
+  script: 'console.log("request script")',
   setId: (id: string) => set({ id }),
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),
