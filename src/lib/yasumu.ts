@@ -9,7 +9,8 @@ import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
 import * as process from '@tauri-apps/plugin-process';
-import { evaluateUnsafe } from './scripts/script';
+import { prepareScript } from './scripts/script';
+import { toast } from 'sonner';
 
 export const Yasumu = createYasumu({
   fetch,
@@ -26,9 +27,26 @@ export const Yasumu = createYasumu({
   path: path as unknown as PathCommon,
   events: events as EventsCommon,
   scripts: {
-    // TODO: use tanxium runtime to evaluate the script
     async evaluate<T>(script: string, contextData: string): Promise<T> {
-      return evaluateUnsafe<T>(script, contextData);
+      try {
+        const result = await Yasumu.commands.invoke<string>('evaluate_javascript', {
+          code: `try {${prepareScript(script, contextData)}}catch(e) {String(e.stack || e)}`,
+        });
+
+        try {
+          const res = JSON.parse(result.slice(1, -1));
+
+          return res as unknown as T;
+        } catch {
+          return result as unknown as T;
+        }
+      } catch (e: any) {
+        toast.error('Failed to evaluate script!', { description: String(e) });
+        return {
+          $result: null,
+          $error: String((e && e.stack) || e),
+        } as unknown as T;
+      }
     },
   } satisfies ScriptsCommon,
   commands: {

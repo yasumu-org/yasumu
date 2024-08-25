@@ -1,6 +1,7 @@
 use tauri::Manager;
 
 mod commands;
+mod tanxium;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -33,6 +34,7 @@ pub fn run() {
             commands::smtp::get_emails,
             commands::smtp::clear_emails,
             commands::smtp::get_smtp_port,
+            tanxium::evaluate_javascript
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

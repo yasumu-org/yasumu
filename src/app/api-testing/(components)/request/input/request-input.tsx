@@ -12,10 +12,12 @@ import { parseString } from 'set-cookie-parser';
 import { useDebounceCallback } from 'usehooks-ts';
 import { HttpMethodColors } from '@/lib/constants';
 import { Yasumu } from '@/lib/yasumu';
-import { evaluateScript } from '@/lib/scripts/evaluator';
+import { useConsole } from '@/stores/api-testing/console.store';
+import { canEvaluateResult } from '@/lib/scripts/script';
 
 export default function RequestInput() {
   const { current } = useRequestStore();
+  const { add } = useConsole();
   const { method, setMethod, url, setUrl, body, headers, bodyMode, id, script: preRequestScript } = useRequestConfig();
 
   const save = useDebounceCallback(() => {
@@ -112,8 +114,6 @@ export default function RequestInput() {
         }
       }
 
-      const start = Date.now();
-
       let bodyData: BodyInit | undefined = undefined;
 
       switch (bodyMode) {
@@ -172,8 +172,16 @@ export default function RequestInput() {
       contextData.request.body = bodyData;
 
       if (!!preRequestScript?.trim().length) {
-        await evaluateScript(preRequestScript, contextData, 'Pre-request script');
+        const result = await Yasumu.scripts.run(preRequestScript, Yasumu.scripts.createContextData(contextData));
+
+        if (canEvaluateResult(result) && result.console && result.console.length) {
+          add(result.console);
+        } else if (result && typeof result === 'object' && '$error' in result) {
+          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
+        }
       }
+
+      const start = Date.now();
 
       const res = await Yasumu.fetch(url, {
         method: method.toUpperCase(),
@@ -254,7 +262,16 @@ export default function RequestInput() {
       contextData.response.responseTime = end;
 
       if (!!responseStore.postRequestScript?.trim().length) {
-        await evaluateScript(responseStore.postRequestScript, contextData, 'Post-request script');
+        const result = await Yasumu.scripts.run(
+          responseStore.postRequestScript,
+          Yasumu.scripts.createContextData(contextData),
+        );
+
+        if (canEvaluateResult(result) && result.console && result.console.length) {
+          add(result.console);
+        } else if (result && typeof result === 'object' && '$error' in result) {
+          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
+        }
       }
     } catch (e) {
       console.error(e);
