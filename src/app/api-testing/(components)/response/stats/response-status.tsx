@@ -1,10 +1,6 @@
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Separator } from '@/components/ui/separator';
-import { getResponse } from '@/lib/response-status';
+import { getResponse } from '@yasumu/core';
 import { cn } from '@/lib/utils';
 import { useResponse } from '@/stores/api-testing/response.store';
 
@@ -34,12 +30,7 @@ export function ResponseStatus() {
   return (
     <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger>
-        <span
-          className={cn(
-            'uppercase cursor-pointer',
-            getStatusColor(responseStatus)
-          )}
-        >
+        <span className={cn('uppercase cursor-pointer', getStatusColor(responseStatus))}>
           {responseStatus} {description.text}
         </span>
       </HoverCardTrigger>

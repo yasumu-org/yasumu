@@ -13,7 +13,7 @@ export interface ILayoutConfig {
 export const useLayoutStore = create<ILayoutConfig>()(
   persist(
     (set, get) => ({
-      orientation: 'horizontal',
+      orientation: 'vertical',
       isHorizontal: () => get().orientation === 'horizontal',
       isVertical: () => get().orientation === 'vertical',
       setOrientation: (orientation) => set({ orientation }),
@@ -21,6 +21,6 @@ export const useLayoutStore = create<ILayoutConfig>()(
     {
       name: 'app-layout-config',
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );

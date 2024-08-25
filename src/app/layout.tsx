@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/components/themes/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
+import { YasumuWorkspaceProvider } from '@/components/workspaces/workspace-provider';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -26,25 +27,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body
-        className={cn(
-          'min-h-screen bg-background font-sans antialiased',
-          fontSans.variable
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body className={cn('min-h-screen bg-background font-sans antialiased select-none', fontSans.variable)}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Sonner />
           <Toaster />
           <TooltipProvider>
-            <div className="flex flex-col bg-muted/40 w-full px-4">
-              <SideNav />
-              {children}
-            </div>
+            <YasumuWorkspaceProvider>
+              <div className="flex flex-col bg-muted/40 w-full px-4">
+                <SideNav />
+                {children}
+              </div>
+            </YasumuWorkspaceProvider>
           </TooltipProvider>
         </ThemeProvider>
       </body>

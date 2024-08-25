@@ -1,9 +1,10 @@
 import { Content } from '@/components/layout/content';
+import { Mail } from '../(components)/mail/mail';
 
 export default function Page() {
   return (
     <Content>
-      <h1>Mail</h1>
+      <Mail defaultLayout={[32, 48]} />
     </Content>
   );
 }

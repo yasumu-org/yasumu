@@ -8,57 +8,98 @@ import { ResponseCookies } from './response-cookies';
 import { ResponseStats } from './stats/response-stats';
 import { useLayoutStore } from '@/stores/application/layout.store';
 import { useResponse } from '@/stores/api-testing/response.store';
+import { LoadingSpinner } from '@/components/layout/loading';
+import { useRequestStore } from '@/stores/api-testing/request-config.store';
+import { useEffect, useMemo } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
+import { ResponseAttachmentGuard } from './response-attachment-guard';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
-  const { headers, cookies, body } = useResponse();
+  const { headers, cookies, body, abortController, responseSize, responseStatus, responseTime } = useResponse();
+
+  const { current } = useRequestStore();
+
+  const save = useDebounceCallback(() => {
+    if (!current) return;
+
+    current.setResponse({
+      body,
+      headers: headers.map((header) => ({
+        key: header.key,
+        value: header.value,
+      })),
+      size: responseSize,
+      status: responseStatus,
+      time: responseTime,
+    });
+
+    current.save().catch(Object);
+  }, 500);
+
+  useEffect(() => {
+    if (current) {
+      save();
+    }
+  }, [body, headers, responseSize, responseStatus, responseTime]);
+
+  const contentType = useMemo(() => {
+    try {
+      const header = headers.find((header) => header.key.toLowerCase() === 'content-type');
+      return header?.value || null;
+    } catch {
+      return null;
+    }
+  }, [headers]);
 
   return (
     <div className={cn(orientation === 'horizontal' ? 'px-2' : 'p-2')}>
       <Tabs defaultValue="pretty" className="rounded-b-none">
-        <div className="flex items-center justify-between">
+        <div
+          className={cn('flex items-center justify-between', {
+            'opacity-20': abortController != null,
+          })}
+        >
           <TabsList className="rounded-b-none border-x border-t">
             <TabsTrigger value="pretty">Pretty</TabsTrigger>
             <TabsTrigger value="raw">Raw</TabsTrigger>
             <TabsTrigger value="headers">
-              Headers{' '}
-              <span className="text-green-500 text-sm ml-2">
-                ({headers.length})
-              </span>
+              Headers <span className="text-green-500 text-sm ml-2">({headers.length})</span>
             </TabsTrigger>
             <TabsTrigger value="cookies">
-              Cookies{' '}
-              <span className="text-green-500 text-sm ml-2">
-                ({cookies.length})
-              </span>
+              Cookies <span className="text-green-500 text-sm ml-2">({cookies.length})</span>
             </TabsTrigger>
           </TabsList>
           <ResponseStats />
         </div>
-        <div
-          className={cn(
-            'border rounded-b-sm p-2 overflow-y-auto',
-            orientation === 'vertical' ? 'max-h-[400px]' : 'max-h-[90vh]'
-          )}
-        >
-          <TabsContent value="pretty">
-            <PrettyResponseViewer content={body} />
-          </TabsContent>
-          <TabsContent value="raw">
-            <pre
-              className={cn('word-break-break-all whitespace-pre-wrap text-sm')}
-            >
-              {body}
-            </pre>
-          </TabsContent>
-          <TabsContent value="headers">
-            <ResponseHeaders headers={headers} />
-          </TabsContent>
+        {abortController != null ? (
+          <LoadingSpinner className="h-auto" />
+        ) : (
+          <div
+            className={cn(
+              'border rounded-b-sm p-2 overflow-y-auto',
+              orientation === 'vertical' ? 'max-h-[400px]' : 'max-h-[90vh]',
+            )}
+          >
+            <TabsContent value="pretty">
+              <ResponseAttachmentGuard contentType={contentType}>
+                <PrettyResponseViewer content={body} />
+              </ResponseAttachmentGuard>
+            </TabsContent>
+            <TabsContent value="raw">
+              <ResponseAttachmentGuard contentType={contentType}>
+                <pre className={cn('word-break-break-all whitespace-pre-wrap text-sm')}>{body}</pre>
+              </ResponseAttachmentGuard>
+            </TabsContent>
+            <TabsContent value="headers">
+              <ResponseHeaders headers={headers} />
+            </TabsContent>
 
-          <TabsContent value="cookies">
-            <ResponseCookies cookies={cookies} />
-          </TabsContent>
-        </div>
+            <TabsContent value="cookies">
+              <ResponseCookies cookies={cookies} />
+            </TabsContent>
+          </div>
+        )}
       </Tabs>
     </div>
   );

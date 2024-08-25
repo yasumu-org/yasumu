@@ -1,8 +1,4 @@
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { useResponse } from '@/stores/api-testing/response.store';
 import { useMemo } from 'react';
 
@@ -11,21 +7,7 @@ export function ResponseSize() {
 
   const size = useMemo(() => {
     if (isNaN(responseSize)) return 'N/A';
-    const times = [
-      'B',
-      'KB',
-      'MB',
-      'GB',
-      'TB',
-      'PB',
-      'EB',
-      'ZB',
-      'YB',
-      'BB',
-      'NB',
-      'DB',
-      'CB',
-    ];
+    const times = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB', 'BB', 'NB', 'DB', 'CB'];
 
     let i = 0;
     let size = responseSize;

@@ -31,6 +31,9 @@ export interface IResponse {
   certificateCN: string;
   issuerCN: string;
   validUntil: string;
+  abortController: AbortController | null;
+  url: string;
+  script: string;
   setBody: (body: string) => void;
   setHeaders: (headers: IHeader[]) => void;
   setCookies: (cookies: ICookie[]) => void;
@@ -45,18 +48,14 @@ export interface IResponse {
   setCertificateCN: (certificateCN: string) => void;
   setIssuerCN: (issuerCN: string) => void;
   setValidUntil: (validUntil: string) => void;
+  setAbortController: (controller: AbortController | null) => void;
+  setUrl: (url: string) => void;
+  setScript: (script: string) => void;
 }
 
-const defaultResponse = JSON.stringify({
-  userId: 1,
-  id: 1,
-  title:
-    'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-  body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
-});
-
 export const useResponse = create<IResponse>((set) => ({
-  body: defaultResponse,
+  url: '',
+  body: '',
   headers: [],
   cookies: [],
   responseTime: 56,
@@ -70,6 +69,8 @@ export const useResponse = create<IResponse>((set) => ({
   certificateCN: '',
   issuerCN: '',
   validUntil: '',
+  abortController: null,
+  script: '',
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),
@@ -84,4 +85,7 @@ export const useResponse = create<IResponse>((set) => ({
   setCertificateCN: (certificateCN: string) => set({ certificateCN }),
   setIssuerCN: (issuerCN: string) => set({ issuerCN }),
   setValidUntil: (validUntil: string) => set({ validUntil }),
+  setAbortController: (abortController: AbortController | null) => set({ abortController }),
+  setUrl: (url: string) => set({ url }),
+  setScript: (script: string) => set({ script }),
 }));

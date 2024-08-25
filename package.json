@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "tauri": "tauri",
-    "ui": "shadcn-ui"
+    "ui": "shadcn-ui",
+    "format": "prettier --write \"./src\""
   },
   "dependencies": {
     "@codemirror/lang-html": "^6.4.9",
@@ -17,6 +18,7 @@
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lang-xml": "^6.1.0",
     "@hookform/resolvers": "^3.4.0",
+    "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-context-menu": "^2.1.5",
@@ -35,30 +37,41 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@tauri-apps/api": ">=2.0.0-beta.0",
-    "@tauri-apps/plugin-http": "^2.0.0-beta.5",
+    "@tauri-apps/api": "^2.0.0-rc.1",
+    "@tauri-apps/plugin-dialog": "^2.0.0-rc.0",
+    "@tauri-apps/plugin-fs": "^2.0.0-rc.1",
+    "@tauri-apps/plugin-http": "^2.0.0-rc.1",
+    "@tauri-apps/plugin-process": "^2.0.0-rc.0",
+    "@tauri-apps/plugin-shell": "^2.0.0-rc.0",
+    "@tauri-apps/plugin-store": "^2.0.0-rc.0",
     "@uiw/react-codemirror": "^4.22.1",
+    "@yasumu/core": "0.0.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
     "detect-programming-language": "^1.0.4",
+    "framer-motion": "^11.3.18",
     "lucide-react": "^0.378.0",
+    "memfs": "^4.11.1",
     "mime-types": "^2.1.35",
     "next": "^14.2.5",
     "next-themes": "^0.3.0",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",
+    "react-icons": "^5.3.0",
     "react-resizable-panels": "^2.0.19",
     "set-cookie-parser": "^2.6.0",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "usehooks-ts": "^3.1.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
-    "@tauri-apps/cli": ">=2.0.0-beta.0",
+    "@tauri-apps/cli": "^2.0.0-rc.1",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.15",
@@ -72,5 +85,10 @@
     "shadcn-ui": "^0.8.0",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.0.2"
-  }
+  },
+  "trustedDependencies": [
+    "esbuild",
+    "tree-sitter",
+    "tree-sitter-bash"
+  ]
 }

@@ -1,50 +1,53 @@
-use boa_engine::{property::Attribute, Context, Source};
-use console::LogResult;
+use boa_engine::{
+    js_str, object::ObjectInitializer, property::Attribute, Context, JsString, Source,
+};
+use tauri;
 
-mod console;
+#[tauri::command]
+pub fn evaluate_javascript(code: &str, app: tauri::AppHandle) -> Result<String, String> {
+    let src = Source::from_bytes(code.as_bytes());
+    let mut ctx = Context::default();
+    let package = app.package_info();
+    let app_version = format!(
+        "{} {} {}",
+        package.version.major, package.version.minor, package.version.patch
+    );
 
-pub struct Tanxium {
-    context: Context,
-    window: Option<tauri::Window>,
-}
+    let tanxium_version = ObjectInitializer::new(&mut ctx)
+        .property(
+            js_str!("yasumu"),
+            JsString::from(app_version),
+            Attribute::all(),
+        )
+        .property(
+            js_str!("tauri"),
+            JsString::from(tauri::VERSION),
+            Attribute::all(),
+        )
+        .build();
 
-impl Tanxium {
-    pub fn new() -> Self {
-        let context = Context::default();
-        Self {
-            context,
-            window: None,
-        }
-    }
+    let tanxium = ObjectInitializer::new(&mut ctx)
+        .property(js_str!("versions"), tanxium_version, Attribute::all())
+        .build();
 
-    pub fn set_window(&mut self, window: &tauri::Window) {
-        self.window = Some(window);
-    }
+    ctx.register_global_property(js_str!("Tanxium"), tanxium, Attribute::all())
+        .expect("Failed to register Tanxium global object");
 
-    fn on_log(&self, message: LogResult) {
-        if let Some(window) = &self.window {
-            window
-                .emit("log", Some(message))
-                .expect("failed to emit log event");
-        }
-    }
+    // enable strict mode
+    ctx.strict(true);
 
-    pub fn initialize_runtime(&mut self) {
-        let output = console::Console::init(context, self.on_log);
+    // make sure the scripts do not run forever
+    let limits = ctx.runtime_limits_mut();
 
-        self.context
-            .register_global_property(console::Console::NAME, output, Attribute::all())
-            .expect("failed to register console");
-    }
+    limits.set_loop_iteration_limit(100_000_000);
+    limits.set_recursion_limit(1000);
+    limits.set_stack_size_limit(1000);
 
-    #[tauri::command]
-    pub async fn eval(&self, script: String) -> Result<(), String> {
-        let src = Source::from_bytes(script.as_bytes());
-        let result = self.context.eval(src);
+    let result = ctx.eval(src);
 
-        match result {
-            Ok(value) => Ok(()),
-            Err(error) => Err(error.to_string()),
-        }
+    if let Ok(result) = result {
+        Ok(format!("{}", result.display()))
+    } else {
+        Err(format!("{}", result.unwrap_err()))
     }
 }

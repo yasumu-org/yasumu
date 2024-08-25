@@ -12,14 +12,11 @@ import { usePrettier } from '@/hooks/use-prettier';
 import { cn } from '@/lib/utils';
 
 export default function PrettyResponseViewer({ content }: { content: string }) {
-  const isMounted = useMounted();
   const { theme } = useTheme();
+  const isMounted = useMounted();
   const editor = useRef<HTMLDivElement>(null);
   const { code, parser } = usePrettier(content, 'application/json');
-  const extensions: Extension[] = useMemo(
-    () => [javascript(), html(), xml(), json()],
-    []
-  );
+  const extensions: Extension[] = useMemo(() => [javascript(), html(), xml(), json()], []);
 
   const { setContainer } = useCodeMirror({
     container: editor.current,
@@ -34,7 +31,7 @@ export default function PrettyResponseViewer({ content }: { content: string }) {
       tabSize: 2,
       lineNumbers: true,
     },
-    className: 'h-full',
+    className: cn(!isMounted && 'hidden', 'h-full'),
   });
 
   useEffect(() => {
@@ -43,5 +40,7 @@ export default function PrettyResponseViewer({ content }: { content: string }) {
     }
   }, [editor.current]);
 
-  return <div className={cn(!isMounted && 'hidden')} ref={editor} />;
+  if (!isMounted) return null;
+
+  return <div ref={editor} />;
 }
