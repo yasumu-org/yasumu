@@ -16,6 +16,7 @@ pub struct YasumuMail {
     pub subject: String,
     pub body: String,
     pub date: String,
+    pub read: bool,
 }
 
 #[derive(Clone)]
@@ -92,6 +93,7 @@ impl Handler for SmtpHandler {
             Ok(mail) => {
                 let email = YasumuMail {
                     body: mail.get_body().unwrap_or("".to_string()),
+                    read: false,
                     from: mail
                         .get_headers()
                         .get_first_value("From")
@@ -196,8 +198,84 @@ pub async fn stop_smtp_server(
 }
 
 #[tauri::command]
-pub fn get_emails(state: State<'_, ServerState>) -> Vec<YasumuMail> {
-    state.get_handler().get_messages()
+pub fn get_email(state: State<'_, ServerState>, id: String) -> Option<YasumuMail> {
+    let handler = state.get_handler();
+    let mut messages = handler.messages.write().unwrap();
+
+    for email in messages.iter_mut() {
+        if email.id == id {
+            email.read = true;
+            return Some(email.clone());
+        }
+    }
+
+    None
+}
+
+#[tauri::command]
+pub fn mark_as_unread(state: State<'_, ServerState>, id: String) -> () {
+    let handler = state.get_handler();
+    let mut messages = handler.messages.write().unwrap();
+
+    for email in messages.iter_mut() {
+        if email.id == id {
+            email.read = false;
+
+            return;
+        }
+    }
+}
+
+#[tauri::command]
+pub fn mark_all_as_read(state: State<'_, ServerState>) -> () {
+    let handler = state.get_handler();
+    let mut messages = handler.messages.write().unwrap();
+
+    for email in messages.iter_mut() {
+        email.read = true;
+    }
+}
+
+#[tauri::command]
+pub fn mark_all_as_unread(state: State<'_, ServerState>) -> () {
+    let handler = state.get_handler();
+    let mut messages = handler.messages.write().unwrap();
+
+    for email in messages.iter_mut() {
+        email.read = false;
+    }
+}
+
+#[tauri::command]
+pub fn get_unread_emails_count(state: State<'_, ServerState>) -> usize {
+    let handler = state.get_handler();
+    let messages = handler.messages.read().unwrap();
+
+    messages.iter().filter(|email| !email.read).count()
+}
+
+#[tauri::command]
+pub fn get_read_emails_count(state: State<'_, ServerState>) -> usize {
+    let handler = state.get_handler();
+    let messages = handler.messages.read().unwrap();
+
+    messages.iter().filter(|email| email.read).count()
+}
+
+#[tauri::command]
+pub fn get_emails(state: State<'_, ServerState>, read: Option<bool>) -> Vec<YasumuMail> {
+    match read {
+        None => state.get_handler().get_messages(),
+        Some(read) => {
+            let filterer = |email: &YasumuMail| email.read == read;
+            state
+                .get_handler()
+                .get_messages()
+                .into_iter()
+                .filter(filterer)
+                .collect()
+        }
+    }
 }
 
 #[tauri::command]

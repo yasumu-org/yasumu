@@ -34,6 +34,12 @@ pub fn run() {
             commands::smtp::get_emails,
             commands::smtp::clear_emails,
             commands::smtp::get_smtp_port,
+            commands::smtp::get_unread_emails_count,
+            commands::smtp::get_read_emails_count,
+            commands::smtp::mark_all_as_unread,
+            commands::smtp::mark_all_as_read,
+            commands::smtp::mark_as_unread,
+            commands::smtp::get_email,
             tanxium::evaluate_javascript
         ])
         .run(tauri::generate_context!())
