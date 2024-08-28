@@ -30,7 +30,7 @@ export const Yasumu = createYasumu({
     async evaluate<T>(script: string, contextData: string): Promise<T> {
       try {
         const result = await Yasumu.commands.invoke<string>('evaluate_javascript', {
-          code: `try {${prepareScript(script, contextData)}}catch(e) {String(e.stack || e)}`,
+          code: `try{${prepareScript(script, contextData)}}catch(e){String(e.stack||e)}`,
         });
 
         try {

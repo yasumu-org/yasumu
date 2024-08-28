@@ -178,6 +178,28 @@ export default function RequestInput() {
           add(result.console);
         } else if (result && typeof result === 'object' && '$error' in result) {
           add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
+        } else if (canEvaluateResult(result)) {
+          if (result.requestHeaders?.length) {
+            try {
+              result.requestHeaders.forEach(([key, value]) => {
+                h.set(key, value);
+              });
+            } catch {
+              //
+            }
+          }
+
+          // if (Object.keys(result.store).length) {
+          //   const id = Yasumu.workspace?.metadata.id;
+
+          //   if (id) {
+          //     const store = Yasumu.createStore(id);
+
+          //     for (const key in result.store) {
+          //       await store.set(key, result.store[key]);
+          //     }
+          //   }
+          // }
         }
       }
 
