@@ -34,14 +34,18 @@ export const Yasumu = createYasumu({
         });
 
         try {
-          return JSON.parse(result);
+          const res = JSON.parse(result.slice(1, -1));
+
+          return res as unknown as T;
         } catch {
           return result as unknown as T;
         }
-      } catch (e) {
-        console.error(e);
+      } catch (e: any) {
         toast.error('Failed to evaluate script!', { description: String(e) });
-        return null as unknown as T;
+        return {
+          $result: null,
+          $error: String((e && e.stack) || e),
+        } as unknown as T;
       }
     },
   } satisfies ScriptsCommon,

@@ -42,7 +42,7 @@ pub async fn evaluate_javascript(app: tauri::AppHandle, code: &str) -> Result<St
         // make sure the scripts do not run forever
         let limits = ctx.runtime_limits_mut();
 
-        limits.set_loop_iteration_limit(100_000_000);
+        limits.set_loop_iteration_limit(100_000);
         limits.set_recursion_limit(1000);
         limits.set_stack_size_limit(1000);
 
