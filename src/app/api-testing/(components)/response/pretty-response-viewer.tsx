@@ -10,6 +10,7 @@ import { json } from '@codemirror/lang-json';
 import { useMounted } from '@/hooks/use-mounted';
 import { usePrettier } from '@/hooks/use-prettier';
 import { cn } from '@/lib/utils';
+import { CopyToClipboard } from '@/components/code/copy-to-clipboard';
 
 export default function PrettyResponseViewer({ content }: { content: string }) {
   const { theme } = useTheme();
@@ -20,7 +21,7 @@ export default function PrettyResponseViewer({ content }: { content: string }) {
 
   const { setContainer } = useCodeMirror({
     container: editor.current,
-    value: code,
+    value: code || content,
     theme: theme === 'dark' ? 'dark' : 'light',
     editable: false,
     extensions,
@@ -42,5 +43,9 @@ export default function PrettyResponseViewer({ content }: { content: string }) {
 
   if (!isMounted) return null;
 
-  return <div ref={editor} />;
+  return (
+    <CopyToClipboard value={code || content}>
+      <div ref={editor} />
+    </CopyToClipboard>
+  );
 }

@@ -8,6 +8,8 @@ import { CreateSmtp } from './create';
 import Link from 'next/link';
 import { Rocket } from 'lucide-react';
 import { Yasumu } from '@/lib/yasumu';
+import { Content } from '@/components/layout/content';
+import { Mail } from './mail/mail';
 
 export function BootstrapSMTP() {
   const { setEmails } = useEmailStore();
@@ -48,17 +50,6 @@ export function BootstrapSMTP() {
     }
   }, [port]);
 
-  const stopSmtp = useCallback(async () => {
-    if (!Yasumu.workspace?.smtp) return;
-
-    try {
-      await Yasumu.workspace.smtp.stop();
-      setRunning(false);
-    } catch (e) {
-      toast.error(`Failed to stop SMTP server: ${String(e)}`);
-    }
-  }, []);
-
   useEffect(() => {
     if (!Yasumu.workspace?.smtp) return;
 
@@ -68,21 +59,19 @@ export function BootstrapSMTP() {
     }, console.error);
   }, []);
 
+  if (running) return <Mail defaultLayout={[32, 48]} />;
+
   return (
-    <div className="py-8">
-      {running ? (
-        <div>
-          <Card>
-            <CardHeader>SMTP Server is running on port {port}</CardHeader>
-            <CardFooter className="flex items-center gap-4">
-              <Link href="/smtp/mail">
-                <Button>View Emails</Button>
-              </Link>
-              <Button onClick={stopSmtp}>Stop</Button>
-            </CardFooter>
-          </Card>
-        </div>
-      ) : (
+    <div>
+      <h1 className="text-xl font-medium">SMTP Server</h1>
+      <p>
+        Local SMTP server for development and testing. This runs a catch-all email server that does not deliver the
+        email to the actual destination.
+        <br />
+        This server only supports inbound requests. The emails sent to this server are stored in memory and will be
+        erased once the application is closed.
+      </p>
+      <div className="py-8">
         <div className="flex items-center gap-2">
           <CreateSmtp port={port} setPort={setPort} />
           <Button size="sm" disabled={Number.isNaN(port)} onClick={startSmtp}>
@@ -90,7 +79,7 @@ export function BootstrapSMTP() {
             Start
           </Button>
         </div>
-      )}
+      </div>
     </div>
   );
 }

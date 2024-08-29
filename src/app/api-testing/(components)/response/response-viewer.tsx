@@ -15,6 +15,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { ResponseAttachmentGuard } from './response-attachment-guard';
 import { YasumuConsole } from '@/components/console/yasumu-console';
 import { useConsole } from '@/stores/api-testing/console.store';
+import { CopyToClipboard } from '@/components/code/copy-to-clipboard';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
@@ -96,7 +97,9 @@ export default function ResponseViewer() {
             </TabsContent>
             <TabsContent value="raw">
               <ResponseAttachmentGuard contentType={contentType}>
-                <pre className={cn('word-break-break-all whitespace-pre-wrap text-sm')}>{body}</pre>
+                <CopyToClipboard value={body}>
+                  <pre className={cn('word-break-break-all whitespace-pre-wrap text-sm')}>{body}</pre>
+                </CopyToClipboard>
               </ResponseAttachmentGuard>
             </TabsContent>
             <TabsContent value="headers">

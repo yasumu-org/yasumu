@@ -51,7 +51,23 @@ pub async fn evaluate_javascript(app: tauri::AppHandle, code: &str) -> Result<St
         if let Ok(result) = result {
             Ok(format!("{}", result.display()))
         } else {
-            Err(format!("{}", result.unwrap_err()))
+            let stacktrace = ctx
+                .stack_trace()
+                .map(|frame| {
+                    let code = frame.code_block();
+                    let name = code.name();
+
+                    format!(
+                        "  at {}",
+                        name.is_empty()
+                            .then(|| "<anonymous>")
+                            .unwrap_or(&name.to_std_string().unwrap_or("<unknown>".to_string())),
+                    )
+                })
+                .collect::<Vec<String>>()
+                .join("\n");
+
+            Err(format!("{}\n{}", result.unwrap_err(), stacktrace))
         }
     });
 
