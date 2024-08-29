@@ -3,6 +3,7 @@ import { GrGraphQl } from 'react-icons/gr';
 import { SiSocketdotio } from 'react-icons/si';
 import { SideNavMenu } from './side-nav-menu';
 import { WebSocketIcon } from '../icons/websocket';
+import { WithSmtpMetadata } from '../smtp/smtp-metadata';
 
 export function SideNav() {
   return (
@@ -10,7 +11,9 @@ export function SideNav() {
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5 text-primary-foreground">
         <SideNavMenu unchecked link="/" name="Home" icon={<Home className="h-5 w-5 -500" />} />
         <SideNavMenu link="/api-testing" name="API Testing" icon={<TestTube className="h-5 w-5 -rotate-45" />} />
-        <SideNavMenu link="/smtp" name="SMTP Server" icon={<Mail className="h-5 w-5" />} />
+        <WithSmtpMetadata>
+          <SideNavMenu link="/smtp" name="SMTP Server" icon={<Mail className="h-5 w-5" />} />
+        </WithSmtpMetadata>
         <SideNavMenu link="/graphql" name="GraphQL" comingSoon icon={<GrGraphQl className="h-5 w-5" />} />
         <SideNavMenu link="/websocket" name="WebSocket" comingSoon icon={<WebSocketIcon className="h-5 w-5" />} />
         <SideNavMenu link="/socketio" name="Socket.IO" comingSoon icon={<SiSocketdotio className="h-5 w-5" />} />

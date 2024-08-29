@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEmailStore } from '@/stores/smtp/emails';
 import { YasumuMail } from '@yasumu/core';
+import { Mail } from 'lucide-react';
 
 interface MailListProps {
   items: (YasumuMail & {
@@ -17,15 +18,25 @@ export function MailList({ items }: MailListProps) {
 
   return (
     <ScrollArea className="h-screen">
-      <div className="flex flex-col gap-2 p-4 pt-0">
+      <div
+        className={cn('flex flex-col gap-2 p-4 pt-0 relative', {
+          'flex items-center justify-center min-h-96': !items.length,
+        })}
+      >
+        {!items.length && (
+          <div className="text-muted-foreground absolute -z-10 flex items-center justify-center flex-col">
+            <Mail className="h-52 w-52 mx-auto" />
+            <p className="text-lg">No emails found.</p>
+          </div>
+        )}
         {items.map((item) => (
           <button
             key={item.id}
             className={cn(
               'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent',
-              selectedEmail?.id === item.id && 'bg-muted',
+              selectedEmail === item.id && 'bg-muted',
             )}
-            onClick={() => setSelectedEmail(selectedEmail?.id === item.id ? null : item)}
+            onClick={() => setSelectedEmail(selectedEmail === item.id ? null : item.id)}
           >
             <div className="flex w-full flex-col gap-1">
               <div className="flex items-center">
@@ -37,7 +48,7 @@ export function MailList({ items }: MailListProps) {
                   <div
                     className={cn(
                       'ml-auto text-xs',
-                      selectedEmail?.id === item.id ? 'text-foreground' : 'text-muted-foreground',
+                      selectedEmail === item.id ? 'text-foreground' : 'text-muted-foreground',
                     )}
                   >
                     {formatDistanceToNow(new Date(item.date as string), {
@@ -48,7 +59,7 @@ export function MailList({ items }: MailListProps) {
               </div>
               <div className="text-xs font-medium">{item.subject}</div>
             </div>
-            <div className="line-clamp-2 text-xs text-muted-foreground">{item.body.substring(0, 300)}</div>
+            <div className="line-clamp-2 text-xs text-muted-foreground">Email id: {item.id}</div>
           </button>
         ))}
       </div>

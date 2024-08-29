@@ -23,15 +23,15 @@ pub struct YasumuMail {
 pub struct SmtpHandler {
     port: Option<u32>,
     messages: Arc<RwLock<VecDeque<YasumuMail>>>,
-    window: Option<tauri::Window>,
+    app_handle: Option<tauri::AppHandle>,
     current_data: Arc<RwLock<String>>,
 }
 
 impl SmtpHandler {
-    fn new(window: Option<tauri::Window>) -> Self {
+    fn new(app_handle: Option<tauri::AppHandle>) -> Self {
         SmtpHandler {
             messages: Arc::new(RwLock::new(VecDeque::new())),
-            window,
+            app_handle,
             current_data: Arc::new(RwLock::new(String::new())),
             port: None,
         }
@@ -41,13 +41,27 @@ impl SmtpHandler {
         self.messages.read().unwrap().clone().into()
     }
 
-    fn set_window(&mut self, window: tauri::Window) {
-        self.window = Some(window);
+    fn emit_new_email(&self, email: YasumuMail) {
+        println!(
+            "Emitting new email and app handle exists: {:?}",
+            self.app_handle.is_some()
+        );
+        if let Some(app_handle) = &self.app_handle {
+            app_handle
+                .emit("new-email", email)
+                .expect("Failed to emit event");
+        }
     }
 
-    fn emit_new_email(&self) {
-        if let Some(window) = &self.window {
-            window.emit("new-email", ()).expect("Failed to emit event");
+    fn emit_refresh_all(&self) {
+        println!(
+            "Emitting new email and app handle exists: {:?}",
+            self.app_handle.is_some()
+        );
+        if let Some(app_handle) = &self.app_handle {
+            app_handle
+                .emit("refresh-all", ())
+                .expect("Failed to emit event");
         }
     }
 }
@@ -112,8 +126,8 @@ impl Handler for SmtpHandler {
                         .get_first_value("Date")
                         .unwrap_or("".to_string()),
                 };
+                self.emit_new_email(email.clone());
                 self.messages.write().unwrap().push_front(email);
-                self.emit_new_email();
                 response::OK
             }
             Err(_) => {
@@ -138,11 +152,6 @@ impl ServerState {
         }
     }
 
-    pub fn set_window(&self, window: tauri::Window) {
-        let mut handler = self.handler.write().unwrap();
-        handler.set_window(window);
-    }
-
     pub fn get_handler(&self) -> SmtpHandler {
         self.handler.read().unwrap().clone()
     }
@@ -155,7 +164,7 @@ pub async fn is_smtp_server_running(state: State<'_, ServerState>) -> Result<boo
 
 #[tauri::command]
 pub async fn start_smtp_server(
-    window: tauri::Window,
+    app_handle: tauri::AppHandle,
     state: State<'_, ServerState>,
     port: u32,
 ) -> Result<(), String> {
@@ -168,7 +177,7 @@ pub async fn start_smtp_server(
     let mut handler = state.get_handler();
     let addr = format!("127.0.0.1:{}", port);
 
-    handler.window = Some(window);
+    handler.app_handle = Some(app_handle.clone());
     handler.port = Some(port);
 
     let handle = tokio::spawn(async move {
@@ -182,11 +191,7 @@ pub async fn start_smtp_server(
 }
 
 #[tauri::command]
-pub async fn stop_smtp_server(
-    window: tauri::Window,
-    state: State<'_, ServerState>,
-) -> Result<(), String> {
-    state.set_window(window);
+pub async fn stop_smtp_server(state: State<'_, ServerState>) -> Result<(), String> {
     let mut handle_guard = state.handle.write().unwrap();
 
     if let Some(handle) = handle_guard.take() {
@@ -234,6 +239,8 @@ pub fn mark_all_as_read(state: State<'_, ServerState>) -> () {
     for email in messages.iter_mut() {
         email.read = true;
     }
+
+    state.get_handler().emit_refresh_all();
 }
 
 #[tauri::command]
@@ -244,6 +251,8 @@ pub fn mark_all_as_unread(state: State<'_, ServerState>) -> () {
     for email in messages.iter_mut() {
         email.read = false;
     }
+
+    state.get_handler().emit_refresh_all();
 }
 
 #[tauri::command]
@@ -263,6 +272,30 @@ pub fn get_read_emails_count(state: State<'_, ServerState>) -> usize {
 }
 
 #[tauri::command]
+pub fn get_all_emails_count(state: State<'_, ServerState>) -> usize {
+    let handler = state.get_handler();
+    let messages = handler.messages.read().unwrap();
+
+    messages.len()
+}
+
+#[tauri::command]
+pub fn delete_email(state: State<'_, ServerState>, id: String) -> Result<(), String> {
+    let handler = state.get_handler();
+    let mut messages = handler.messages.write().unwrap();
+
+    let index = messages.iter().position(|email| email.id == id);
+
+    match index {
+        Some(index) => {
+            messages.remove(index);
+            Ok(())
+        }
+        None => Err("Email not found".into()),
+    }
+}
+
+#[tauri::command]
 pub fn get_emails(state: State<'_, ServerState>, read: Option<bool>) -> Vec<YasumuMail> {
     match read {
         None => state.get_handler().get_messages(),
@@ -273,6 +306,10 @@ pub fn get_emails(state: State<'_, ServerState>, read: Option<bool>) -> Vec<Yasu
                 .get_messages()
                 .into_iter()
                 .filter(filterer)
+                .map(|email| YasumuMail {
+                    body: "".to_string(),
+                    ..email
+                })
                 .collect()
         }
     }
@@ -281,6 +318,8 @@ pub fn get_emails(state: State<'_, ServerState>, read: Option<bool>) -> Vec<Yasu
 #[tauri::command]
 pub fn clear_emails(state: State<'_, ServerState>) -> Result<(), String> {
     state.get_handler().messages.write().unwrap().clear();
+    state.get_handler().emit_refresh_all();
+
     Ok(())
 }
 
