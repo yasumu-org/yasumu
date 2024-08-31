@@ -42,3 +42,6 @@ uuid = { version = "1.10.0", default-features = false, features = [
     "v4",
     "fast-rng",
 ] }
+swc_fast_ts_strip = "0.7.0"
+swc_common = "0.37.5"
+boa_gc = "0.19.0"

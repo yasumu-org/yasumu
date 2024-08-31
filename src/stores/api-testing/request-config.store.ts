@@ -56,7 +56,7 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
     urlencoded: [],
   },
   bodyMode: BodyMode.None,
-  script: 'for(let i = 0; i < 100; i++) console.log(`${i + 1}`)',
+  script: 'console.log(Yasumu)',
   setId: (id: string) => set({ id }),
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),
