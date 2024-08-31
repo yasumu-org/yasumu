@@ -60,7 +60,7 @@ export function RequestHeaders() {
             {headers.map((parameter, index) => {
               return (
                 <RequestHeader
-                  key={`${parameter.key}-${index}`}
+                  key={index}
                   data={parameter}
                   onDelete={() => {
                     onDelete(index);
