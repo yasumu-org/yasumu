@@ -29,8 +29,11 @@ export const Yasumu = createYasumu({
   scripts: {
     async evaluate<T>(script: string, contextData: string): Promise<T> {
       try {
+        const prescript = `try{${prepareScript(script, contextData)}}catch(e){String(e.stack||e)}`;
         const result = await Yasumu.commands.invoke<string>('evaluate_javascript', {
-          code: `try{${prepareScript(script, contextData)}}catch(e){String(e.stack||e)}`,
+          code: prescript,
+          id: Yasumu.workspace?.metadata.id ?? 'anonymous',
+          typescript: false,
         });
 
         try {

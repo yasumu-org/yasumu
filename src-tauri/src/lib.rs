@@ -49,5 +49,5 @@ pub fn run() {
             tanxium::evaluate_javascript
         ])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("error while running the application");
 }

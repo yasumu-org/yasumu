@@ -27,7 +27,7 @@ export function YasumuConsole() {
 }
 
 function LogStream({ log, scroll = false }: { log: ConsoleStream; scroll?: boolean }) {
-  const ref = useRef<HTMLParagraphElement>(null);
+  const ref = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     if (scroll && ref.current) {
@@ -36,16 +36,20 @@ function LogStream({ log, scroll = false }: { log: ConsoleStream; scroll?: boole
   }, [scroll]);
 
   return (
-    <p
+    <pre
       ref={ref}
-      className={cn('border-b py-2 text-xs font-bold', {
-        'text-red-500': log.type === 'error',
-        'text-yellow-500': log.type === 'warn',
-        'text-blue-500': log.type === 'info',
-        'text-green-500': log.type === 'log',
-      })}
+      className={cn(
+        'border-b py-2 text-xs font-bold font-mono',
+        {
+          'text-red-500': log.type === 'error',
+          'text-yellow-500': log.type === 'warn',
+          'text-blue-500': log.type === 'info',
+          'text-green-500': log.type === 'log',
+        },
+        'whitespace-pre-wrap break-all',
+      )}
     >
       {log.args.join(' ')}
-    </p>
+    </pre>
   );
 }

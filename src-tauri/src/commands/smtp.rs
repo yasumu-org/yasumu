@@ -47,9 +47,7 @@ impl SmtpHandler {
             self.app_handle.is_some()
         );
         if let Some(app_handle) = &self.app_handle {
-            app_handle
-                .emit("new-email", email)
-                .expect("Failed to emit event");
+            app_handle.emit("new-email", email).unwrap();
         }
     }
 
@@ -59,9 +57,7 @@ impl SmtpHandler {
             self.app_handle.is_some()
         );
         if let Some(app_handle) = &self.app_handle {
-            app_handle
-                .emit("refresh-all", ())
-                .expect("Failed to emit event");
+            app_handle.emit("refresh-all", ()).unwrap();
         }
     }
 }
