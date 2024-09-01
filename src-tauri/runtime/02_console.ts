@@ -16,23 +16,23 @@
         return String(value);
       }
 
+      if (typeof value === 'function') {
+        return `function ${value.name || '<anonymous>'}() { [native code] }`;
+      }
+
       if (typeof value === 'object') {
         if (visited.has(value)) {
           return '[Circular]';
         }
-        visited.add(value);
 
-        if (
-          value instanceof ArrayBuffer ||
-          value instanceof SharedArrayBuffer ||
-          value instanceof DataView ||
-          value instanceof Object.getPrototypeOf(Uint8Array)
-        ) {
-          return `${value.constructor.name} [byteLength: ${value.byteLength}]`;
-        }
+        visited.add(value);
 
         if (Array.isArray(value)) {
           return `[${value.map((item) => inspect(item, visited, indentLevel + 2)).join(', ')}]`;
+        }
+
+        if (value && 'constructor' in value && value.constructor && value.constructor.name) {
+          return `${value.constructor.name} {}`;
         }
 
         const indent = ' '.repeat(indentLevel);
