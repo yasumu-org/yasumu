@@ -1,10 +1,16 @@
+use std::rc::Rc;
+
+use boa_engine::context::ContextBuilder;
 use boa_engine::{Context, Source};
 
+use event_loop::Queue;
+use smol::LocalExecutor;
 use tauri;
 use tauri::path::BaseDirectory;
 use tauri::Manager;
 
 mod crypto;
+mod event_loop;
 mod typescript;
 mod yasumu_runtime;
 
@@ -14,10 +20,11 @@ use typescript::transpile_typescript;
 fn setup_runtime(ctx: &mut Context, app: tauri::AppHandle) {
     let path = app.path();
     let runtime_files = vec![
-        "runtime/00_headers.ts",
+        "runtime/00_headers.js",
         "runtime/01_runtime.ts",
         "runtime/02_console.ts",
         "runtime/03_test.ts",
+        "runtime/04_timers.ts",
     ];
 
     for file in runtime_files {
@@ -58,7 +65,12 @@ pub async fn evaluate_javascript(
             code
         };
         let src = Source::from_bytes(final_code.as_bytes());
-        let mut ctx = Context::default();
+        let executor = LocalExecutor::new();
+        let queue = Queue::new(executor);
+        let mut ctx = &mut ContextBuilder::new()
+            .job_queue(Rc::new(queue))
+            .build()
+            .unwrap();
 
         crypto::crypto_init(&mut ctx);
         yasumu_runtime::runtime_init(&mut ctx, current_workspace, app.clone(), id, ts_supported);
@@ -78,6 +90,7 @@ pub async fn evaluate_javascript(
 
         let result = ctx.eval(src);
 
+        // not working properly?
         ctx.run_jobs();
 
         if let Ok(result) = result {

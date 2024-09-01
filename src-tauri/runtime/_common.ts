@@ -69,6 +69,7 @@ declare global {
     response: YasumuResponse;
     store: YasumuStore;
     serialize(): string;
+    sleep(ms: number): Promise<void>;
   }
 
   var Yasumu: YasumuCore;
