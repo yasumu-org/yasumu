@@ -10,7 +10,7 @@ The following table shows the status of the features in the project.
 | ----------------- | ----------- |
 | REST API Testing  | In Progress |
 | SMTP Server       | In Progress |
-| GraphQL Testing   | Planned     |
+| GraphQL Testing   | In Progress |
 | WebSocket Testing | Planned     |
 | gRPC Testing      | Planned     |
 | Custom Plugins    | Planned     |
