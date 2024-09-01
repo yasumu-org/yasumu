@@ -33,7 +33,7 @@ export const Yasumu = createYasumu({
         const result = await Yasumu.commands.invoke<string>('evaluate_javascript', {
           code: prescript,
           id: Yasumu.workspace?.metadata.id ?? 'anonymous',
-          typescript: false,
+          typescript: true,
         });
 
         try {
