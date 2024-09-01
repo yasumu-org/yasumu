@@ -1,5 +1,6 @@
 /// <reference path="./_common.ts" />
 (() => {
+  const COMMON_OBJECTS = new Set(['Map', 'Set', 'WeakMap', 'WeakSet']);
   function inspect(value: any, visited = new WeakSet(), indentLevel = 0): string {
     try {
       if (typeof value === 'string') {
@@ -31,7 +32,7 @@
           return `[${value.map((item) => inspect(item, visited, indentLevel + 2)).join(', ')}]`;
         }
 
-        if (value && 'constructor' in value && value.constructor && value.constructor.name) {
+        if (value && 'constructor' in value && value.constructor && COMMON_OBJECTS.has(value.constructor.name)) {
           return `${value.constructor.name} {}`;
         }
 

@@ -1,9 +1,28 @@
-use boa_engine::{
-    js_str, object::ObjectInitializer, property::Attribute, Context, JsString, JsValue,
-    NativeFunction,
+use std::{
+    future::Future,
+    time::{Duration, Instant},
 };
 
-use super::typescript::transpile_typescript;
+use boa_engine::{
+    js_str, js_string, object::ObjectInitializer, property::Attribute, Context, JsArgs, JsResult,
+    JsString, JsValue, NativeFunction,
+};
+
+fn sleep(
+    _this: &JsValue,
+    args: &[JsValue],
+    context: &mut Context,
+) -> impl Future<Output = JsResult<JsValue>> {
+    let millis = args.get_or_undefined(0).to_u32(context);
+
+    async move {
+        let millis = millis?;
+        let now = Instant::now();
+        smol::Timer::after(Duration::from_millis(u64::from(millis))).await;
+        let elapsed = now.elapsed().as_secs_f64();
+        Ok(elapsed.into())
+    }
+}
 
 pub fn runtime_init(
     context: &mut Context,
@@ -64,25 +83,10 @@ pub fn runtime_init(
         .property(js_str!("features"), app_script_features, Attribute::all())
         .property(js_str!("versions"), yasumu_version, Attribute::all())
         .property(js_str!("workspace"), yasumu_workspace, Attribute::all())
+        .function(NativeFunction::from_async_fn(sleep), js_string!("sleep"), 1)
         .build();
 
     context
         .register_global_property(js_str!("Yasumu"), yasumu, Attribute::all())
         .unwrap();
-
-    if ts_supported {
-        context
-            .register_global_builtin_callable(
-                JsString::from("transpileTypeScript"),
-                1,
-                NativeFunction::from_copy_closure(|_this, args, context| {
-                    let code = args.get(0).unwrap().to_string(context).unwrap();
-                    let src = code.to_std_string().unwrap_or("".to_string());
-                    let result = transpile_typescript(src.as_str());
-
-                    Ok(JsValue::String(JsString::from(result.unwrap())))
-                }),
-            )
-            .unwrap();
-    }
 }
