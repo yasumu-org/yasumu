@@ -1,15 +1,40 @@
-use boa_engine::{
-    js_str, object::ObjectInitializer, property::Attribute, Context, JsString, JsValue,
-    NativeFunction, Source,
-};
+use boa_engine::{Context, Source};
 
 use tauri;
+use tauri::path::BaseDirectory;
+use tauri::Manager;
 
+mod crypto;
 mod typescript;
-
-use typescript::transpile_typescript;
+mod yasumu_runtime;
 
 use crate::commands::workspace::WorkspaceState;
+use typescript::transpile_typescript;
+
+fn setup_runtime(ctx: &mut Context, app: tauri::AppHandle) {
+    let path = app.path();
+    let runtime_files = vec![
+        "runtime/00_headers.ts",
+        "runtime/01_runtime.ts",
+        "runtime/02_console.ts",
+        "runtime/03_test.ts",
+    ];
+
+    for file in runtime_files {
+        let loc = path.resolve(file, BaseDirectory::Resource).unwrap();
+        let content = std::fs::read_to_string(&loc).unwrap();
+
+        // transpile if needed
+        let js_src = if file.ends_with(".ts") {
+            transpile_typescript(content.as_str()).unwrap()
+        } else {
+            content
+        };
+
+        let src = Source::from_bytes(js_src.as_bytes());
+        ctx.eval(src).unwrap();
+    }
+}
 
 #[tauri::command]
 pub async fn evaluate_javascript(
@@ -34,77 +59,9 @@ pub async fn evaluate_javascript(
         };
         let src = Source::from_bytes(final_code.as_bytes());
         let mut ctx = Context::default();
-        let package = app.package_info();
-        let app_version = format!(
-            "{}.{}.{}",
-            package.version.major, package.version.minor, package.version.patch
-        );
 
-        let yasumu_version = ObjectInitializer::new(&mut ctx)
-            .property(
-                js_str!("yasumu"),
-                JsString::from(app_version.clone()),
-                Attribute::all(),
-            )
-            // same as yasumu because both are the same project as of now
-            .property(
-                js_str!("tanxium"),
-                JsString::from(app_version.clone()),
-                Attribute::all(),
-            )
-            .property(
-                js_str!("tauri"),
-                JsString::from(tauri::VERSION),
-                Attribute::all(),
-            )
-            .build();
-
-        let wrk = match current_workspace {
-            Some(wrk) => JsValue::String(JsString::from(wrk)),
-            None => JsValue::null(),
-        };
-
-        let yasumu_workspace = ObjectInitializer::new(&mut ctx)
-            .property(js_str!("id"), JsString::from(id), Attribute::all())
-            .property(js_str!("current"), wrk, Attribute::all())
-            .build();
-
-        let app_script_features = ObjectInitializer::new(&mut ctx)
-            .property(
-                js_str!("typescript"),
-                JsValue::Boolean(ts_supported),
-                Attribute::all(),
-            )
-            .build();
-
-        let yasumu = ObjectInitializer::new(&mut ctx)
-            .property(
-                js_str!("version"),
-                JsString::from(app_version),
-                Attribute::all(),
-            )
-            .property(js_str!("features"), app_script_features, Attribute::all())
-            .property(js_str!("versions"), yasumu_version, Attribute::all())
-            .property(js_str!("workspace"), yasumu_workspace, Attribute::all())
-            .build();
-
-        ctx.register_global_property(js_str!("Yasumu"), yasumu, Attribute::all())
-            .unwrap();
-
-        if ts_supported {
-            ctx.register_global_builtin_callable(
-                JsString::from("transpileTypeScript"),
-                1,
-                NativeFunction::from_copy_closure(|_this, args, context| {
-                    let code = args.get(0).unwrap().to_string(context).unwrap();
-                    let src = code.to_std_string().unwrap_or("".to_string());
-                    let result = transpile_typescript(src.as_str());
-
-                    Ok(JsValue::String(JsString::from(result.unwrap())))
-                }),
-            )
-            .unwrap();
-        }
+        crypto::crypto_init(&mut ctx);
+        yasumu_runtime::runtime_init(&mut ctx, current_workspace, app.clone(), id, ts_supported);
 
         // enable strict mode
         ctx.strict(true);
@@ -116,7 +73,12 @@ pub async fn evaluate_javascript(
         limits.set_recursion_limit(1000);
         limits.set_stack_size_limit(1000);
 
+        // init runtime
+        setup_runtime(&mut ctx, app);
+
         let result = ctx.eval(src);
+
+        ctx.run_jobs();
 
         if let Ok(result) = result {
             Ok(format!("{}", result.display()))

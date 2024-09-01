@@ -1,23 +1,32 @@
-use swc_common::{errors::HANDLER, FilePathMapping, SourceMap};
-use swc_fast_ts_strip::{operate, Mode, Options};
+use deno_ast::MediaType;
+use deno_ast::ParseParams;
 
 pub fn transpile_typescript(code: &str) -> Result<String, String> {
-    HANDLER.with(|handler| {
-        let cm = swc_common::sync::Lrc::new(SourceMap::new(FilePathMapping::empty()));
-        let options = Options {
-            filename: None,
-            mode: Mode::Transform,
-            source_map: false,
-            module: Some(true),
-            parser: Default::default(),
-            transform: Default::default(),
-        };
-        let src = operate(&cm, &handler, code.to_string(), options);
-
-        if src.is_err() {
-            return Err(format!("{}", src.err().unwrap()));
-        } else {
-            return Ok(src.unwrap().code);
-        }
+    let parsed = deno_ast::parse_module(ParseParams {
+        specifier: deno_ast::ModuleSpecifier::parse("file:///yasumu.workspace/script.ts").unwrap(),
+        text: code.into(),
+        media_type: MediaType::TypeScript,
+        capture_tokens: false,
+        scope_analysis: false,
+        maybe_syntax: None,
     })
+    .unwrap();
+
+    let transpiled_source = parsed
+        .transpile(
+            &deno_ast::TranspileOptions {
+                imports_not_used_as_values: deno_ast::ImportsNotUsedAsValues::Remove,
+                ..Default::default()
+            },
+            &deno_ast::EmitOptions {
+                source_map: deno_ast::SourceMapOption::None,
+                ..Default::default()
+            },
+        )
+        .unwrap()
+        .into_source();
+
+    let source_text = String::from_utf8(transpiled_source.source).unwrap();
+
+    Ok(source_text.into())
 }
