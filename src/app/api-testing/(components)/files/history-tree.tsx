@@ -5,6 +5,7 @@ import { FsActionManager } from './fs-action-manager';
 import { useCallback, useEffect, useState } from 'react';
 import { Yasumu } from '@/lib/yasumu';
 import { toast } from 'sonner';
+import { FullAreaContextMenu } from './full-area-context-menu';
 
 export default function HistoryTree() {
   const [tree, setTree] = useState<TreeViewElement[]>([]);
@@ -45,16 +46,19 @@ export default function HistoryTree() {
   }, []);
 
   return (
-    <div className="max-h-[96.5vh] overflow-y-auto flex flex-col">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold">Requests</h3>
-        <FsActionManager />
+    <>
+      <div className="max-h-[96.5vh] overflow-y-auto flex flex-col">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Requests</h3>
+          <FsActionManager />
+        </div>
+        {tree.map((item) => (
+          <Tree key={item.id} className="py-1 overflow-hidden rounded-md" elements={item.children ?? []}>
+            <RecursiveTreeGenerator tree={Array.isArray(item) ? item : [item]} />
+          </Tree>
+        ))}
       </div>
-      {tree.map((item) => (
-        <Tree key={item.id} className="py-1 overflow-hidden rounded-md" elements={item.children ?? []}>
-          <RecursiveTreeGenerator tree={Array.isArray(item) ? item : [item]} />
-        </Tree>
-      ))}
-    </div>
+      <FullAreaContextMenu />
+    </>
   );
 }
