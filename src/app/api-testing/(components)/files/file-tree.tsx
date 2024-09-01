@@ -60,6 +60,7 @@ export function RecursiveTreeGenerator({ tree }: { tree: TreeViewElement[] }) {
                 })}
                 onClick={() => {
                   setSelectedPath(item.id);
+                  setCurrent(null);
                 }}
               >
                 {item.children?.length ? <RecursiveTreeGenerator tree={item.children} /> : null}

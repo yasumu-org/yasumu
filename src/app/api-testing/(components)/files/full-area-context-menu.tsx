@@ -2,12 +2,13 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 import { DialogTrigger } from '@/components/ui/dialog';
 import { ContextMenuFsActionDialog } from '@/app/api-testing/(components)/files/context-menu-fs-action-dialog';
 import { useState } from 'react';
-import { useRequestFs } from '@/stores/api-testing/request-config.store';
+import { useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { Yasumu } from '@/lib/yasumu';
 import { toast } from 'sonner';
 import { HttpMethods } from '@yasumu/core';
 
 export function FullAreaContextMenu() {
+  const { current, setCurrent } = useRequestStore();
   const [isGroup, setIsGroup] = useState(false);
   const { copied, cut, setCut } = useRequestFs();
   const handleCreate = async (name: string) => {
@@ -33,7 +34,11 @@ export function FullAreaContextMenu() {
       description={`Create the request${isGroup ? ' group' : ''}`}
     >
       <ContextMenu>
-        <ContextMenuTrigger>
+        <ContextMenuTrigger
+          onClick={() => {
+            setCurrent(null);
+          }}
+        >
           <div className="h-full"></div>
         </ContextMenuTrigger>
         <ContextMenuContent className="w-[200px]">
