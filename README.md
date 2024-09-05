@@ -69,10 +69,11 @@ For any queries, you can contact the maintainers at [contact@yasumu.dev](mailto:
 
 ## Core Team
 
-| Name              | Role         | Links                                     |
-| ----------------- | ------------ | ----------------------------------------- |
-| Twilight          | Project Lead | [GitHub](https://github.com/twlite)       |
-| Zyrouge           | Co-Lead      | [GitHub](https://github.com/zyrouge)      |
-| Santosh Bhandari  | Developer    | [GitHub](https://github.com/bsantosh909)  |
-| Bibek Raj Ghimire | Developer    | [GitHub](https://github.com/ghimirebibek) |
-| Samir Paudyal     | Developer    | [GitHub](https://github.com/samir-byte)   |
+| Name              | Role               | Links                                     |
+| ----------------- | ------------------ | ----------------------------------------- |
+| Twilight          | Project Lead       | [GitHub](https://github.com/twlite)       |
+| Zyrouge           | Co-Lead            | [GitHub](https://github.com/zyrouge)      |
+| Santosh Bhandari  | Developer          | [GitHub](https://github.com/bsantosh909)  |
+| Bibek Raj Ghimire | Developer          | [GitHub](https://github.com/ghimirebibek) |
+| Samir Paudyal     | Developer          | [GitHub](https://github.com/samir-byte)   |
+| Sulav Niroula     | Frontend Developer | [GitHub](https://github.com/sulav7)       |
