@@ -1,0 +1,40 @@
+{
+  "name": "yasumu",
+  "version": "0.0.0",
+  "description": "Yasumu cli",
+  "main": "dist/index.js",
+  "bin": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yasumu-org/yasumu.git"
+  },
+  "keywords": [
+    "yasumu",
+    "cli",
+    "yasumu-cli",
+    "ci",
+    "test",
+    "http",
+    "api"
+  ],
+  "author": "twlite <hello@twlite.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yasumu-org/yasumu/issues"
+  },
+  "homepage": "https://github.com/yasumu-org/yasumu#readme",
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@yasumu/core": "workspace:^",
+    "@yasumu/schema": "workspace:^"
+  }
+}
