@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "identifier": "com.yasumu.dev",
   "build": {
-    "beforeDevCommand": "bun run dev",
-    "beforeBuildCommand": "bun run build",
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build",
     "devUrl": "http://localhost:3000",
     "frontendDist": "../out"
   },
@@ -23,26 +23,16 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "copyright": "Yasumu Org.",
+    "copyright": "Yasumu Org",
     "shortDescription": "Yasumu is a customizable, free and open-source application to test various types of APIs.",
     "longDescription": "Yasumu is a free and open-source application to test various types of APIs. It is a lightweight alternative to postman, insomnia, and bruno. It follows simple user interface to provide better user experience without causing a lot of confusion.",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ],
-    "resources": [
-      "runtime/*"
-    ]
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "resources": ["runtime/*"]
   },
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERFMkU4QzFCMkE2OTA4MgpSV1NDa0theXdlamlEWjJDYUpVc1Y5ZUREeUdxeENYKzlWejVMQTZ1S3VINGhTREhwQWNJK2N4bwo=",
-      "endpoints": [
-        "https://github.com/yasumu-org/yasumu/releases/latest/download/latest.json"
-      ]
+      "endpoints": ["https://github.com/yasumu-org/yasumu/releases/latest/download/latest.json"]
     }
   }
 }

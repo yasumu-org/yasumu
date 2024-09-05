@@ -3,8 +3,11 @@ on:
   workflow_dispatch:
   pull_request:
   push:
+    paths:
+      - 'apps/yasumu/**'
     branches:
       - 'main'
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -32,9 +35,11 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache@v4
+        name: Setup yarn cache
         with:
-          bun-version: latest
+          path: .yarn/cache
+          key: yarn-cache
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -48,10 +53,13 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: yarn install --immutable
+
+      - name: Build packages
+        run: yarn build
 
       - name: Build
-        run: bun tauri build ${{ matrix.args }}
+        run: yarn workspace @yasumu/app tauri build ${{ matrix.args }}
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
