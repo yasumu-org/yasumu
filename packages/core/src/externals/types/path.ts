@@ -1,0 +1,35 @@
+export interface PathCommon {
+  appCacheDir(): Promise<string>;
+  appConfigDir(): Promise<string>;
+  appDataDir(): Promise<string>;
+  appLocalDataDir(): Promise<string>;
+  allLogDirs(): Promise<string>;
+  audioDir(): Promise<string>;
+  basename(path: string, ext?: string | undefined): Promise<string>;
+  cacheDir(): Promise<string>;
+  configDir(): Promise<string>;
+  dataDir(): Promise<string>;
+  delimiter(): string;
+  desktopDir(): Promise<string>;
+  dirname(path: string): Promise<string>;
+  documentDir(): Promise<string>;
+  downloadDir(): Promise<string>;
+  executableDir(): Promise<string>;
+  extname(path: string): Promise<string>;
+  fontDir(): Promise<string>;
+  homeDir(): Promise<string>;
+  isAbsolute(path: string): Promise<boolean>;
+  join(...paths: string[]): Promise<string>;
+  localDataDir(): Promise<string>;
+  normalize(path: string): Promise<string>;
+  pictureDir(): Promise<string>;
+  publicDir(): Promise<string>;
+  resolve(...paths: string[]): Promise<string>;
+  resolveResource(resourcePath: string): Promise<string>;
+  resourceDir(): Promise<string>;
+  runtimeDir(): Promise<string>;
+  sep(): string;
+  tempDir(): Promise<string>;
+  templateDir(): Promise<string>;
+  videoDir(): Promise<string>;
+}

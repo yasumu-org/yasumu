@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    /* --ring: 262.1 83.3% 57.8%; */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 220 24% 15%;
+    --foreground: 221 31% 74%;
+    --muted: 220 12% 19%;
+    --muted-foreground: 220 12% 69%;
+    --popover: 220 24% 12%;
+    --popover-foreground: 221 31% 84%;
+    --card: 220 24% 13%;
+    --card-foreground: 221 31% 79%;
+    --border: 220 14% 20%;
+    --input: 220 14% 23%;
+    --primary: 221 31% 74%;
+    --primary-foreground: 221 31% 14%;
+    --secondary: 221 21% 25%;
+    --secondary-foreground: 221 21% 85%;
+    --accent: 220 24% 30%;
+    --accent-foreground: 220 24% 90%;
+    --destructive: 10 92% 50%;
+    --destructive-foreground: 0 0% 100%;
+    /* --ring: 221 31% 74%; */
+  }
+}
+
+/* scrollbar styles */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--foreground) / 30) transparent;
+}
+
+/* zero width scrollbar */
+.zw-scrollbar {
+  scrollbar-width: none;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

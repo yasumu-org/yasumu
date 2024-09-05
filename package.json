@@ -1,0 +1,24 @@
+{
+  "name": "yasumu-workspace",
+  "version": "0.0.0",
+  "description": "Yasumu monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yasumu-org/yasumu.git"
+  },
+  "keywords": [
+    "yasumu"
+  ],
+  "author": "twlite <hello@twlite.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yasumu-org/yasumu/issues"
+  },
+  "homepage": "https://github.com/yasumu-org/yasumu#readme",
+  "packageManager": "yarn@4.4.1"
+}
