@@ -34,6 +34,14 @@ Canary branch contains relatively stable features and updates after testing on t
 
 Release branch contains stable features and updates after testing on the `canary` branch. This branch is used for public release and is released via stable builds. This version is recommended for production use.
 
+## Projects
+
+| ID  | Name                                  | Description                                                              |
+| --- | ------------------------------------- | ------------------------------------------------------------------------ |
+| 1.  | [`@yasumu/app`](./apps/yasumu)        | The desktop application of Yasumu                                        |
+| 2.  | [`@yasumu/core`](./packages/core)     | The core api used by Yasumu's applications across different environments |
+| 3.  | [`@yasumu/schema`](./packages/schema) | Yasumu's custom schema definition language                               |
+
 ## Contributing
 
 Contributions are welcome! Please read the [contribution guidelines](CONTRIBUTING.md) before contributing.

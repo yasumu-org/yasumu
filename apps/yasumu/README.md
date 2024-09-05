@@ -1,70 +1,11 @@
-# Yasumu
+# Yasumu Application
 
-Yasumu is a customizable, free and open-source application to test various types of APIs (Lightweight alternative to postman/insomnia/bruno).
+This directory contains the source code for the Yasumu application. It is written in TypeScript and built with Tauri, React, and TypeScript.
 
-## Features Status
+You can find the following contents in this directory:
 
-The following table shows the status of the features in the project.
-
-| Feature           | Status      |
-| ----------------- | ----------- |
-| REST API Testing  | In Progress |
-| SMTP Server       | In Progress |
-| GraphQL Testing   | In Progress |
-| WebSocket Testing | Planned     |
-| gRPC Testing      | Planned     |
-| Custom Plugins    | Planned     |
-| Custom Themes     | Planned     |
-
-## About
-
-Yasumu is a free and open-source application to test various types of APIs. It is a lightweight alternative to postman, insomnia, and bruno. Yasumu is built with Tauri, React, and TypeScript.
-
-## Project Structure
-
-### `main` branch
-
-Main branch contains the latest updates and unstable features. This branch is used for development and testing purposes.
-
-### `canary` branch
-
-Canary branch contains relatively stable features and updates after testing on the `main` branch. This branch is used for public testing and feedback, and is released via pre-release builds.
-
-### `release` branch
-
-Release branch contains stable features and updates after testing on the `canary` branch. This branch is used for public release and is released via stable builds. This version is recommended for production use.
-
-## Contributing
-
-Contributions are welcome! Please read the [contribution guidelines](CONTRIBUTING.md) before contributing.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- [Tauri](https://tauri.app/)
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Shadcn UI](https://ui.shadcn.com/)
-
-## Support
-
-If you like this project, please consider supporting it by starring ⭐ the repository. Additionally, you can support the project by contributing to it or by making a donation.
-
-<a href="https://www.buymeacoffee.com/twlite"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a coffee" width="200" height="50"></a> <a href="https://www.patreon.com/twlite"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200" height="50"></a>
-
-## Contact
-
-For any queries, you can contact the maintainers at [contact@yasumu.dev](mailto:contact@yasumu.dev).
-
-## Core Team
-
-| Name              | Role         | Links                                     |
-| ----------------- | ------------ | ----------------------------------------- |
-| Twilight          | Project Lead | [GitHub](https://github.com/twlite)       |
-| Zyrouge           | Co-Lead      | [GitHub](https://github.com/zyrouge)      |
-| Santosh Bhandari  | Developer    | [GitHub](https://github.com/bsantosh909)  |
-| Bibek Raj Ghimire | Developer    | [GitHub](https://github.com/ghimirebibek) |
-| Samir Paudyal     | Developer    | [GitHub](https://github.com/samir-byte)   |
+- `src`: Contains the frontend source code for the application. This directory contains the React components, styles, and other frontend assets.
+- `src-tauri`: Contains the Tauri source code for the application. This directory contains the Tauri configuration, build scripts, and other Tauri-specific assets.
+- `src-tauri/src/tanxium`: Contains Yasumu's JavaScript runtime to evaluate user generated JavaScript code in the application. It uses Boa, a JavaScript interpreter written in Rust.
+- `src-tauri/runtime`: Contains the runtime JavaScript/TypeScript code for the Tanxium JavaScript runtime. It is used to expose certain apis to the user generated JavaScript code.
+- `src-tauri/src/commands`: Contains the command handlers for the application. This directory contains the command handlers for the application, which are used to handle the commands sent from the frontend to the Tauri backend.

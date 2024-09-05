@@ -1,14 +1,16 @@
 {
-  "name": "yasumu",
+  "name": "@yasumu/app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "clean": "cd src-tauri && cargo clean",
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "tauri": "tauri",
+    "app": "tauri dev",
     "ui": "shadcn-ui",
     "format": "prettier --write \"./src\""
   },
