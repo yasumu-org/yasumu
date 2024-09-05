@@ -6831,6 +6831,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"yasumu@workspace:apps/cli":
+  version: 0.0.0-use.local
+  resolution: "yasumu@workspace:apps/cli"
+  dependencies:
+    "@yasumu/core": "workspace:^"
+    "@yasumu/schema": "workspace:^"
+    rimraf: "npm:^6.0.1"
+    typescript: "npm:^5.5.4"
+  languageName: unknown
+  linkType: soft
+
 "yocto-queue@npm:^0.1.0":
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
