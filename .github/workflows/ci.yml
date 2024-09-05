@@ -55,6 +55,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Build packages
+        run: yarn build
+
       - name: Build
         run: yarn workspace @yasumu/app tauri build ${{ matrix.args }}
         env:

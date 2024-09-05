@@ -2523,7 +2523,8 @@ __metadata:
     "@types/set-cookie-parser": "npm:^2.4.7"
     "@uiw/react-codemirror": "npm:^4.22.1"
     "@vitejs/plugin-react": "npm:^4.2.1"
-    "@yasumu/core": "npm:0.0.10"
+    "@yasumu/core": "workspace:^"
+    "@yasumu/schema": "workspace:^"
     autoprefixer: "npm:^10.4.19"
     class-variance-authority: "npm:^0.7.0"
     clsx: "npm:^2.1.1"
@@ -2558,7 +2559,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@yasumu/core@npm:0.0.10, @yasumu/core@workspace:packages/core":
+"@yasumu/core@workspace:^, @yasumu/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@yasumu/core@workspace:packages/core"
   dependencies:
@@ -2569,7 +2570,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@yasumu/schema@workspace:packages/schema":
+"@yasumu/schema@workspace:^, @yasumu/schema@workspace:packages/schema":
   version: 0.0.0-use.local
   resolution: "@yasumu/schema@workspace:packages/schema"
   dependencies:

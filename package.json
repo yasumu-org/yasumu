@@ -7,6 +7,9 @@
     "packages/*",
     "apps/*"
   ],
+  "scripts": {
+    "build": "yarn workspaces foreach -pt -A --exclude @yasumu/app run build"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yasumu-org/yasumu.git"
