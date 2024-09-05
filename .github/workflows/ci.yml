@@ -56,7 +56,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build
-        run: yarn workspace @yasumu/app build ${{ matrix.args }}
+        run: yarn workspace @yasumu/app tauri build ${{ matrix.args }}
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
