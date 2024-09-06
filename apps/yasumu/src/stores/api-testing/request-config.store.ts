@@ -56,7 +56,7 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
     urlencoded: [],
   },
   bodyMode: BodyMode.None,
-  script: 'console.log(Yasumu)',
+  script: 'Promise.resolve("foo").then(console.log)',
   setId: (id: string) => set({ id }),
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),

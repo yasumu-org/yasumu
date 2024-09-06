@@ -1,28 +1,6 @@
-use std::{
-    future::Future,
-    time::{Duration, Instant},
-};
-
 use boa_engine::{
-    js_str, js_string, object::ObjectInitializer, property::Attribute, Context, JsArgs, JsResult,
-    JsString, JsValue, NativeFunction,
+    js_str, object::ObjectInitializer, property::Attribute, Context, JsString, JsValue,
 };
-
-fn sleep(
-    _this: &JsValue,
-    args: &[JsValue],
-    context: &mut Context,
-) -> impl Future<Output = JsResult<JsValue>> {
-    let millis = args.get_or_undefined(0).to_u32(context);
-
-    async move {
-        let millis = millis?;
-        let now = Instant::now();
-        smol::Timer::after(Duration::from_millis(u64::from(millis))).await;
-        let elapsed = now.elapsed().as_secs_f64();
-        Ok(elapsed.into())
-    }
-}
 
 pub fn runtime_init(
     context: &mut Context,
@@ -83,7 +61,6 @@ pub fn runtime_init(
         .property(js_str!("features"), app_script_features, Attribute::all())
         .property(js_str!("versions"), yasumu_version, Attribute::all())
         .property(js_str!("workspace"), yasumu_workspace, Attribute::all())
-        .function(NativeFunction::from_async_fn(sleep), js_string!("sleep"), 1)
         .build();
 
     context
