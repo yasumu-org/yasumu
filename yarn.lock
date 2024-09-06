@@ -6839,6 +6839,8 @@ __metadata:
     "@yasumu/schema": "workspace:^"
     rimraf: "npm:^6.0.1"
     typescript: "npm:^5.5.4"
+  bin:
+    yasumu: ./dist/index.js
   languageName: unknown
   linkType: soft
 

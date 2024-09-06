@@ -3,6 +3,7 @@
 (() => {
   const isTestEnvironment = Yasumu.isTestEnvironment;
 
+  // we dont want to expose the testing API unless we are in a test environment
   if (!isTestEnvironment) return;
 
   const YASUMU_ASSERTION_ERROR = 'YasumuAssertionError';
@@ -150,14 +151,7 @@
     Skipped = 'skipped',
   }
 
-  function ensureTestEnvironment(): void {
-    if (!isTestEnvironment) {
-      throw new Error('Yasumu tests can only be performed in test environment');
-    }
-  }
-
   function test(name: string, fn: YasumuTest): void {
-    ensureTestEnvironment();
     let state: TestState | null = null;
     let stateReason: string | null | undefined = null;
 
@@ -224,7 +218,6 @@
   }
 
   function expect<T>(actual: T): Assertion<T> {
-    ensureTestEnvironment();
     return new YasumuAssertion<T>(actual);
   }
 
