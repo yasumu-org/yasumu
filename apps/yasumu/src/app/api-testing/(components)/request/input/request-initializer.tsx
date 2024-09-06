@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import { useResponse } from '@/stores/api-testing/response.store';
 import { PreRequestScript } from '../script/pre-request';
 import { PostRequestScript } from '../script/post-request';
+import { TestScript } from '../script/test-script';
 
 const ReqTabs = {
   QueryParameters: 'query-parameters',
@@ -17,6 +18,7 @@ const ReqTabs = {
   RequestBody: 'request-body',
   PreRequestScript: 'pre-request-script',
   PostRequestScript: 'post-request-script',
+  TestScript: 'test-script',
 };
 
 export default function RequestInitializer() {
@@ -88,7 +90,10 @@ export default function RequestInitializer() {
               Pre-Request
             </TabsTrigger>
             <TabsTrigger className="select-none" value={ReqTabs.PostRequestScript}>
-              Post-Request
+              Post-Response
+            </TabsTrigger>
+            <TabsTrigger className="select-none" value={ReqTabs.TestScript}>
+              Tests
             </TabsTrigger>
           </TabsList>
           <TabsContent value={ReqTabs.QueryParameters}>
@@ -105,6 +110,9 @@ export default function RequestInitializer() {
           </TabsContent>
           <TabsContent value={ReqTabs.PostRequestScript}>
             <PostRequestScript />
+          </TabsContent>
+          <TabsContent value={ReqTabs.TestScript}>
+            <TestScript />
           </TabsContent>
         </Tabs>
       </div>

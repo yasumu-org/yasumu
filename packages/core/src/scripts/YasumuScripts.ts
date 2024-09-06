@@ -25,14 +25,16 @@ export class YasumuScripts {
    * Execute the given script with the given context.
    * @param script The script to execute.
    * @param context The context to execute the script with.
+   * @param config The configuration for the script. Useful for passing additional data to the script.
    * @returns The result of the script.
    */
   public async run<T = unknown, C = unknown>(
     script: string,
-    context: C
+    context: C,
+    config: Record<string, unknown>
   ): Promise<T> {
     const ctx = this.createContextData(context);
-    const result = await this.adapter.evaluate<T>(script, ctx);
+    const result = await this.adapter.evaluate<T>(script, ctx, config);
 
     return result;
   }

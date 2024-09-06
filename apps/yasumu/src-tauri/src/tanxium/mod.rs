@@ -42,6 +42,7 @@ pub async fn evaluate_javascript(
     code: &str,
     id: &str,
     typescript: Option<bool>,
+    test: Option<bool>,
     workspace_state: tauri::State<'_, WorkspaceState>,
 ) -> Result<String, String> {
     let code = code.to_string();
@@ -61,7 +62,7 @@ pub async fn evaluate_javascript(
         let mut ctx = Context::default();
 
         crypto::crypto_init(&mut ctx);
-        yasumu_runtime::runtime_init(&mut ctx, current_workspace, app.clone(), id, ts_supported);
+        yasumu_runtime::runtime_init(&mut ctx, current_workspace, app.clone(), id, ts_supported, test.unwrap_or(false));
 
         // enable strict mode
         ctx.strict(true);

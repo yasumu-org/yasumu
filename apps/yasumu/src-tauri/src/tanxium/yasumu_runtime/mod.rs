@@ -8,6 +8,7 @@ pub fn runtime_init(
     app: tauri::AppHandle,
     id: String,
     ts_supported: bool,
+    is_test: bool,
 ) {
     let package = app.package_info();
     let app_version = format!(
@@ -56,6 +57,11 @@ pub fn runtime_init(
         .property(
             js_str!("version"),
             JsString::from(app_version),
+            Attribute::all(),
+        )
+        .property(
+            js_str!("isTestEnvironment"),
+            JsValue::Boolean(is_test),
             Attribute::all(),
         )
         .property(js_str!("features"), app_script_features, Attribute::all())

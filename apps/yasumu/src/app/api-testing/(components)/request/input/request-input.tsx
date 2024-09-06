@@ -55,6 +55,7 @@ export default function RequestInput() {
       abortController,
       setUrl,
       script,
+      test,
     } = u;
 
     return {
@@ -68,6 +69,7 @@ export default function RequestInput() {
       abortController,
       setUrl,
       postRequestScript: script,
+      test,
     };
   });
 
@@ -172,7 +174,9 @@ export default function RequestInput() {
       contextData.request.body = bodyData;
 
       if (!!preRequestScript?.trim().length) {
-        const result = await Yasumu.scripts.run(preRequestScript, Yasumu.scripts.createContextData(contextData));
+        const result = await Yasumu.scripts.run(preRequestScript, Yasumu.scripts.createContextData(contextData), {
+          test: false,
+        });
 
         if (canEvaluateResult(result) && result.console && result.console.length) {
           add(result.console);
@@ -287,7 +291,22 @@ export default function RequestInput() {
         const result = await Yasumu.scripts.run(
           responseStore.postRequestScript,
           Yasumu.scripts.createContextData(contextData),
+          {
+            test: false,
+          },
         );
+
+        if (canEvaluateResult(result) && result.console && result.console.length) {
+          add(result.console);
+        } else if (result && typeof result === 'object' && '$error' in result) {
+          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
+        }
+      }
+
+      if (!!responseStore.test?.trim().length) {
+        const result = await Yasumu.scripts.run(responseStore.test, Yasumu.scripts.createContextData(contextData), {
+          test: true,
+        });
 
         if (canEvaluateResult(result) && result.console && result.console.length) {
           add(result.console);
