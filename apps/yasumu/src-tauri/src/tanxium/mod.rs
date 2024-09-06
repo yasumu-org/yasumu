@@ -1,16 +1,10 @@
-use std::rc::Rc;
-
-use boa_engine::context::ContextBuilder;
 use boa_engine::{Context, Source};
 
-use event_loop::Queue;
-use smol::LocalExecutor;
 use tauri;
 use tauri::path::BaseDirectory;
 use tauri::Manager;
 
 mod crypto;
-mod event_loop;
 mod typescript;
 mod yasumu_runtime;
 
@@ -24,7 +18,6 @@ fn setup_runtime(ctx: &mut Context, app: tauri::AppHandle) {
         "runtime/01_runtime.ts",
         "runtime/02_console.ts",
         "runtime/03_test.ts",
-        "runtime/04_timers.ts",
     ];
 
     for file in runtime_files {
@@ -49,6 +42,7 @@ pub async fn evaluate_javascript(
     code: &str,
     id: &str,
     typescript: Option<bool>,
+    test: Option<bool>,
     workspace_state: tauri::State<'_, WorkspaceState>,
 ) -> Result<String, String> {
     let code = code.to_string();
@@ -65,15 +59,10 @@ pub async fn evaluate_javascript(
             code
         };
         let src = Source::from_bytes(final_code.as_bytes());
-        let executor = LocalExecutor::new();
-        let queue = Queue::new(executor);
-        let mut ctx = &mut ContextBuilder::new()
-            .job_queue(Rc::new(queue))
-            .build()
-            .unwrap();
+        let mut ctx = Context::default();
 
         crypto::crypto_init(&mut ctx);
-        yasumu_runtime::runtime_init(&mut ctx, current_workspace, app.clone(), id, ts_supported);
+        yasumu_runtime::runtime_init(&mut ctx, current_workspace, app.clone(), id, ts_supported, test.unwrap_or(false));
 
         // enable strict mode
         ctx.strict(true);
@@ -90,14 +79,12 @@ pub async fn evaluate_javascript(
 
         let result = ctx.eval(src);
 
-        // not working properly?
-        ctx.run_jobs();
+        let output = match result {
+            Ok(result) => Ok(format!("{}", result.display())),
+            Err(err) => Err(format!("{}", err)),
+        };
 
-        if let Ok(result) = result {
-            Ok(format!("{}", result.display()))
-        } else {
-            Err(format!("{}", result.unwrap_err()))
-        }
+        output
     });
 
     handle.await.unwrap()

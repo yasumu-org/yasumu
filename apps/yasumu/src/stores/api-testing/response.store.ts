@@ -34,6 +34,7 @@ export interface IResponse {
   abortController: AbortController | null;
   url: string;
   script: string;
+  test: string;
   setBody: (body: string) => void;
   setHeaders: (headers: IHeader[]) => void;
   setCookies: (cookies: ICookie[]) => void;
@@ -51,6 +52,7 @@ export interface IResponse {
   setAbortController: (controller: AbortController | null) => void;
   setUrl: (url: string) => void;
   setScript: (script: string) => void;
+  setTest: (test: string) => void;
 }
 
 export const useResponse = create<IResponse>((set) => ({
@@ -71,6 +73,7 @@ export const useResponse = create<IResponse>((set) => ({
   validUntil: '',
   abortController: null,
   script: '',
+  test: '',
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),
@@ -88,4 +91,5 @@ export const useResponse = create<IResponse>((set) => ({
   setAbortController: (abortController: AbortController | null) => set({ abortController }),
   setUrl: (url: string) => set({ url }),
   setScript: (script: string) => set({ script }),
+  setTest: (test: string) => set({ test }),
 }));

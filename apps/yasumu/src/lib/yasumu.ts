@@ -4,7 +4,15 @@ import * as events from '@tauri-apps/api/event';
 import * as path from '@tauri-apps/api/path';
 import * as fs from '@tauri-apps/plugin-fs';
 import * as dialog from '@tauri-apps/plugin-dialog';
-import { createYasumu, FileSystemCommon, StoreCommon, PathCommon, EventsCommon, ScriptsCommon } from '@yasumu/core';
+import {
+  createYasumu,
+  FileSystemCommon,
+  StoreCommon,
+  PathCommon,
+  EventsCommon,
+  ScriptsCommon,
+  DialogCommon,
+} from '@yasumu/core';
 import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
@@ -23,17 +31,18 @@ export const Yasumu = createYasumu({
   createStore(store: string) {
     return new Store(store) as unknown as StoreCommon;
   },
-  dialog: dialog,
+  dialog: dialog as unknown as DialogCommon,
   path: path as unknown as PathCommon,
   events: events as EventsCommon,
   scripts: {
-    async evaluate<T>(script: string, contextData: string): Promise<T> {
+    async evaluate<T>(script: string, contextData: string, config: Record<string, unknown>): Promise<T> {
       try {
         const prescript = `try{${prepareScript(script, contextData)}}catch(e){String(e.stack||e)}`;
         const result = await Yasumu.commands.invoke<string>('evaluate_javascript', {
           code: prescript,
-          id: Yasumu.workspace?.metadata.id ?? 'anonymous',
-          typescript: true,
+          id: Yasumu.workspace?.metadata.id ?? config.id ?? 'anonymous',
+          typescript: typeof config.typescript === 'boolean' ? config.typescript : true,
+          test: !!config.test,
         });
 
         try {
