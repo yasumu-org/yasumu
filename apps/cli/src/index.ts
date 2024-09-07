@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-console.log('Hello from Yasumu CLI!');
+console.log('Yeah Masuuuu!!!!');
