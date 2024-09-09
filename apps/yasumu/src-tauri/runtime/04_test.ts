@@ -1,10 +1,26 @@
 /// <reference path="./_common.ts" />
 
 (() => {
-  const isTestEnvironment = Yasumu.isTestEnvironment;
+  const isTestEnvironment = Yasumu.features.test;
 
   // we dont want to expose the testing API unless we are in a test environment
-  if (!isTestEnvironment) return;
+  if (!isTestEnvironment) {
+    const noop = () => {};
+
+    Object.assign(globalThis, {
+      test: noop,
+      expect: noop,
+    });
+
+    return;
+  }
+
+  const warnLog = (arg: string) =>
+    Yasumu.context.__meta.console.push({ type: 'warn', args: [arg], timestamp: Date.now(), test: true });
+  const writeSuccess = (arg: string) =>
+    Yasumu.context.__meta.console.push({ type: 'log', args: [arg], timestamp: Date.now(), test: true });
+  const writeError = (arg: string) =>
+    Yasumu.context.__meta.console.push({ type: 'error', args: [arg], timestamp: Date.now(), test: true });
 
   const YASUMU_ASSERTION_ERROR = 'YasumuAssertionError';
   const TEST_CONTEXT_THROWAWAY_ERROR = 'TestContextThrowawayError';
@@ -21,6 +37,23 @@
       super(message);
       this.name = TEST_CONTEXT_THROWAWAY_ERROR;
     }
+  }
+
+  function compareDeep(a: any, b: any): boolean {
+    if (a === b) return true;
+
+    if (typeof a !== 'object' || typeof b !== 'object') return false;
+
+    const keysA = Object.keys(a);
+    const keysB = Object.keys(b);
+
+    if (keysA.length !== keysB.length) return false;
+
+    for (const key of keysA) {
+      if (!keysB.includes(key) || !compareDeep(a[key], b[key])) return false;
+    }
+
+    return true;
   }
 
   class YasumuAssertion<T> implements Assertion<T> {
@@ -66,6 +99,18 @@
 
     public toEqual(expected: T): void {
       this.#throwIf(this.actual != expected, `Expected ${this.actual} to equal ${expected}`, expected);
+    }
+
+    public toStrictEqual(expected: T): void {
+      this.#throwIf(this.actual !== expected, `Expected ${this.actual} to strictly equal ${expected}`, expected);
+    }
+
+    public toDeepEqual(expected: T): void {
+      this.#throwIf(
+        compareDeep(this.actual, expected),
+        `Expected ${this.actual} to deeply equal ${expected}`,
+        expected,
+      );
     }
 
     public toMatch(expected: RegExp): void {
@@ -174,45 +219,45 @@
     };
 
     const formatTime = (duration: number) => {
-      if (duration < 1000) return `${duration}ms`;
-      return `${(duration / 1000).toFixed(2)}s`;
+      if (duration < 1000) return `${duration.toFixed(2)}ms`;
+      return `${duration.toFixed(2)}s`;
     };
 
     const evaluateState = (duration: string) => {
       switch (state) {
         case TestState.Passed:
-          console.log(`[PASSED] (${duration}) ${name}: ${state}`);
+          writeSuccess(`[PASSED] (${duration}) ${name}: ${stateReason}`);
           break;
         case TestState.Failed:
-          console.error(`[FAILED] (${duration}) Yasumu.test(${name}): ${stateReason}`);
+          writeError(`[FAILED] (${duration}) Yasumu.test(${name}): ${stateReason}`);
           break;
         case TestState.Skipped:
-          console.warn(`[SKIPPED] (${duration}) Yasumu.test(${name}): ${stateReason}`);
+          warnLog(`[SKIPPED] (${duration}) Yasumu.test(${name}): ${stateReason}`);
           break;
         default:
           break;
       }
     };
 
-    let start = Date.now();
+    let start = performance.now();
     let end;
 
     try {
       fn(testContext);
-      end = Date.now();
-      console.log(`[PASSED] (${formatTime(end - start)}) ${name}: ${state || TestState.Passed}`);
-    } catch (error) {
-      end = Date.now();
+      end = performance.now();
+      writeSuccess(`[PASSED] (${formatTime(end - start)}) ${name}`);
+    } catch (_error) {
+      end = performance.now();
       const timeTaken = formatTime(end - start);
-      if (error && error instanceof TestContextThrowawayError && state != null) return void evaluateState(timeTaken);
+      if (_error && _error instanceof TestContextThrowawayError && state != null) return void evaluateState(timeTaken);
 
-      if (error && error instanceof YasumuAssertionError) {
-        console.error(`[FAILED] (${timeTaken}) Yasumu.test(${name}): ${error.message}`);
+      if (_error && _error instanceof YasumuAssertionError) {
+        writeError(`[FAILED] (${timeTaken}) Yasumu.test(${name}):\n${_error.message}`);
         return;
       }
 
-      console.error(
-        `[ERROR] (${timeTaken}) Yasumu.test(${name}) failed with error: ${(error as Error).message || error}`,
+      writeError(
+        `[ERROR] (${timeTaken}) Yasumu.test(${name}) failed with error:\n${(_error as Error).message || _error}`,
       );
     }
   }

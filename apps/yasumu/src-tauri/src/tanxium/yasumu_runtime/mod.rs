@@ -1,5 +1,6 @@
 use boa_engine::{
-    js_str, object::ObjectInitializer, property::Attribute, Context, JsString, JsValue,
+    js_str, js_string, object::ObjectInitializer, property::Attribute, Context, JsString, JsValue,
+    NativeFunction,
 };
 
 pub fn runtime_init(
@@ -51,6 +52,7 @@ pub fn runtime_init(
             JsValue::Boolean(ts_supported),
             Attribute::all(),
         )
+        .property(js_str!("test"), JsValue::Boolean(is_test), Attribute::all())
         .build();
 
     let yasumu = ObjectInitializer::new(context)
@@ -59,14 +61,21 @@ pub fn runtime_init(
             JsString::from(app_version),
             Attribute::all(),
         )
-        .property(
-            js_str!("isTestEnvironment"),
-            JsValue::Boolean(is_test),
-            Attribute::all(),
-        )
         .property(js_str!("features"), app_script_features, Attribute::all())
         .property(js_str!("versions"), yasumu_version, Attribute::all())
         .property(js_str!("workspace"), yasumu_workspace, Attribute::all())
+        .function(
+            NativeFunction::from_fn_ptr(|_, args, _| {
+                let result = std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_secs_f64();
+
+                Ok(JsValue::Rational(result))
+            }),
+            js_string!("nanoseconds"),
+            0,
+        )
         .build();
 
     context

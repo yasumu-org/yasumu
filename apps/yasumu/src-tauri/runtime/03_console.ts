@@ -6,9 +6,13 @@
       if (typeof value === 'string') {
         return `"${value}"`;
       }
+
+      if (typeof value === 'bigint') {
+        return `${value}n`;
+      }
+
       if (
         typeof value === 'number' ||
-        typeof value === 'bigint' ||
         typeof value === 'symbol' ||
         typeof value === 'boolean' ||
         typeof value === 'undefined' ||
@@ -18,7 +22,8 @@
       }
 
       if (typeof value === 'function') {
-        return `function ${value.name || '<anonymous>'}() { [native code] }`;
+        const str = value.toString();
+        return str || `function ${value.name || '<anonymous>'}() { [native code] }`;
       }
 
       if (typeof value === 'object') {
@@ -66,10 +71,16 @@
     }
   }
 
-  const CONSOLE_METHODS: LogType = ['log', 'error', 'warn', 'info'];
+  const CONSOLE_METHODS: LogType = ['log', 'error', 'warn', 'info', 'clear'];
 
   const console = new Proxy<YasumuConsole>({} as YasumuConsole, {
     get(target, prop, receiver) {
+      if (prop === 'clear') {
+        return () => {
+          Yasumu.context.__meta.console.length = 0;
+        };
+      }
+
       if (CONSOLE_METHODS.includes(prop as any)) {
         return (...args: any[]) => {
           Yasumu.context.__meta.console.push({
