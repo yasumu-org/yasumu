@@ -18,10 +18,13 @@ export function prepareScript(code: string, ctx: string) {
   `;
 }
 
+export type ConsoleLogLevel = 'log' | 'warn' | 'error' | 'info';
+
 export interface ConsoleStream {
-  type: 'log' | 'warn' | 'error' | 'info';
+  type: ConsoleLogLevel;
   args: string[];
   timestamp: number;
+  test?: boolean;
 }
 
 export interface YasumuPostEvaluationData {

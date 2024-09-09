@@ -1,9 +1,11 @@
-use deno_ast::MediaType;
-use deno_ast::ParseParams;
+use deno_ast::{
+    parse_module, EmitOptions, ImportsNotUsedAsValues, MediaType, ModuleSpecifier, ParseParams,
+    SourceMapOption, TranspileOptions,
+};
 
 pub fn transpile_typescript(code: &str) -> Result<String, String> {
-    let parsed = deno_ast::parse_module(ParseParams {
-        specifier: deno_ast::ModuleSpecifier::parse("file:///yasumu.workspace/script.ts").unwrap(),
+    let parsed = parse_module(ParseParams {
+        specifier: ModuleSpecifier::parse("file:///yasumu.workspace/script.ts").unwrap(),
         text: code.into(),
         media_type: MediaType::TypeScript,
         capture_tokens: false,
@@ -14,12 +16,12 @@ pub fn transpile_typescript(code: &str) -> Result<String, String> {
 
     let transpiled_source = parsed
         .transpile(
-            &deno_ast::TranspileOptions {
-                imports_not_used_as_values: deno_ast::ImportsNotUsedAsValues::Remove,
+            &TranspileOptions {
+                imports_not_used_as_values: ImportsNotUsedAsValues::Remove,
                 ..Default::default()
             },
-            &deno_ast::EmitOptions {
-                source_map: deno_ast::SourceMapOption::None,
+            &EmitOptions {
+                source_map: SourceMapOption::None,
                 ..Default::default()
             },
         )

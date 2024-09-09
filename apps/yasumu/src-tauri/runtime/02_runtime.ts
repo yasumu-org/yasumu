@@ -18,6 +18,10 @@
       Yasumu.context.__meta.requestHeaders = new Headers(this.data.request.headers);
       return Yasumu.context.__meta.requestHeaders;
     }
+
+    public cancel(): void {
+      Yasumu.context.__meta.requestCanceled = true;
+    }
   }
 
   class YasumuResponseModel implements YasumuResponse {

@@ -14,10 +14,11 @@ use typescript::transpile_typescript;
 fn setup_runtime(ctx: &mut Context, app: tauri::AppHandle) {
     let path = app.path();
     let runtime_files = vec![
-        "runtime/00_headers.js",
-        "runtime/01_runtime.ts",
-        "runtime/02_console.ts",
-        "runtime/03_test.ts",
+        "runtime/00_performance.ts",
+        "runtime/01_headers.js",
+        "runtime/02_runtime.ts",
+        "runtime/03_console.ts",
+        "runtime/04_test.ts",
     ];
 
     for file in runtime_files {

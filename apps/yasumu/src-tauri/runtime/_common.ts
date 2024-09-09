@@ -1,20 +1,39 @@
 declare global {
-  type LogType = readonly ['log', 'error', 'warn', 'info'];
+  interface YasumuCrypto {
+    randomUUID(): string;
+    randomULID(): string;
+    randomNanoId(): string;
+  }
+
+  // @ts-ignore
+  var crypto: YasumuCrypto;
+
+  type LogType = readonly ['log', 'error', 'warn', 'info', 'clear'];
 
   type LogStream = {
     type: LogType[number];
     args: any[];
     timestamp: number;
+    test?: boolean;
   };
 
-  type YasumuConsole = {
-    [K in LogType[number]]: (...args: any[]) => void;
-  };
+  interface NamedConsoleMethods {
+    clear(): void;
+  }
+
+  type YasumuConsole = Omit<
+    {
+      [K in LogType[number]]: (...args: any[]) => void;
+    },
+    keyof NamedConsoleMethods
+  > &
+    NamedConsoleMethods;
 
   interface YasumuRequest {
     url: string;
     method: string;
     headers: Headers;
+    cancel(): void;
   }
 
   interface YasumuResponse {
@@ -58,6 +77,12 @@ declare global {
     store: Record<string, any>;
     console: LogStream[];
     requestHeaders: Headers;
+    requestCanceled: boolean;
+  }
+
+  interface YasumuFeatures {
+    typescript: boolean;
+    test: boolean;
   }
 
   interface YasumuCore {
@@ -68,8 +93,9 @@ declare global {
     request: YasumuRequest;
     response: YasumuResponse;
     store: YasumuStore;
-    isTestEnvironment: boolean;
+    features: YasumuFeatures;
     serialize(): string;
+    nanoseconds(): bigint;
   }
 
   var Yasumu: YasumuCore;

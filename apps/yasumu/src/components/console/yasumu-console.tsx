@@ -39,13 +39,19 @@ function LogStream({ log, scroll = false }: { log: ConsoleStream; scroll?: boole
     <pre
       ref={ref}
       className={cn(
-        'border-b py-2 text-xs font-bold font-mono',
-        {
-          'text-red-500': log.type === 'error',
-          'text-yellow-500': log.type === 'warn',
-          'text-blue-500': log.type === 'info',
-          'text-green-500': log.type === 'log',
-        },
+        'py-1 text-xs font-normal font-mono',
+        log.test
+          ? {
+              'text-red-500': log.type === 'error',
+              'text-yellow-500': log.type === 'warn',
+              'text-green-500': log.type === 'log',
+            }
+          : {
+              'text-red-500': log.type === 'error',
+              'text-yellow-500': log.type === 'warn',
+              'text-blue-500': log.type === 'info',
+              'text-gray-500 dark:text-gray-200': log.type === 'log',
+            },
         'whitespace-pre-wrap break-all',
       )}
     >
