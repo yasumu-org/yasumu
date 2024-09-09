@@ -2563,6 +2563,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@yasumu/core@workspace:packages/core"
   dependencies:
+    "@yasumu/schema": "workspace:^"
     rimraf: "npm:^6.0.1"
     tsc-alias: "npm:^1.8.10"
     tsx: "npm:^4.17.0"

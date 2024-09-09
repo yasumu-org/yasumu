@@ -21,6 +21,7 @@ import type { FetchCommon } from '../../externals/types/fetch.js';
 import type { ScriptsCommon } from '@/scripts/types.js';
 import { YasumuScripts } from '@/scripts/YasumuScripts.js';
 import type { ShellCommon } from '@/externals/types/shell.js';
+import { YasumuSchemaUtilities } from './utils/schema.js';
 
 export class YasumuCore {
   /**
@@ -77,6 +78,11 @@ export class YasumuCore {
   public workspace: YasumuWorkspace | null = null;
 
   /**
+   * The schema utilities
+   */
+  public readonly schema: YasumuSchemaUtilities;
+
+  /**
    * Create a new YasumuCore instance
    * @param config The configuration for the core
    */
@@ -93,6 +99,7 @@ export class YasumuCore {
     this.events = config.events;
     this.shell = config.shell;
     this.scripts = new YasumuScripts(this, config.scripts);
+    this.schema = new YasumuSchemaUtilities();
   }
 
   /**
