@@ -1,6 +1,5 @@
 use boa_engine::{
-    js_str, js_string, object::ObjectInitializer, property::Attribute, Context, JsString, JsValue,
-    NativeFunction,
+    js_str, object::ObjectInitializer, property::Attribute, Context, JsString, JsValue,
 };
 
 pub fn runtime_init(
@@ -64,18 +63,6 @@ pub fn runtime_init(
         .property(js_str!("features"), app_script_features, Attribute::all())
         .property(js_str!("versions"), yasumu_version, Attribute::all())
         .property(js_str!("workspace"), yasumu_workspace, Attribute::all())
-        .function(
-            NativeFunction::from_fn_ptr(|_, _, _| {
-                let result = std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap()
-                    .as_secs_f64();
-
-                Ok(JsValue::Rational(result))
-            }),
-            js_string!("nanoseconds"),
-            0,
-        )
         .build();
 
     context
