@@ -12,6 +12,10 @@ const sidebarNavItems = [
     title: 'Appearance',
     href: '/settings/appearance',
   },
+  {
+    title: 'Environments',
+    href: '/settings/environments',
+  },
 ];
 
 export default function SettingsLayout({ children }: React.PropsWithChildren) {
