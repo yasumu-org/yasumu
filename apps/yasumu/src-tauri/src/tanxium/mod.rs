@@ -7,6 +7,7 @@ use tauri::Manager;
 mod crypto;
 mod typescript;
 mod yasumu_runtime;
+mod performance;
 
 use crate::commands::workspace::WorkspaceState;
 use typescript::transpile_typescript;
@@ -14,7 +15,6 @@ use typescript::transpile_typescript;
 fn setup_runtime(ctx: &mut Context, app: tauri::AppHandle) {
     let path = app.path();
     let runtime_files = vec![
-        "runtime/00_performance.ts",
         "runtime/01_headers.js",
         "runtime/02_runtime.ts",
         "runtime/03_console.ts",
@@ -64,6 +64,7 @@ pub async fn evaluate_javascript(
 
         crypto::crypto_init(&mut ctx);
         yasumu_runtime::runtime_init(&mut ctx, current_workspace, app.clone(), id, ts_supported, test.unwrap_or(false));
+        performance::performance_init(&mut ctx);
 
         // enable strict mode
         ctx.strict(true);
