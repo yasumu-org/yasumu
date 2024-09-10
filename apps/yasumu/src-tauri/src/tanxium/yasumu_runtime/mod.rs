@@ -65,7 +65,7 @@ pub fn runtime_init(
         .property(js_str!("versions"), yasumu_version, Attribute::all())
         .property(js_str!("workspace"), yasumu_workspace, Attribute::all())
         .function(
-            NativeFunction::from_fn_ptr(|_, args, _| {
+            NativeFunction::from_fn_ptr(|_, _, _| {
                 let result = std::time::SystemTime::now()
                     .duration_since(std::time::UNIX_EPOCH)
                     .unwrap()

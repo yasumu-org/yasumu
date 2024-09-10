@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 import { DialogTrigger } from '@/components/ui/dialog';
 import { CreateEnvDialog } from './create-env';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -9,32 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Trash } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-enum VariableType {
-  DEFAULT = 'DEFAULT',
-  SECRET = 'SECRET',
-}
-
-type EnvironmentVariable = {
-  id: string;
-  key: string;
-  type: VariableType;
-  value: string;
-  enabled: boolean;
-};
-
-type Environment = {
-  id: string;
-  name: string;
-  variables: EnvironmentVariable[];
-};
+import { Environment, EnvironmentVariable, useEnvironment, VariableType } from '@/stores/application/environment.store';
 
 const Environments: React.FC = () => {
-  const [environments, setEnvironments] = useState<Environment[]>([]);
-  const [selectedEnv, setSelectedEnv] = useState<Environment | null>(null);
+  const { environments, selected, add, select, addVariable, updateVariable, removeVariable } = useEnvironment();
 
   console.log('Environments', environments);
-  console.log('SelectedEnv', selectedEnv);
+  console.log('SelectedEnv', selected);
 
   const handleCreate = (name: string) => {
     const newEnv: Environment = {
@@ -42,11 +22,11 @@ const Environments: React.FC = () => {
       name,
       variables: [],
     };
-    setEnvironments([...environments, newEnv]);
+    add(newEnv);
   };
 
   const onAddVariable = () => {
-    if (!selectedEnv) return;
+    if (!selected) return;
     const newVariable: EnvironmentVariable = {
       id: Math.random().toString(),
       key: '',
@@ -54,33 +34,17 @@ const Environments: React.FC = () => {
       value: '',
       enabled: true,
     };
-    setSelectedEnv({
-      ...selectedEnv,
-      variables: [...selectedEnv.variables, newVariable],
-    });
+    addVariable(newVariable);
   };
 
-  const onEdit = (variable: EnvironmentVariable) => {
-    console.log('Edit', variable);
-    if (!selectedEnv) return;
-    console.log('Edit', variable);
-    setSelectedEnv({
-      ...selectedEnv,
-      variables: selectedEnv.variables.map((v) => {
-        if (v.id === variable.id) {
-          return variable;
-        }
-        return v;
-      }),
-    });
+  const onEditVariable = (variable: EnvironmentVariable) => {
+    if (!selected) return;
+    updateVariable(variable);
   };
 
-  const onDelete = (variable: EnvironmentVariable) => {
-    if (!selectedEnv) return;
-    setSelectedEnv({
-      ...selectedEnv,
-      variables: selectedEnv.variables.filter((v) => v.id !== variable.id),
-    });
+  const onDeleteVariable = (variable: EnvironmentVariable) => {
+    if (!selected) return;
+    removeVariable(variable);
   };
 
   const saveEnv = () => {
@@ -97,11 +61,11 @@ const Environments: React.FC = () => {
         </CreateEnvDialog>
 
         <Select
-          value={selectedEnv?.name}
+          value={selected?.name}
           onValueChange={(value) => {
             const env = environments.find((env) => env.name === value);
             if (env) {
-              setSelectedEnv(env);
+              select(env);
             }
           }}
         >
@@ -117,7 +81,7 @@ const Environments: React.FC = () => {
           </SelectContent>
         </Select>
 
-        <Button onClick={saveEnv} disabled={!selectedEnv}>
+        <Button onClick={saveEnv} disabled={!selected}>
           Save
         </Button>
       </div>
@@ -132,12 +96,12 @@ const Environments: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {selectedEnv?.variables.map((variable) => (
+            {selected?.variables.map((variable) => (
               <EnvironmentVariableRow
                 key={variable.id}
                 variable={variable}
-                onEdit={onEdit}
-                onDelete={() => onDelete(variable)}
+                onEdit={onEditVariable}
+                onDelete={() => onDeleteVariable(variable)}
               />
             ))}
           </TableBody>
