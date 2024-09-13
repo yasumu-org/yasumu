@@ -1,4 +1,15 @@
 declare global {
+  interface YasumuRequire {
+    (id: string): any;
+    resolve(id: string): string;
+    cache: Record<string, any>;
+  }
+
+  var __require: YasumuRequire;
+
+  // @ts-ignore
+  var require: YasumuRequire;
+
   interface YasumuCrypto {
     randomUUID(): string;
     randomULID(): string;
@@ -96,6 +107,7 @@ declare global {
     features: YasumuFeatures;
     serialize(): string;
     nanoseconds(): bigint;
+    sleep(ms: number): Promise<number>;
   }
 
   var Yasumu: YasumuCore;

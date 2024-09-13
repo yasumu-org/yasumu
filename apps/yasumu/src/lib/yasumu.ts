@@ -12,12 +12,12 @@ import {
   EventsCommon,
   ScriptsCommon,
   DialogCommon,
+  Commands,
 } from '@yasumu/core';
 import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
 import * as process from '@tauri-apps/plugin-process';
-import { prepareScript } from './scripts/script';
 import { toast } from 'sonner';
 
 export const Yasumu = createYasumu({
@@ -37,20 +37,27 @@ export const Yasumu = createYasumu({
   scripts: {
     async evaluate<T>(script: string, contextData: string, config: Record<string, unknown>): Promise<T> {
       try {
-        const prescript = `try{${prepareScript(script, contextData)}}catch(e){String(e.stack||e)}`;
-        const result = await Yasumu.commands.invoke<string>('evaluate_javascript', {
-          code: prescript,
+        const prescript = `Yasumu.setContextData(${contextData});`;
+        const result = await Yasumu.commands.invoke<string>(Commands.EvaluateJavaScript, {
+          code: script,
+          prepare: prescript,
           id: Yasumu.workspace?.metadata.id ?? config.id ?? 'anonymous',
           typescript: typeof config.typescript === 'boolean' ? config.typescript : true,
           test: !!config.test,
         });
 
         try {
-          const res = JSON.parse(result.slice(1, -1));
+          const res = JSON.parse(result);
 
           return res as unknown as T;
         } catch {
-          return result as unknown as T;
+          try {
+            const res = JSON.parse(result.slice(1, -1));
+
+            return res as unknown as T;
+          } catch {
+            return result as unknown as T;
+          }
         }
       } catch (e: any) {
         toast.error('Failed to evaluate script!', { description: String(e) });

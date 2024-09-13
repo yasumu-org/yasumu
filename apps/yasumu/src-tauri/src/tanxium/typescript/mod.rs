@@ -3,9 +3,12 @@ use deno_ast::{
     SourceMapOption, TranspileOptions,
 };
 
+pub const YASUMU_WORKSPACE_SCRIPT_NAME: &str = "script.ts";
+pub const YASUMU_WORKSPACE_SCRIPT_URL: &str = "file:///yasumu.workspace/script.ts";
+
 pub fn transpile_typescript(code: &str) -> Result<String, String> {
     let parsed = parse_module(ParseParams {
-        specifier: ModuleSpecifier::parse("file:///yasumu.workspace/script.ts").unwrap(),
+        specifier: ModuleSpecifier::parse(YASUMU_WORKSPACE_SCRIPT_URL).unwrap(),
         text: code.into(),
         media_type: MediaType::TypeScript,
         capture_tokens: false,
