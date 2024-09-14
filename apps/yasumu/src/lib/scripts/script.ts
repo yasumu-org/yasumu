@@ -1,23 +1,3 @@
-export function prepareScript(code: string, ctx: string) {
-  return `try {
-    void (() => {
-      Yasumu.setContextData(${ctx});
-      ${code}
-    })();
-  } catch(e) {
-    const err = e && e.stack ? e.stack : String(e);
-    
-    Yasumu.context.__meta.console.push({
-      timestamp: Date.now(),
-      type: 'error',
-      args: [err],
-    })
-  }
-  
-  Yasumu.serialize()
-  `;
-}
-
 export type ConsoleLogLevel = 'log' | 'warn' | 'error' | 'info';
 
 export interface ConsoleStream {

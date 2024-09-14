@@ -1,11 +1,11 @@
 use mailin_embedded::{response, Handler, Response, Server};
 use mailparse::{parse_mail, MailHeaderMap};
 use serde::Serialize;
+use smol::Task;
 use std::collections::VecDeque;
 use std::io::Error;
 use std::sync::{Arc, RwLock};
 use tauri::{Emitter, State};
-use tokio::task::JoinHandle;
 use uuid::Uuid;
 
 #[derive(Clone, Serialize)]
@@ -136,7 +136,7 @@ impl Handler for SmtpHandler {
 }
 
 pub struct ServerState {
-    handle: RwLock<Option<JoinHandle<()>>>,
+    handle: RwLock<Option<Task<()>>>,
     handler: RwLock<SmtpHandler>,
 }
 
@@ -176,7 +176,7 @@ pub async fn start_smtp_server(
     handler.app_handle = Some(app_handle.clone());
     handler.port = Some(port);
 
-    let handle = tokio::spawn(async move {
+    let handle = smol::spawn(async move {
         let mut server = Server::new(handler);
         server.with_addr(addr).expect("Failed to set address");
         server.serve().expect("Failed to start server");
@@ -191,7 +191,7 @@ pub async fn stop_smtp_server(state: State<'_, ServerState>) -> Result<(), Strin
     let mut handle_guard = state.handle.write().unwrap();
 
     if let Some(handle) = handle_guard.take() {
-        handle.abort();
+        drop(handle);
         return Ok(());
     }
 

@@ -8,5 +8,6 @@
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "rust-analyzer.linkedProjects": ["apps/yasumu/src-tauri/Cargo.toml"]
 }
