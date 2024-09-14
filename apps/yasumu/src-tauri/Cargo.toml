@@ -32,7 +32,6 @@ tauri-plugin-fs = { version = "2.0.0-rc", features = ["watch"] }
 tauri-plugin-store = "2.0.0-rc"
 local-ip-address = "0.6.1"
 mailin-embedded = "0.8.2"
-tokio = "1.38.1"
 boa_engine = "0.19.0"
 tauri-plugin-dialog = "2.0.0-rc.1"
 tauri-plugin-shell = "2.0.0-rc.1"
@@ -44,8 +43,9 @@ uuid = { version = "1.10.0", default-features = false, features = [
 ] }
 boa_gc = "0.19.0"
 deno_ast = { version = "0.42.0", features = ["transpiling", "typescript"] }
-futures-util = "0.3.30"
 ulid = "1.1.3"
 nid = "3.0.0"
 boa_parser = "0.19.0"
+futures-util = "0.3.30"
 smol = "2.0.2"
+reqwest = { version = "0.12.7", features = ["blocking"] }

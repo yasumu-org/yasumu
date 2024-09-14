@@ -55,7 +55,7 @@ pub async fn evaluate_javascript(
     let id = id.to_string();
     let current_workspace = workspace_state.get_current_workspace();
 
-    let handle = tokio::spawn(async move {
+    let handle = smol::spawn(async move {
         let ts_supported = typescript.is_some() && typescript.unwrap().eq(&true);
         let prepare_script = if ts_supported {
             let res = transpile_typescript(&prepare);
@@ -88,7 +88,7 @@ pub async fn evaluate_javascript(
 
         builtins::performance::performance_init(&mut ctx);
         builtins::crypto::crypto_init(&mut ctx);
-        builtins::yasumu_runtime::runtime_init(
+        builtins::yasumu::runtime_init(
             &mut ctx,
             current_workspace.clone(),
             app.clone(),
@@ -159,7 +159,7 @@ pub async fn evaluate_javascript(
     });
 
     match handle.await {
-        Ok(res) => res,
+        Ok(res) => Ok(res),
         Err(e) => Err(format!("FatalError: {}", e)),
     }
 }
