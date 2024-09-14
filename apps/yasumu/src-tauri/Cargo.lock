@@ -436,9 +436,9 @@ dependencies = [
 
 [[package]]
 name = "boa_ast"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b49637e7ecb7c541c46c3e885d4c49326ad8076dbfb88bef2cf3165d8ea7df2b"
+checksum = "3a69ee3a749ea36d4e56d92941e7b25076b493d4917c3d155b6cf369e23547d9"
 dependencies = [
  "bitflags 2.5.0",
  "boa_interner",
@@ -450,9 +450,9 @@ dependencies = [
 
 [[package]]
 name = "boa_engine"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "411558b4cbc7d0303012e26721815e612fed78179313888fd5dd8d6c50d70099"
+checksum = "06e4559b35b80ceb2e6328481c0eca9a24506663ea33ee1e279be6b5b618b25c"
 dependencies = [
  "arrayvec",
  "bitflags 2.5.0",
@@ -495,9 +495,9 @@ dependencies = [
 
 [[package]]
 name = "boa_gc"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8eff345a85a39cf9b8ed863198947d61e6df2b1d774002b57341158b0ce2c525"
+checksum = "716406f57d67bc3ac7fd227d5513b42df401dff14a3be22cbd8ee29817225363"
 dependencies = [
  "boa_macros",
  "boa_profiler",
@@ -508,9 +508,9 @@ dependencies = [
 
 [[package]]
 name = "boa_interner"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72b779280420804c70da9043d152c84eb96e2f7c9e7d1ec3262decf59f9349df"
+checksum = "4e18df2272616e1ba0322a69333d37dbb78797f1aa0595aad9dc41e8ecd06ad9"
 dependencies = [
  "boa_gc",
  "boa_macros",
@@ -524,9 +524,9 @@ dependencies = [
 
 [[package]]
 name = "boa_macros"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "25e0097fa69cde4c95f9869654004340fbbe2bcf3ce9189ba2a31a65ac40e0a1"
+checksum = "240f4126219a83519bad05c9a40bfc0303921eeb571fc2d7e44c17ffac99d3f1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -536,9 +536,9 @@ dependencies = [
 
 [[package]]
 name = "boa_parser"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd63fe8faf62561fc8c50f9402687e8cfde720b57d292fb3b4ac17c821878ac1"
+checksum = "62b59dc05bf1dc019b11478a92986f590cff43fced4d20e866eefb913493e91c"
 dependencies = [
  "bitflags 2.5.0",
  "boa_ast",
@@ -555,15 +555,26 @@ dependencies = [
 
 [[package]]
 name = "boa_profiler"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cd9da895f0df9e2a97b36c1f98e0c5d2ab963abc8679d80f2a66f7bcb211ce90"
+checksum = "00ee0645509b3b91abd724f25072649d9e8e65653a78ff0b6e592788a58dd838"
+
+[[package]]
+name = "boa_runtime"
+version = "0.19.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "377b8e09fe5fe37b5d5c3944320acaf55299d55106f384097caa160b4ae77553"
+dependencies = [
+ "boa_engine",
+ "boa_gc",
+ "rustc-hash 2.0.0",
+]
 
 [[package]]
 name = "boa_string"
-version = "0.19.0"
+version = "0.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9ca6668df83fcd3c2903f6f296b7180421908c5b478ebe0d1c468be9fd60e1c"
+checksum = "ae85205289bab1f2c7c8a30ddf0541cf89ba2ff7dbd144feef50bbfa664288d4"
 dependencies = [
  "fast-float",
  "paste",
@@ -1853,10 +1864,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4567c8db10ae91089c99af84c68c38da3ec2f087c3f82960bcdbf3656b6f4d7"
 dependencies = [
  "cfg-if",
- "js-sys",
  "libc",
  "wasi 0.11.0+wasi-snapshot-preview1",
- "wasm-bindgen",
 ]
 
 [[package]]
@@ -3018,16 +3027,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
 
 [[package]]
-name = "nid"
-version = "3.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4abdf1789932b85dc39446e27f45a1064a30f9e19a2b872b1d09bd59283f85f3"
-dependencies = [
- "rand 0.8.5",
- "thiserror",
-]
-
-[[package]]
 name = "nix"
 version = "0.27.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3814,9 +3813,9 @@ checksum = "33cb294fe86a74cbcf50d4445b37da762029549ebeea341421c7c70370f86cac"
 
 [[package]]
 name = "psm"
-version = "0.1.22"
+version = "0.1.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b1f9bf148c15500d44581654fb9260bc9d82970f3ef777a79a40534f6aa784f"
+checksum = "aa37f80ca58604976033fae9515a8a2989fc13797d953f7c04fb8fa36a11f205"
 dependencies = [
  "cc",
 ]
@@ -5339,6 +5338,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "tanxium"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98a78074a6843e5de930769336a5b70aa7916f7b9874edd5d53ca36bb2e53e4c"
+dependencies = [
+ "boa_engine",
+ "boa_gc",
+ "boa_parser",
+ "boa_runtime",
+ "deno_ast",
+ "futures-util",
+ "reqwest",
+ "smol",
+ "uuid",
+]
+
+[[package]]
 name = "tao"
 version = "0.29.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6208,17 +6224,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ulid"
-version = "1.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "04f903f293d11f31c0c29e4148f6dc0d033a7f80cebc0282bea147611667d289"
-dependencies = [
- "getrandom 0.2.15",
- "rand 0.8.5",
- "web-time",
-]
-
-[[package]]
 name = "unic-char-property"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6542,16 +6547,6 @@ name = "web-sys"
 version = "0.3.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77afa9a11836342370f4817622a2f0f418b134426d91a82dfb48f532d2ec13ef"
-dependencies = [
- "js-sys",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "web-time"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a6580f308b1fad9207618087a65c04e7a10bc77e02c8e84e9b00dd4b12fa0bb"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
@@ -7122,18 +7117,13 @@ name = "yasumu"
 version = "0.0.0"
 dependencies = [
  "boa_engine",
- "boa_gc",
- "boa_parser",
- "deno_ast",
- "futures-util",
  "local-ip-address",
  "mailin-embedded",
  "mailparse",
- "nid",
- "reqwest",
  "serde",
  "serde_json",
  "smol",
+ "tanxium",
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
@@ -7143,7 +7133,6 @@ dependencies = [
  "tauri-plugin-shell",
  "tauri-plugin-store",
  "tauri-plugin-websocket",
- "ulid",
  "uuid",
 ]
 
