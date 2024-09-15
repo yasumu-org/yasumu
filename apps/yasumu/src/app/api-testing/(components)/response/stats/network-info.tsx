@@ -88,7 +88,7 @@ export function NetworkInfo() {
   );
 }
 
-function Info({ title, value }: { title: string; value: string }) {
+export function Info({ title, value }: { title: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-6">
       <span className="font-semibold text-start">{title}</span>

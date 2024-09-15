@@ -1,5 +1,7 @@
 /// <reference path="./_common.ts" />
 
+import type { TestResult } from '@yasumu/core';
+
 (() => {
   const isTestEnvironment = Yasumu.features.test;
 
@@ -15,12 +17,16 @@
     return;
   }
 
-  const warnLog = (arg: string) =>
-    Yasumu.context.__meta.console.push({ type: 'warn', args: [arg], timestamp: Date.now(), test: true });
-  const writeSuccess = (arg: string) =>
-    Yasumu.context.__meta.console.push({ type: 'log', args: [arg], timestamp: Date.now(), test: true });
-  const writeError = (arg: string) =>
-    Yasumu.context.__meta.console.push({ type: 'error', args: [arg], timestamp: Date.now(), test: true });
+  const addTestResult = (result: Omit<TestResult, 'id'>) => {
+    Yasumu.context.__meta.test.push({ ...result, id: crypto.randomUUID() });
+  };
+
+  const writeSuccess = (name: string, time: number, message: string | null) =>
+    addTestResult({ name, status: 'pass', time, message });
+  const writeError = (name: string, time: number, message: string | null) =>
+    addTestResult({ name, status: 'fail', time, message });
+  const writeSkip = (name: string, time: number, message: string | null) =>
+    addTestResult({ name, status: 'skip', time, message });
 
   const YASUMU_ASSERTION_ERROR = 'YasumuAssertionError';
   const TEST_CONTEXT_THROWAWAY_ERROR = 'TestContextThrowawayError';
@@ -218,21 +224,16 @@
       },
     };
 
-    const formatTime = (duration: number) => {
-      if (duration < 1000) return `${duration.toFixed(2)}ms`;
-      return `${duration.toFixed(2)}s`;
-    };
-
-    const evaluateState = (duration: string) => {
+    const evaluateState = (duration: number) => {
       switch (state) {
         case TestState.Passed:
-          writeSuccess(`[PASSED] (${duration}) ${name}: ${stateReason}`);
+          writeSuccess(name, duration, stateReason || null);
           break;
         case TestState.Failed:
-          writeError(`[FAILED] (${duration}) Yasumu.test(${name}): ${stateReason}`);
+          writeError(name, duration, stateReason || null);
           break;
         case TestState.Skipped:
-          warnLog(`[SKIPPED] (${duration}) Yasumu.test(${name}): ${stateReason}`);
+          writeSkip(name, duration, stateReason || null);
           break;
         default:
           break;
@@ -245,20 +246,18 @@
     try {
       fn(testContext);
       end = performance.now();
-      writeSuccess(`[PASSED] (${formatTime(end - start)}) ${name}`);
+      writeSuccess(name, end - start, null);
     } catch (_error) {
       end = performance.now();
-      const timeTaken = formatTime(end - start);
+      const timeTaken = end - start;
       if (_error && _error instanceof TestContextThrowawayError && state != null) return void evaluateState(timeTaken);
 
       if (_error && _error instanceof YasumuAssertionError) {
-        writeError(`[FAILED] (${timeTaken}) Yasumu.test(${name}):\n${_error.message}`);
+        writeError(name, timeTaken, _error.message || String(_error));
         return;
       }
 
-      writeError(
-        `[ERROR] (${timeTaken}) Yasumu.test(${name}) failed with error:\n${(_error as Error).message || _error}`,
-      );
+      writeError(name, timeTaken, (_error as Error).message || String(_error));
     }
   }
 

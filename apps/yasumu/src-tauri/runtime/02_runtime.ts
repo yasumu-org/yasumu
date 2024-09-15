@@ -6,6 +6,10 @@
       return Yasumu.context.data;
     }
 
+    public get id(): string {
+      return this.data.request.id;
+    }
+
     public get url(): string {
       return this.data.request.url;
     }
@@ -15,18 +19,42 @@
     }
 
     public get headers(): Headers {
-      Yasumu.context.__meta.requestHeaders = new Headers(this.data.request.headers);
-      return Yasumu.context.__meta.requestHeaders;
+      const headers = new Headers(this.data.request.headers as HeadersInit);
+
+      // @ts-ignore
+      Yasumu.context.__meta.request.headers = headers;
+
+      return headers;
     }
 
     public cancel(): void {
-      Yasumu.context.__meta.requestCanceled = true;
+      Yasumu.context.__meta.request.canceled = true;
     }
   }
 
   class YasumuResponseModel implements YasumuResponse {
     private get data() {
       return Yasumu.context.data;
+    }
+
+    public get contentLength(): number {
+      return this.data.response.contentLength;
+    }
+
+    public get redirected(): boolean {
+      return this.data.response.redirected;
+    }
+
+    public get type(): string {
+      return this.data.response.type;
+    }
+
+    public get ok(): boolean {
+      return this.data.response.ok;
+    }
+
+    public get cookies(): Cookie[] {
+      return this.data.response.cookies;
     }
 
     public get url(): string {
@@ -38,7 +66,7 @@
     }
 
     public get headers(): Headers {
-      return new Headers(this.data.response.headers);
+      return new Headers(this.data.response.headers as HeadersInit);
     }
 
     public get status(): number {
@@ -58,39 +86,73 @@
     }
   }
 
-  class YasumuStoreModel implements YasumuStore {
-    private get store() {
-      return Yasumu.context.__meta.store;
+  const getStore = () => {
+    const val = Yasumu.context.data.store;
+
+    if (!val) {
+      return (Yasumu.context.data.store = {});
     }
 
+    return val;
+  };
+  const getChanges = () => {
+    const val = Yasumu.context.__meta.store;
+
+    if (!Array.isArray(val)) {
+      return (Yasumu.context.__meta.store = []);
+    }
+
+    return val;
+  };
+
+  class YasumuStoreModel implements YasumuStore {
     public get(key: string): any {
-      return this.store[key];
+      return getStore()[key] ?? getChanges().find((change) => change.key === key)?.value;
     }
 
     public set(key: string, value: any): void {
-      this.store[key] = value;
+      if (value === undefined) {
+        throw new Error('Value cannot be undefined');
+      }
+
+      getStore()[key] = value;
+      getChanges().push({ op: 'set', key, value });
     }
 
     public remove(key: string): void {
-      delete this.store[key];
+      delete getStore()[key];
+      getChanges().push({ op: 'delete', key });
     }
 
     public has(key: string): boolean {
-      return key in this.store;
+      return key in getStore() || getChanges().some((change) => change.key === key);
     }
 
     public count(): number {
-      return Object.keys(this.store).length;
+      const keys = Object.keys(getStore());
+      return keys.length + getChanges().filter((change) => change.op === 'set' && !keys.includes(change.key)).length;
     }
 
     public clear(): void {
-      for (const key in this.store) {
-        delete this.store[key];
+      const store = getStore();
+      const changes = getChanges();
+      for (const key in store) {
+        changes.push({ op: 'delete', key });
+        delete store[key];
       }
     }
 
     public entries(): [string, any][] {
-      return Object.entries(this.store);
+      const main = Object.entries(getStore());
+      const changes = getChanges();
+
+      const res = [
+        changes
+          .filter((change) => change.op === 'set' && !main.some((v) => v[0] === change.key))
+          .map((v) => [v.key, v.value]),
+      ];
+
+      return res.flat() as [string, any][];
     }
   }
 
@@ -98,10 +160,12 @@
     context: {
       data: {},
       __meta: {
-        store: {},
-        requestHeaders: {},
+        store: [],
+        request: {} as any,
+        response: {} as any,
         console: [],
-      },
+        test: [],
+      } satisfies YasumuContextMeta,
     },
     setContextData(data: string | Record<string, any>) {
       if (typeof data === 'string') {
@@ -115,8 +179,24 @@
     store: new YasumuStoreModel(),
   };
 
+  function deeplyClean(obj: any) {
+    if (!obj) return;
+
+    for (const key in obj) {
+      if (obj[key] === undefined) {
+        delete obj[key];
+      } else if (typeof obj[key] === 'object') {
+        deeplyClean(obj[key]);
+      }
+    }
+  }
+
   Yasumu.serialize = function () {
-    return JSON.stringify(this.context.__meta);
+    const obj = this.context.__meta;
+
+    deeplyClean(obj);
+
+    return JSON.stringify(obj);
   };
 
   Object.assign(Yasumu, context);

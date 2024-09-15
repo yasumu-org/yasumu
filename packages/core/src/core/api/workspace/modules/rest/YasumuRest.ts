@@ -3,6 +3,7 @@ import { YasumuWorkspace } from '../../YasumuWorkspace.js';
 import { YasumuWorkspaceFiles } from '../../constants.js';
 import { YasumuRestEntity } from './YasumuRestEntity.js';
 import { YasumuRestImports } from './YasumuRestImports.js';
+import { YasumuScriptResultEvaluator } from './YasumuScriptResultEvaluator.js';
 
 export interface YasumuRestRequest {
   path: string;
@@ -19,6 +20,9 @@ export interface TreeViewElement {
 
 export class YasumuRest {
   public readonly imports = new YasumuRestImports(this);
+  public readonly scriptResults = new YasumuScriptResultEvaluator(
+    this.workspace
+  );
 
   /**
    * Create a new YasumuRest instance

@@ -8,9 +8,9 @@ import { YasumuSmtp } from './modules/smtp/YasumuSmtp.js';
 import { YasumuStoreKeys, YasumuWorkspaceFiles } from './constants.js';
 import {
   Commands,
-  type CommandInvocation,
   type CommandsInvocationMap,
 } from '@/core/common/commands.js';
+import type { StoreCommon } from '@/externals/index.js';
 
 export interface YasumuWorkspaceInit {
   path: string;
@@ -22,6 +22,7 @@ export interface YasumuWorkspaceHistory {
 }
 
 export class YasumuWorkspace {
+  private _kv: StoreCommon | null = null;
   public metadata!: YasumuWorkspaceMetadata;
   public readonly rest: YasumuRest;
   public readonly smtp: YasumuSmtp;
@@ -37,6 +38,19 @@ export class YasumuWorkspace {
   ) {
     this.rest = new YasumuRest(this);
     this.smtp = new YasumuSmtp(this);
+  }
+
+  /**
+   * Open the key-value store for this workspace
+   */
+  public openKV() {
+    if (this._kv) return this._kv;
+
+    const name = this.metadata.id;
+
+    this._kv = this.yasumu.createStore(name);
+
+    return this._kv;
   }
 
   /**
@@ -153,7 +167,7 @@ export class YasumuWorkspace {
    */
   public async send<
     Cmd extends Commands,
-    InvocationData extends CommandsInvocationMap[Cmd]
+    InvocationData extends CommandsInvocationMap[Cmd],
   >(command: Cmd, data: InvocationData[0]): Promise<InvocationData[1]> {
     return this.yasumu.commands.invoke(command, data);
   }
