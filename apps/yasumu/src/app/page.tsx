@@ -1,5 +1,4 @@
 import { Content } from '@/components/layout/content';
-import { Separator } from '@/components/ui/separator';
 import { YasumuWorkspace } from '@/components/workspaces/workspace';
 
 export default function Page() {
