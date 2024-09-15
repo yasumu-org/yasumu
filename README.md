@@ -6,15 +6,15 @@ Yasumu is a customizable, free and open-source application to test various types
 
 The following table shows the status of the features in the project.
 
-| Feature           | Status      |
-| ----------------- | ----------- |
-| REST API Testing  | In Progress |
-| SMTP Server       | In Progress |
-| GraphQL Testing   | In Progress |
-| WebSocket Testing | Planned     |
-| gRPC Testing      | Planned     |
-| Custom Plugins    | Planned     |
-| Custom Themes     | Planned     |
+| Feature           | Status  |
+| ----------------- | ------- |
+| REST API Testing  | ✅      |
+| SMTP Server       | ✅      |
+| GraphQL Testing   | Planned |
+| WebSocket Testing | Planned |
+| gRPC Testing      | Planned |
+| Custom Plugins    | Planned |
+| Custom Themes     | Planned |
 
 ## About
 
@@ -77,3 +77,4 @@ For any queries, you can contact the maintainers at [contact@yasumu.dev](mailto:
 | Bibek Raj Ghimire | Developer          | [GitHub](https://github.com/ghimirebibek) |
 | Samir Paudyal     | Developer          | [GitHub](https://github.com/samir-byte)   |
 | Sulav Niroula     | Frontend Developer | [GitHub](https://github.com/sulav7)       |
+| Anish             | Frontend Developer | [GitHub](https://github.com/novanish)     |

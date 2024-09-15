@@ -6,6 +6,10 @@
       return Yasumu.context.data;
     }
 
+    public get id(): string {
+      return this.data.request.id;
+    }
+
     public get url(): string {
       return this.data.request.url;
     }
@@ -15,18 +19,42 @@
     }
 
     public get headers(): Headers {
-      Yasumu.context.__meta.requestHeaders = new Headers(this.data.request.headers);
-      return Yasumu.context.__meta.requestHeaders;
+      const headers = new Headers(this.data.request.headers as HeadersInit);
+
+      // @ts-ignore
+      Yasumu.context.__meta.request.headers = headers;
+
+      return headers;
     }
 
     public cancel(): void {
-      Yasumu.context.__meta.requestCanceled = true;
+      Yasumu.context.__meta.request.canceled = true;
     }
   }
 
   class YasumuResponseModel implements YasumuResponse {
     private get data() {
       return Yasumu.context.data;
+    }
+
+    public get contentLength(): number {
+      return this.data.response.contentLength;
+    }
+
+    public get redirected(): boolean {
+      return this.data.response.redirected;
+    }
+
+    public get type(): string {
+      return this.data.response.type;
+    }
+
+    public get ok(): boolean {
+      return this.data.response.ok;
+    }
+
+    public get cookies(): Cookie[] {
+      return this.data.response.cookies;
     }
 
     public get url(): string {
@@ -38,7 +66,7 @@
     }
 
     public get headers(): Headers {
-      return new Headers(this.data.response.headers);
+      return new Headers(this.data.response.headers as HeadersInit);
     }
 
     public get status(): number {
@@ -60,37 +88,53 @@
 
   class YasumuStoreModel implements YasumuStore {
     private get store() {
+      return Yasumu.context.data.store;
+    }
+
+    private get changes() {
       return Yasumu.context.__meta.store;
     }
 
     public get(key: string): any {
-      return this.store[key];
+      return this.store[key] ?? this.changes.find((change) => change.key === key)?.value;
     }
 
     public set(key: string, value: any): void {
       this.store[key] = value;
+      this.changes.push({ op: 'set', key, value });
     }
 
     public remove(key: string): void {
       delete this.store[key];
+      this.changes.push({ op: 'delete', key });
     }
 
     public has(key: string): boolean {
-      return key in this.store;
+      return key in this.store || this.changes.some((change) => change.key === key);
     }
 
     public count(): number {
-      return Object.keys(this.store).length;
+      const keys = Object.keys(this.store);
+      return keys.length + this.changes.filter((change) => change.op === 'set' && !keys.includes(change.key)).length;
     }
 
     public clear(): void {
       for (const key in this.store) {
+        this.changes.push({ op: 'delete', key });
         delete this.store[key];
       }
     }
 
     public entries(): [string, any][] {
-      return Object.entries(this.store);
+      const main = Object.entries(this.store);
+
+      const res = [
+        this.changes
+          .filter((change) => change.op === 'set' && !main.some((v) => v[0] === change.key))
+          .map((v) => [v.key, v.value]),
+      ];
+
+      return res.flat() as [string, any][];
     }
   }
 

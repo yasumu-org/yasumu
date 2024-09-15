@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BodyMode, HttpMethods, HttpMethodsArray } from '@yasumu/core';
+import { BodyMode, HttpMethods, HttpMethodsArray, YasumuResponseContextData } from '@yasumu/core';
 import { cn, IS_AUDIO, IS_BINARY_DATA, IS_IMAGE, IS_VIDEO } from '@/lib/utils';
 import { useRequestConfig, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { ICookie, useResponse } from '@/stores/api-testing/response.store';
@@ -87,19 +87,31 @@ export default function RequestInput() {
 
   const dispatchRequest = useCallback(async () => {
     try {
+      if (!Yasumu.workspace) return;
       const controller = new AbortController();
       responseStore.setAbortController(controller);
 
       const h = new Headers();
 
-      const contextData: Record<string, any> = {
-        response: {},
+      const kv = Yasumu.workspace.openKV();
+      const storeData = await kv.entries();
+      const storeRecord = storeData.reduce(
+        (acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        },
+        {} as Record<string, any>,
+      );
+
+      const contextData: YasumuContextData = {
+        response: {} as YasumuResponseContextData,
         request: {
           id,
           url,
           method,
-          headers: h,
+          headers: h as any,
         },
+        store: storeRecord,
       };
 
       headers.forEach((header) => {
@@ -171,52 +183,54 @@ export default function RequestInput() {
           break;
       }
 
-      contextData.request.body = bodyData;
-
       if (!!preRequestScript?.trim().length) {
         const result = await Yasumu.scripts.run(preRequestScript, Yasumu.scripts.createContextData(contextData), {
           test: false,
         });
 
-        if (canEvaluateResult(result) && result.console && result.console.length) {
-          add(result.console);
-        } else if (result && typeof result === 'object' && '$error' in result) {
-          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
-        } else if (canEvaluateResult(result)) {
-          if (result.requestHeaders?.length) {
+        if (canEvaluateResult(result)) {
+          if (result.request.canceled) {
+            controller.abort();
+          }
+
+          if (result.console && result.console.length) {
+            add(result.console);
+          }
+
+          await Yasumu.workspace.rest.scriptResults.applyContext(result, contextData);
+
+          if (result.request.headers) {
             try {
-              result.requestHeaders.forEach(([key, value]) => {
-                h.set(key, value);
+              const headers = Object.entries(result.request.headers);
+              headers.forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                  value.forEach((v) => h.append(key, v));
+                } else {
+                  h.set(key, value);
+                }
               });
             } catch {
               //
             }
           }
 
-          // if (Object.keys(result.store).length) {
-          //   const id = Yasumu.workspace?.metadata.id;
-
-          //   if (id) {
-          //     const store = Yasumu.createStore(id);
-
-          //     for (const key in result.store) {
-          //       await store.set(key, result.store[key]);
-          //     }
-          //   }
-          // }
+          if (result.request.url && typeof result.request.url === 'string') {
+            setUrl(result.request.url);
+          }
+        } else if (result && typeof result === 'object' && '$error' in result) {
+          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
         }
       }
 
       const start = Date.now();
 
-      const res = await Yasumu.fetch(url, {
+      const res = await Yasumu.fetch(contextData.request.url || url, {
         method: method.toUpperCase(),
         body: bodyData,
         redirect: 'follow',
         // @ts-ignore
-        maxRedirections: 20,
+        maxRedirections: 10,
         cache: 'no-cache',
-        credentials: 'omit',
         connectTimeout: 60_000,
         headers: h,
         signal: controller.signal,
@@ -265,7 +279,7 @@ export default function RequestInput() {
 
         const bodySize = Number(res.headers.get('Content-Length')) || value.byteLength;
 
-        contextData.response.body = str;
+        contextData.response.bodyText = str;
         contextData.response.contentLength = bodySize;
 
         responseStore.setBody(str);
@@ -277,7 +291,7 @@ export default function RequestInput() {
         responseStore.setResponseSize(len);
       }
 
-      contextData.response.headers = res.headers;
+      contextData.response.headers = Object.fromEntries(res.headers.entries());
       contextData.response.status = res.status;
       contextData.response.statusText = res.statusText;
       contextData.response.redirected = res.redirected;
@@ -296,8 +310,12 @@ export default function RequestInput() {
           },
         );
 
-        if (canEvaluateResult(result) && result.console && result.console.length) {
-          add(result.console);
+        if (canEvaluateResult(result)) {
+          if (result.console && result.console.length) {
+            add(result.console);
+          }
+
+          await Yasumu.workspace.rest.scriptResults.applyContext(result, contextData);
         } else if (result && typeof result === 'object' && '$error' in result) {
           add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
         }
@@ -308,8 +326,12 @@ export default function RequestInput() {
           test: true,
         });
 
-        if (canEvaluateResult(result) && result.console && result.console.length) {
-          add(result.console);
+        if (canEvaluateResult(result)) {
+          if (result.console && result.console.length) {
+            add(result.console);
+          }
+
+          await Yasumu.workspace.rest.scriptResults.applyContext(result, contextData);
         } else if (result && typeof result === 'object' && '$error' in result) {
           add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
         }

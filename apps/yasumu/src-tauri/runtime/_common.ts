@@ -1,9 +1,21 @@
+import {
+  LogType as YasumuLogType,
+  LogStream as YasumuLogStream,
+  YasumuResponseContextData,
+  YasumuRequestContextData,
+  YasumuContextData as YasumuContextDataCore,
+  YasumuContextMeta as YasumuContextMetaCore,
+  YasumuCookie,
+} from '@yasumu/core';
+
 declare global {
   interface YasumuRequire {
     (id: string): any;
     resolve(id: string): string;
     cache: Record<string, any>;
   }
+
+  type Cookie = YasumuCookie;
 
   var __require: YasumuRequire;
 
@@ -19,14 +31,8 @@ declare global {
   // @ts-ignore
   var crypto: YasumuCrypto;
 
-  type LogType = readonly ['log', 'error', 'warn', 'info', 'clear'];
-
-  type LogStream = {
-    type: LogType[number];
-    args: any[];
-    timestamp: number;
-    test?: boolean;
-  };
+  type LogType = YasumuLogType;
+  type LogStream = YasumuLogStream;
 
   interface NamedConsoleMethods {
     clear(): void;
@@ -40,23 +46,6 @@ declare global {
   > &
     NamedConsoleMethods;
 
-  interface YasumuRequest {
-    url: string;
-    method: string;
-    headers: Headers;
-    cancel(): void;
-  }
-
-  interface YasumuResponse {
-    url: string;
-    method: string;
-    headers: Headers;
-    status: number;
-    statusText: string;
-    bodyText: string;
-    responseTime: number;
-  }
-
   interface YasumuStore {
     get(key: string): any;
     set(key: string, value: any): void;
@@ -67,28 +56,16 @@ declare global {
     entries(): [string, any][];
   }
 
-  interface YasumuContextData {
-    request: {
-      url: string;
-      method: string;
-      headers: Record<string, string>;
-    };
-    response: {
-      url: string;
-      method: string;
-      headers: Record<string, string>;
-      status: number;
-      statusText: string;
-      bodyText: string;
-      responseTime: number;
-    };
+  type YasumuContextData = YasumuContextDataCore;
+  type YasumuContextMeta = YasumuContextMetaCore;
+
+  interface YasumuRequest extends Omit<YasumuRequestContextData, 'headers' | 'canceled'> {
+    headers: Headers;
+    cancel(): void;
   }
 
-  interface YasumuContextMeta {
-    store: Record<string, any>;
-    console: LogStream[];
-    requestHeaders: Headers;
-    requestCanceled: boolean;
+  interface YasumuResponse extends Omit<YasumuResponseContextData, 'headers'> {
+    headers: Headers;
   }
 
   interface YasumuFeatures {
