@@ -14,10 +14,14 @@ import { HttpMethodColors } from '@/lib/constants';
 import { Yasumu } from '@/lib/yasumu';
 import { useConsole } from '@/stores/api-testing/console.store';
 import { canEvaluateResult } from '@/lib/scripts/script';
+import { useTest } from '@/stores/api-testing/test.store';
+import { useScriptTime } from '@/stores/api-testing/script-time.store';
 
 export default function RequestInput() {
   const { current } = useRequestStore();
   const { add } = useConsole();
+  const { add: addTest } = useTest();
+  const { setPostResponse, setPreRequest, setTestScript } = useScriptTime();
   const { method, setMethod, url, setUrl, body, headers, bodyMode, id, script: preRequestScript } = useRequestConfig();
 
   const save = useDebounceCallback(() => {
@@ -184,9 +188,13 @@ export default function RequestInput() {
       }
 
       if (!!preRequestScript?.trim().length) {
+        const preScriptStart = performance.now();
         const result = await Yasumu.scripts.run(preRequestScript, Yasumu.scripts.createContextData(contextData), {
           test: false,
         });
+        const preScriptFinish = Math.abs(performance.now() - preScriptStart);
+
+        setPreRequest(preScriptFinish);
 
         if (canEvaluateResult(result)) {
           if (result.request.canceled) {
@@ -221,10 +229,15 @@ export default function RequestInput() {
           add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
         }
       }
+      const finalUrl = contextData.request.url || url;
 
-      const start = Date.now();
+      if (!finalUrl) {
+        throw new Error('No url provided');
+      }
 
-      const res = await Yasumu.fetch(contextData.request.url || url, {
+      const start = performance.now();
+
+      const res = await Yasumu.fetch(finalUrl, {
         method: method.toUpperCase(),
         body: bodyData,
         redirect: 'follow',
@@ -238,7 +251,7 @@ export default function RequestInput() {
 
       if (!res) throw new Error('Failed to fetch response');
 
-      const end = Math.abs(Date.now() - start);
+      const end = Math.abs(performance.now() - start);
 
       responseStore.setUrl(res.url);
       responseStore.setResponseStatus(res.status);
@@ -302,6 +315,7 @@ export default function RequestInput() {
       contextData.response.responseTime = end;
 
       if (!!responseStore.postRequestScript?.trim().length) {
+        const postScriptStart = performance.now();
         const result = await Yasumu.scripts.run(
           responseStore.postRequestScript,
           Yasumu.scripts.createContextData(contextData),
@@ -309,6 +323,9 @@ export default function RequestInput() {
             test: false,
           },
         );
+        const postScriptFinish = Math.abs(performance.now() - postScriptStart);
+
+        setPostResponse(postScriptFinish);
 
         if (canEvaluateResult(result)) {
           if (result.console && result.console.length) {
@@ -322,13 +339,21 @@ export default function RequestInput() {
       }
 
       if (!!responseStore.test?.trim().length) {
+        const testScriptStart = performance.now();
         const result = await Yasumu.scripts.run(responseStore.test, Yasumu.scripts.createContextData(contextData), {
           test: true,
         });
+        const testScriptFinish = Math.abs(performance.now() - testScriptStart);
+
+        setTestScript(testScriptFinish);
 
         if (canEvaluateResult(result)) {
           if (result.console && result.console.length) {
             add(result.console);
+          }
+
+          if (result.test.length) {
+            addTest(result.test);
           }
 
           await Yasumu.workspace.rest.scriptResults.applyContext(result, contextData);

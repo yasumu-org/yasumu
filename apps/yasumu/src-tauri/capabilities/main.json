@@ -2,9 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "main-capability",
   "description": "Capability for main window",
-  "windows": [
-    "main"
-  ],
+  "windows": ["main"],
   "permissions": [
     "core:app:allow-version",
     "core:app:allow-name",
@@ -54,6 +52,14 @@
     "store:allow-set",
     "store:allow-save",
     "store:allow-load",
+    "store:allow-clear",
+    "store:allow-delete",
+    "store:allow-entries",
+    "store:allow-has",
+    "store:allow-keys",
+    "store:allow-length",
+    "store:allow-reset",
+    "store:allow-values",
     {
       "identifier": "fs:allow-write-text-file",
       "allow": [

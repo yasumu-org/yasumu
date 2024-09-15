@@ -82,6 +82,9 @@ declare global {
     response: YasumuResponse;
     store: YasumuStore;
     features: YasumuFeatures;
+    utils: {
+      getStackTrace(): string;
+    };
     serialize(): string;
     nanoseconds(): bigint;
     sleep(ms: number): Promise<number>;

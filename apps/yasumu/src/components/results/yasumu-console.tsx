@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useConsole } from '@/stores/api-testing/console.store';
 import { Button } from '../ui/button';
 import { Trash2 } from 'lucide-react';
-import { ConsoleStream } from '@/lib/scripts/script';
+import { LogStream as ConsoleStream } from '@yasumu/core';
 import { useEffect, useRef } from 'react';
 
 export function YasumuConsole() {
@@ -39,19 +39,13 @@ function LogStream({ log, scroll = false }: { log: ConsoleStream; scroll?: boole
     <pre
       ref={ref}
       className={cn(
-        'py-1 text-xs font-normal font-mono',
-        log.test
-          ? {
-              'text-red-500': log.type === 'error',
-              'text-yellow-500': log.type === 'warn',
-              'text-green-500': log.type === 'log',
-            }
-          : {
-              'text-red-500': log.type === 'error',
-              'text-yellow-500': log.type === 'warn',
-              'text-blue-500': log.type === 'info',
-              'text-gray-500 dark:text-gray-200': log.type === 'log',
-            },
+        'py-1 text-xs font-normal font-mono select-text',
+        {
+          'text-red-500': log.type === 'error',
+          'text-yellow-500': log.type === 'warn',
+          'text-blue-500': log.type === 'info',
+          'text-gray-500 dark:text-gray-200': log.type === 'log',
+        },
         'whitespace-pre-wrap break-all',
       )}
     >

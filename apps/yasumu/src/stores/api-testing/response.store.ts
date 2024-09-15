@@ -72,8 +72,18 @@ export const useResponse = create<IResponse>((set) => ({
   issuerCN: '',
   validUntil: '',
   abortController: null,
-  script: '',
-  test: '',
+  script: `console.log('Sent the request to', Yasumu.request.url, 'and got status', Yasumu.response.status)`,
+  test: `test("should return 200 status code", () => {
+  expect(Yasumu.response.status).toBe(200)
+})
+
+test("should return 200 status code", () => {
+  expect(Yasumu.response.status).toBe(201)
+})
+
+test("should return 200 status code", (t) => {
+  t.skip()
+})`,
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),

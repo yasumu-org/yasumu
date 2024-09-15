@@ -86,50 +86,68 @@
     }
   }
 
+  const getStore = () => {
+    const val = Yasumu.context.data.store;
+
+    if (!val) {
+      return (Yasumu.context.data.store = {});
+    }
+
+    return val;
+  };
+  const getChanges = () => {
+    const val = Yasumu.context.__meta.store;
+
+    if (!Array.isArray(val)) {
+      return (Yasumu.context.__meta.store = []);
+    }
+
+    return val;
+  };
+
   class YasumuStoreModel implements YasumuStore {
-    private get store() {
-      return Yasumu.context.data.store;
-    }
-
-    private get changes() {
-      return Yasumu.context.__meta.store;
-    }
-
     public get(key: string): any {
-      return this.store[key] ?? this.changes.find((change) => change.key === key)?.value;
+      return getStore()[key] ?? getChanges().find((change) => change.key === key)?.value;
     }
 
     public set(key: string, value: any): void {
-      this.store[key] = value;
-      this.changes.push({ op: 'set', key, value });
+      if (value === undefined) {
+        throw new Error('Value cannot be undefined');
+      }
+
+      getStore()[key] = value;
+      getChanges().push({ op: 'set', key, value });
     }
 
     public remove(key: string): void {
-      delete this.store[key];
-      this.changes.push({ op: 'delete', key });
+      delete getStore()[key];
+      getChanges().push({ op: 'delete', key });
     }
 
     public has(key: string): boolean {
-      return key in this.store || this.changes.some((change) => change.key === key);
+      return key in getStore() || getChanges().some((change) => change.key === key);
     }
 
     public count(): number {
-      const keys = Object.keys(this.store);
-      return keys.length + this.changes.filter((change) => change.op === 'set' && !keys.includes(change.key)).length;
+      const keys = Object.keys(getStore());
+      return keys.length + getChanges().filter((change) => change.op === 'set' && !keys.includes(change.key)).length;
     }
 
     public clear(): void {
-      for (const key in this.store) {
-        this.changes.push({ op: 'delete', key });
-        delete this.store[key];
+      const store = getStore();
+      const changes = getChanges();
+      for (const key in store) {
+        changes.push({ op: 'delete', key });
+        delete store[key];
       }
     }
 
     public entries(): [string, any][] {
-      const main = Object.entries(this.store);
+      const main = Object.entries(getStore());
+      const changes = getChanges();
 
       const res = [
-        this.changes
+        changes
           .filter((change) => change.op === 'set' && !main.some((v) => v[0] === change.key))
           .map((v) => [v.key, v.value]),
       ];
@@ -142,10 +160,12 @@
     context: {
       data: {},
       __meta: {
-        store: {},
-        requestHeaders: {},
+        store: [],
+        request: {} as any,
+        response: {} as any,
         console: [],
-      },
+        test: [],
+      } satisfies YasumuContextMeta,
     },
     setContextData(data: string | Record<string, any>) {
       if (typeof data === 'string') {
@@ -159,8 +179,24 @@
     store: new YasumuStoreModel(),
   };
 
+  function deeplyClean(obj: any) {
+    if (!obj) return;
+
+    for (const key in obj) {
+      if (obj[key] === undefined) {
+        delete obj[key];
+      } else if (typeof obj[key] === 'object') {
+        deeplyClean(obj[key]);
+      }
+    }
+  }
+
   Yasumu.serialize = function () {
-    return JSON.stringify(this.context.__meta);
+    const obj = this.context.__meta;
+
+    deeplyClean(obj);
+
+    return JSON.stringify(obj);
   };
 
   Object.assign(Yasumu, context);

@@ -13,9 +13,11 @@ import { useRequestStore } from '@/stores/api-testing/request-config.store';
 import { useEffect, useMemo } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 import { ResponseAttachmentGuard } from './response-attachment-guard';
-import { YasumuConsole } from '@/components/console/yasumu-console';
+import { YasumuConsole } from '@/components/results/yasumu-console';
 import { useConsole } from '@/stores/api-testing/console.store';
 import { CopyToClipboard } from '@/components/code/copy-to-clipboard';
+import { YasumuTestResult } from '@/components/results/yasumu-test-result';
+import { useTest } from '@/stores/api-testing/test.store';
 
 export default function ResponseViewer() {
   const { orientation } = useLayoutStore();
@@ -23,7 +25,15 @@ export default function ResponseViewer() {
     return state.logs.length;
   });
   const { headers, cookies, body, abortController, responseSize, responseStatus, responseTime } = useResponse();
+  const { testsCount, failed } = useTest((state) => {
+    const count = state.results.length;
+    const failed = state.results.some((r) => r.status === 'fail');
 
+    return {
+      testsCount: count,
+      failed,
+    };
+  });
   const { current } = useRequestStore();
 
   const save = useDebounceCallback(() => {
@@ -78,6 +88,19 @@ export default function ResponseViewer() {
             <TabsTrigger value="console">
               Console{logsCount > 0 && <span className="text-green-500 text-sm ml-2">({logsCount})</span>}
             </TabsTrigger>
+            <TabsTrigger value="tests">
+              Tests
+              {testsCount > 0 && (
+                <span
+                  className={cn('text-sm ml-2', {
+                    'text-red-500': failed,
+                    'text-green-500': !failed,
+                  })}
+                >
+                  ({testsCount})
+                </span>
+              )}
+            </TabsTrigger>
           </TabsList>
           <ResponseStats />
         </div>
@@ -111,6 +134,9 @@ export default function ResponseViewer() {
             </TabsContent>
             <TabsContent value="console">
               <YasumuConsole />
+            </TabsContent>
+            <TabsContent value="tests">
+              <YasumuTestResult />
             </TabsContent>
           </div>
         )}

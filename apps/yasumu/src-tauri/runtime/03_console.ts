@@ -1,10 +1,13 @@
 /// <reference path="./_common.ts" />
 (() => {
   const COMMON_OBJECTS = new Set(['Map', 'Set', 'WeakMap', 'WeakSet']);
-  function inspect(value: any, visited = new WeakSet(), indentLevel = 0): string {
+  const MAX_DEPTH = 2;
+
+  function inspect(value: any, visited = new WeakSet(), indentLevel = 0, root = true, depth = 0): string {
     try {
       if (typeof value === 'string') {
-        return `"${value}"`;
+        if (!root) return `"${value}"`;
+        return value;
       }
 
       if (typeof value === 'bigint') {
@@ -27,14 +30,27 @@
       }
 
       if (typeof value === 'object') {
+        if (depth > MAX_DEPTH) {
+          return '{ ... }';
+        }
         if (visited.has(value)) {
           return '[Circular]';
         }
 
         visited.add(value);
 
+        if (value instanceof Error) {
+          let msg = value.stack || String(value);
+
+          if (!value.stack) {
+            msg += `\n${Yasumu.utils.getStackTrace()}`;
+          }
+
+          return msg;
+        }
+
         if (Array.isArray(value)) {
-          return `[${value.map((item) => inspect(item, visited, indentLevel + 2)).join(', ')}]`;
+          return `[${value.map((item) => inspect(item, visited, indentLevel + 2, false, depth + 1)).join(', ')}]`;
         }
 
         if (value && 'constructor' in value && value.constructor && COMMON_OBJECTS.has(value.constructor.name)) {
@@ -50,7 +66,7 @@
         for (const key in value) {
           if (Object.prototype.propertyIsEnumerable.call(value, key)) {
             enumerableFound++;
-            result += `${nestedIndent}${key}: ${inspect(value[key], visited, indentLevel + 2)},\n`;
+            result += `${nestedIndent}${key}: ${inspect(value[key], visited, indentLevel + 2, false, depth + 1)},\n`;
           }
         }
 
@@ -71,7 +87,7 @@
     }
   }
 
-  const CONSOLE_METHODS: LogType = ['log', 'error', 'warn', 'info', 'clear'];
+  const CONSOLE_METHODS: LogType = ['log', 'warn', 'error', 'info', 'clear'];
 
   const console = new Proxy<YasumuConsole>({} as YasumuConsole, {
     get(target, prop, receiver) {

@@ -2,7 +2,7 @@ use boa_engine::{
     js_str, js_string,
     object::ObjectInitializer,
     property::{Attribute, PropertyDescriptorBuilder},
-    JsValue,
+    JsString, JsValue, NativeFunction,
 };
 use tanxium::tanxium;
 use tauri::{path::BaseDirectory, Manager};
@@ -19,6 +19,7 @@ fn polyfill_yasumu_api(
     workspace_id: String,
 ) {
     let ctx = &mut tanxium.context;
+
     // Yasumu object
     let package = app.package_info();
     let app_version = format!(
@@ -74,6 +75,31 @@ fn polyfill_yasumu_api(
         .configurable(false);
 
     yasumu_obj.insert_property(js_str!("workspace"), workspace);
+
+    let yasumu_utils = ObjectInitializer::new(ctx)
+        .function(
+            NativeFunction::from_fn_ptr(|_, _, context| {
+                let stack = context
+                    .stack_trace()
+                    .map(|frame| format!("  at {}", frame.code_block().name().to_std_string_escaped()))
+                    .collect::<Vec<_>>()
+                    .join("\n");
+
+                Ok(JsValue::String(JsString::from(stack)))
+            }),
+            js_string!("getStackTrace"),
+            0,
+        )
+        .build();
+
+    let yasumu_utils_obj = PropertyDescriptorBuilder::new()
+        .value(yasumu_utils)
+        .enumerable(true)
+        .writable(false)
+        .configurable(false)
+        .build();
+
+    yasumu_obj.insert_property(js_str!("utils"), yasumu_utils_obj);
 }
 
 #[tauri::command]
@@ -157,7 +183,6 @@ pub async fn evaluate_javascript(
             .unwrap();
 
         tanxium.initialize_runtime().unwrap();
-        tanxium.load_extensions(extensions).unwrap();
 
         polyfill_yasumu_api(
             &mut tanxium,
@@ -166,6 +191,8 @@ pub async fn evaluate_javascript(
             current_workspace_dir,
             id,
         );
+
+        tanxium.load_extensions(extensions).unwrap();
 
         let prepare_script = if ts_supported {
             let res = tanxium.transpile(&prepare);

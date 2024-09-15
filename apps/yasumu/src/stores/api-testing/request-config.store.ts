@@ -56,15 +56,7 @@ export const useRequestConfig = create<IRequestConfig>((set) => ({
     urlencoded: [],
   },
   bodyMode: BodyMode.None,
-  script: `import fromAsync from 'https://esm.run/array-from-async@3.0.0';
-import { Base64 } from 'https://esm.run/js-base64@3.7.6';
-
-let result = await fromAsync([
-    Promise.resolve(Base64.encode("Hello")),
-    Promise.resolve(Base64.encode("World")),
-]);
-
-console.log(result)`,
+  script: `console.log('About to send the request to: ', Yasumu.request.url)`,
   setId: (id: string) => set({ id }),
   setUrl: (url: string) => set({ url }),
   setMethod: (method: HttpMethods) => set({ method }),

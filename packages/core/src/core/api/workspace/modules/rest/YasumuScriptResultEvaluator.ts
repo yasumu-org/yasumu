@@ -50,10 +50,11 @@ export interface YasumuContextData {
 export type TestStatus = 'pass' | 'fail' | 'skip';
 
 export interface TestResult {
+  id: string;
   name: string;
   status: TestStatus;
   time: number;
-  message?: string;
+  message?: string | null;
 }
 
 export interface YasumuContextMeta {
