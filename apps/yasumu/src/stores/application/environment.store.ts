@@ -25,6 +25,7 @@ export interface IEnvironmentStore {
   remove: (env: Environment) => void;
   update: (env: Environment) => void;
   select: (env: Environment) => void;
+  selectById: (env: string) => void;
   selected: Environment | null;
   addVariable: (variable: EnvironmentVariable) => void;
   updateVariable: (variable: EnvironmentVariable) => void;
@@ -40,6 +41,7 @@ export const useEnvironment = create<IEnvironmentStore>((set) => ({
       environments: state.environments.map((e) => (e.id === env.id ? env : e)),
     })),
   select: (env: Environment) => set({ selected: env }),
+  selectById: (env: string) => set((prev) => ({ selected: prev.environments.find((e) => e.id === env) || null })),
   selected: null,
   addVariable: (variable: EnvironmentVariable) =>
     set((state) => ({
