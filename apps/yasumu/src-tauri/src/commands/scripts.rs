@@ -180,6 +180,15 @@ pub async fn evaluate_javascript(
                     .to_string(),
                 transpile: true,
             },
+            tanxium::ScriptExtension {
+                path: path
+                    .resolve("runtime/05_schema.js", BaseDirectory::Resource)
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .to_string(),
+                transpile: false,
+            },
         ];
 
         let mut tanxium =

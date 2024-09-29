@@ -33,6 +33,7 @@
   }
 
   class YasumuResponseModel implements YasumuResponse {
+    #json: any;
     private get data() {
       return Yasumu.context.data;
     }
@@ -83,6 +84,18 @@
 
     public get responseTime(): number {
       return this.data.response.responseTime;
+    }
+
+    public text(): string {
+      return this.data.response.bodyText;
+    }
+
+    public json<T>(): T {
+      if (this.#json) return this.#json;
+
+      this.#json = JSON.parse(this.data.response.bodyText);
+
+      return this.#json;
     }
   }
 
