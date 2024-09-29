@@ -125,6 +125,8 @@ pub async fn evaluate_javascript(
             crypto: true,
             performance: true,
             runtime: true,
+            base64: true,
+            timers: true,
             console: false,
         };
 
@@ -198,6 +200,13 @@ pub async fn evaluate_javascript(
         tanxium
             .load_extensions(extensions)
             .map_err(|e| format!("FatalError: {}", e))?;
+
+        let ctx = &mut tanxium.context;
+        let limits = ctx.runtime_limits_mut();
+
+        limits.set_loop_iteration_limit(100_000_000);
+        limits.set_recursion_limit(1200);
+        limits.set_stack_size_limit(10_000);
 
         let prepare_script = if ts_supported {
             let res = tanxium.transpile(&prepare);

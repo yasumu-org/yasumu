@@ -38,5 +38,5 @@ tauri-plugin-shell = "2.0.0-rc.1"
 tauri-plugin-process = "2.0.0-rc.0"
 mailparse = "0.15.0"
 smol = "2.0.2"
-tanxium = "0.1.4"
+tanxium = "0.1.5"
 uuid = { version = "1.10.0", features = ["fast-rng"] }
