@@ -2625,7 +2625,7 @@ __metadata:
     react-icons: "npm:^5.3.0"
     react-resizable-panels: "npm:^2.0.19"
     set-cookie-parser: "npm:^2.6.0"
-    shadcn-ui: "npm:^0.8.0"
+    shadcn-ui: "npm:^0.9.0"
     sonner: "npm:^1.4.41"
     tailwind-merge: "npm:^2.3.0"
     tailwindcss: "npm:^3.4.3"
@@ -6115,9 +6115,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shadcn-ui@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "shadcn-ui@npm:0.8.0"
+"shadcn-ui@npm:^0.9.0":
+  version: 0.9.2
+  resolution: "shadcn-ui@npm:0.9.2"
   dependencies:
     "@antfu/ni": "npm:^0.21.4"
     "@babel/core": "npm:^7.22.1"
@@ -6141,7 +6141,7 @@ __metadata:
     zod: "npm:^3.20.2"
   bin:
     shadcn-ui: dist/index.js
-  checksum: 10c0/f5e77a49e7792c599dfc503eb0dfb9b5715c5ae9ffe985c73a0eddd66ccc8eedd1365318572786d9a67f82f22ea745fb0122c2f9b4bc8d774198d11214027368
+  checksum: 10c0/5c7ea6b46259d13670a5aac487bc040b1449f71d6c72fd597b98db2e6634225ef4e81cdb4dceffadacb7983009b480c2b971298dd646d3f8ddd6a96bbf6da3d5
   languageName: node
   linkType: hard
 
