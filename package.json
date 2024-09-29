@@ -23,5 +23,5 @@
     "url": "https://github.com/yasumu-org/yasumu/issues"
   },
   "homepage": "https://github.com/yasumu-org/yasumu#readme",
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.5.0"
 }
