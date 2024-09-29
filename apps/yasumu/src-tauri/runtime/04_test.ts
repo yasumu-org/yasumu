@@ -194,6 +194,48 @@ import type { TestResult } from '@yasumu/core';
         expected,
       );
     }
+
+    public throws(): void {
+      if (typeof this.actual !== 'function') {
+        throw new YasumuAssertionError(`Expected ${this.actual} to be a function`);
+      }
+
+      let error: Error | null = null;
+      try {
+        this.actual();
+      } catch (e) {
+        error = e as Error;
+      }
+
+      this.#throwIf(error === null, `Expected function to throw an error`, error);
+    }
+
+    public toThrow(expected: string | RegExp): void {
+      if (typeof this.actual !== 'function') {
+        throw new YasumuAssertionError(`Expected ${this.actual} to be a function`);
+      }
+
+      let error: Error | null = null;
+      try {
+        this.actual();
+      } catch (e) {
+        error = e as Error;
+      }
+
+      if (error === null) {
+        throw new YasumuAssertionError(`Expected function to throw an error`);
+      }
+
+      if (typeof expected === 'string') {
+        this.#throwIf(error.message !== expected, `Expected error message to be ${expected}`, error);
+      } else {
+        if (!(expected instanceof RegExp)) {
+          throw new YasumuAssertionError(`Expected ${expected} to be a string or a RegExp`);
+        }
+
+        this.#throwIf(!expected.test(error.message), `Expected error message to match ${expected}`, error);
+      }
+    }
   }
 
   enum TestState {

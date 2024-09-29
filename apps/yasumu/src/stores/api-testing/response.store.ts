@@ -73,17 +73,29 @@ export const useResponse = create<IResponse>((set) => ({
   validUntil: '',
   abortController: null,
   script: `console.log('Sent the request to', Yasumu.request.url, 'and got status', Yasumu.response.status)`,
-  test: `test("should return 200 status code", () => {
-  expect(Yasumu.response.status).toBe(200)
-})
+  test: `const schema = t.object({
+    userId: t.number(),
+    id: t.number(),
+    title: t.string(),
+    completed: t.boolean()
+});
 
-test("should return 200 status code", () => {
-  expect(Yasumu.response.status).toBe(201)
-})
+let body: Record<string, any>;
 
-test("should return 200 status code", (t) => {
-  t.skip()
-})`,
+test("should return valid json response", () => {
+  const parser = () => {
+    body = Yasumu.response.json()
+  };
+  expect(parser).not.throws()
+});
+
+test("should return valid response", () => {
+  expect(schema.check(body)).toBe(true)
+});
+
+test("should return id of 1", () => {
+  expect(body.id).toBe(1)
+});`,
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),
