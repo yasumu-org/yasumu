@@ -81,7 +81,9 @@ fn polyfill_yasumu_api(
             NativeFunction::from_fn_ptr(|_, _, context| {
                 let stack = context
                     .stack_trace()
-                    .map(|frame| format!("  at {}", frame.code_block().name().to_std_string_escaped()))
+                    .map(|frame| {
+                        format!("  at {}", frame.code_block().name().to_std_string_escaped())
+                    })
                     .collect::<Vec<_>>()
                     .join("\n");
 
@@ -178,11 +180,12 @@ pub async fn evaluate_javascript(
             },
         ];
 
-        let mut tanxium = tanxium::Tanxium::new(options)
-            .map_err(|e| format!("FatalError: {}", e))
-            .unwrap();
+        let mut tanxium =
+            tanxium::Tanxium::new(options).map_err(|e| format!("FatalError: {}", e))?;
 
-        tanxium.initialize_runtime().unwrap();
+        tanxium
+            .initialize_runtime()
+            .map_err(|e| format!("FatalError: {}", e))?;
 
         polyfill_yasumu_api(
             &mut tanxium,
@@ -192,7 +195,9 @@ pub async fn evaluate_javascript(
             id,
         );
 
-        tanxium.load_extensions(extensions).unwrap();
+        tanxium
+            .load_extensions(extensions)
+            .map_err(|e| format!("FatalError: {}", e))?;
 
         let prepare_script = if ts_supported {
             let res = tanxium.transpile(&prepare);
@@ -202,12 +207,14 @@ pub async fn evaluate_javascript(
             prepare
         };
 
-        tanxium.eval(&prepare_script).unwrap();
+        tanxium
+            .eval(&prepare_script)
+            .map_err(|e| format!("FatalError: {}", e))?;
 
         let final_code = if ts_supported {
             let res = tanxium.transpile(&code);
 
-            res.unwrap()
+            res.map_err(|e| format!("FatalError: {}", e))?
         } else {
             code
         };
