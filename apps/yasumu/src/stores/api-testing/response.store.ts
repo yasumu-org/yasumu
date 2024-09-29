@@ -73,11 +73,11 @@ export const useResponse = create<IResponse>((set) => ({
   validUntil: '',
   abortController: null,
   script: `console.log('Sent the request to', Yasumu.request.url, 'and got status', Yasumu.response.status)`,
-  test: `const schema = y.object({
-    userId: y.number(),
-    id: y.number(),
-    title: y.string(),
-    completed: y.boolean()
+  test: `const schema = t.object({
+    userId: t.number(),
+    id: t.number(),
+    title: t.string(),
+    completed: t.boolean()
 });
 
 let body: Record<string, any>;

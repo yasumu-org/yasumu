@@ -376,7 +376,7 @@
     fields: K,
   });
 
-  Object.defineProperty(globalThis, 'y', {
+  Object.defineProperty(globalThis, 't', {
     value: K,
     writable: false,
     enumerable: true,
