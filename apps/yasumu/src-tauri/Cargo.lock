@@ -5624,9 +5624,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-fs"
-version = "2.0.0-rc.5"
+version = "2.0.0-rc.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4cb1dfbbea322afbc9dec49351bc29edf4e85e74d37d9a3fcc72d67ed55ffdbd"
+checksum = "5f1ae27c7c1cef7bfc022046f55d6fcc32f4a39374dddc8d96208bfc234dc593"
 dependencies = [
  "anyhow",
  "dunce",
