@@ -73,6 +73,16 @@ declare global {
     test: boolean;
   }
 
+  interface YasumuSmtp {
+    getEmailsCount(): number;
+    getUnreadEmailsCount(): number;
+    getReadEmailsCount(): number;
+    getEmails(): YasumuMail[];
+    getUnreadEmails(): YasumuMail[];
+    getReadEmails(): YasumuMail[];
+    getEmailById(id: string): YasumuMail | null;
+  }
+
   interface YasumuCore {
     context: {
       __meta: YasumuContextMeta;
@@ -85,6 +95,8 @@ declare global {
     utils: {
       getStackTrace(): string;
     };
+    emails: YasumuMail[];
+    smtp: YasumuSmtp;
     serialize(): string;
     nanoseconds(): bigint;
     sleep(ms: number): Promise<number>;
@@ -118,6 +130,16 @@ declare global {
 
   function test(name: string, test: YasumuTest): void;
   function expect<T>(actual: T): Assertion<T>;
+
+  interface YasumuMail {
+    id: string;
+    from: string;
+    to: string;
+    subject: string;
+    body: string;
+    date: Date;
+    read: boolean;
+  }
 }
 
 export {};
