@@ -1,9 +1,4 @@
-use boa_engine::{
-    js_str, js_string,
-    object::ObjectInitializer,
-    property::{Attribute, PropertyDescriptorBuilder},
-    JsString, JsValue, NativeFunction,
-};
+use boa_engine::js_string;
 use tanxium::tanxium;
 use tauri::{path::BaseDirectory, Manager};
 
@@ -11,98 +6,7 @@ use super::workspace::WorkspaceState;
 
 const GLOBAL_OBJECT_NAME: &str = "Yasumu";
 
-fn polyfill_yasumu_api(
-    tanxium: &mut tanxium::Tanxium,
-    app: tauri::AppHandle,
-    test: bool,
-    workspace: String,
-    workspace_id: String,
-) {
-    let ctx = &mut tanxium.context;
-
-    // Yasumu object
-    let package = app.package_info();
-    let app_version = format!(
-        "{}.{}.{}",
-        package.version.major, package.version.minor, package.version.patch
-    );
-    let global_obj = ctx.global_object();
-    let yasumu = global_obj.get(js_string!(GLOBAL_OBJECT_NAME), ctx).unwrap();
-    let yasumu_obj = yasumu
-        .as_object()
-        .ok_or("Failed to convert Yasumu to object")
-        .unwrap();
-
-    let versions = yasumu_obj.get(js_string!("versions"), ctx).unwrap();
-    let versions_obj = versions
-        .as_object()
-        .ok_or("Failed to convert versions to object")
-        .unwrap();
-
-    let yasumu_version = PropertyDescriptorBuilder::new()
-        .value(js_string!(app_version))
-        .enumerable(true)
-        .writable(false)
-        .configurable(false)
-        .build();
-
-    versions_obj.insert_property(js_str!("yasumu"), yasumu_version);
-
-    let features = yasumu_obj.get(js_string!("features"), ctx).unwrap();
-    let features_obj = features
-        .as_object()
-        .ok_or("Failed to convert features to object")
-        .unwrap();
-
-    let test_feature = PropertyDescriptorBuilder::new()
-        .value(JsValue::Boolean(test))
-        .enumerable(true)
-        .writable(false)
-        .configurable(false)
-        .build();
-
-    features_obj.insert_property(js_str!("test"), test_feature);
-
-    let yasumu_workspace = ObjectInitializer::new(ctx)
-        .property(js_str!("id"), js_string!(workspace_id), Attribute::all())
-        .property(js_str!("current"), js_string!(workspace), Attribute::all())
-        .build();
-
-    let workspace = PropertyDescriptorBuilder::new()
-        .value(yasumu_workspace)
-        .enumerable(true)
-        .writable(false)
-        .configurable(false);
-
-    yasumu_obj.insert_property(js_str!("workspace"), workspace);
-
-    let yasumu_utils = ObjectInitializer::new(ctx)
-        .function(
-            NativeFunction::from_fn_ptr(|_, _, context| {
-                let stack = context
-                    .stack_trace()
-                    .map(|frame| {
-                        format!("  at {}", frame.code_block().name().to_std_string_escaped())
-                    })
-                    .collect::<Vec<_>>()
-                    .join("\n");
-
-                Ok(JsValue::String(JsString::from(stack)))
-            }),
-            js_string!("getStackTrace"),
-            0,
-        )
-        .build();
-
-    let yasumu_utils_obj = PropertyDescriptorBuilder::new()
-        .value(yasumu_utils)
-        .enumerable(true)
-        .writable(false)
-        .configurable(false)
-        .build();
-
-    yasumu_obj.insert_property(js_str!("utils"), yasumu_utils_obj);
-}
+mod yasumu_api;
 
 #[tauri::command]
 pub async fn evaluate_javascript(
@@ -113,11 +17,17 @@ pub async fn evaluate_javascript(
     typescript: Option<bool>,
     test: Option<bool>,
     workspace_state: tauri::State<'_, WorkspaceState>,
+    smtp_server_state: tauri::State<'_, super::smtp::ServerState>,
 ) -> Result<String, String> {
     let code = code.to_string();
     let prepare = prepare.to_string();
     let id = id.to_string();
     let current_workspace = workspace_state.get_current_workspace();
+    let smtp_handler = smtp_server_state.get_handler();
+    let smtp_messages = match smtp_handler.messages.read() {
+        Ok(messages) => Some(messages.clone()),
+        Err(_) => None,
+    };
 
     let handle = smol::spawn(async move {
         let ts_supported = typescript.unwrap_or(false);
@@ -180,6 +90,24 @@ pub async fn evaluate_javascript(
                     .to_string(),
                 transpile: true,
             },
+            tanxium::ScriptExtension {
+                path: path
+                    .resolve("runtime/05_schema.js", BaseDirectory::Resource)
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .to_string(),
+                transpile: false,
+            },
+            tanxium::ScriptExtension {
+                path: path
+                    .resolve("runtime/06_smtp.ts", BaseDirectory::Resource)
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .to_string(),
+                transpile: true,
+            },
         ];
 
         let mut tanxium =
@@ -189,12 +117,13 @@ pub async fn evaluate_javascript(
             .initialize_runtime()
             .map_err(|e| format!("FatalError: {}", e))?;
 
-        polyfill_yasumu_api(
+        yasumu_api::init_yasumu_api(
             &mut tanxium,
             app,
             test.unwrap_or(false),
             current_workspace_dir,
             id,
+            smtp_messages,
         );
 
         tanxium
