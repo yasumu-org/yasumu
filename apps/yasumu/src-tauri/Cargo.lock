@@ -5357,10 +5357,11 @@ dependencies = [
 
 [[package]]
 name = "tanxium"
-version = "0.1.4"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "557e539f9c9c5121511dd7cf07ad15bc26ece4d2845a3f6f74cd5cfe6609ec51"
+checksum = "b019014091218705dc6d0f74cc6f5f72aa34610e0393907756bc7dc06bb521c0"
 dependencies = [
+ "base64 0.22.1",
  "boa_engine",
  "boa_gc",
  "boa_parser",
