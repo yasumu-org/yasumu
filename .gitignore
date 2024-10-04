@@ -28,3 +28,6 @@ dist-ssr
 # next
 .next
 out
+
+# test repo
+yasumu_test
