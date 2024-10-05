@@ -17,6 +17,7 @@ import { Yasumu } from '@/lib/yasumu';
 import { YasumuRestEntity } from '@yasumu/core';
 import { toast } from 'sonner';
 import { useRequestFs } from '@/stores/api-testing/request-config.store';
+import { useCopyCutPaste } from '../../hooks/use-copy';
 
 export function FsContextMenu({
   children,
@@ -32,9 +33,11 @@ export function FsContextMenu({
   onDelete?: () => void;
   onOpenExternal?: () => void;
 }>) {
-  const { setCopied, setCut, copied, cut } = useRequestFs();
+  const { copied, cut } = useRequestFs();
   const [isUpdate, setIsUpdate] = useState(false);
   const [isGroup, setIsGroup] = useState(false);
+
+  const { handleCopy, handleCut, handlePaste } = useCopyCutPaste(item);
 
   const handleUpdate = useCallback(
     async (name: string) => {
@@ -119,46 +122,14 @@ export function FsContextMenu({
                 Rename
               </ContextMenuItem>
             </DialogTrigger>
-            <ContextMenuItem
-              className="cursor-pointer"
-              onClick={async () => {
-                setCopied(item.id);
-                setCut(null);
-              }}
-            >
+            <ContextMenuItem className="cursor-pointer" onClick={handleCopy}>
               Copy
             </ContextMenuItem>
-            <ContextMenuItem
-              className="cursor-pointer"
-              onClick={async () => {
-                setCut(item.id);
-                setCopied(null);
-              }}
-            >
+            <ContextMenuItem className="cursor-pointer" onClick={handleCut}>
               Cut
             </ContextMenuItem>
             {!isFile && (
-              <ContextMenuItem
-                className="cursor-pointer"
-                disabled={!copied && !cut}
-                onClick={async () => {
-                  if (!Yasumu.workspace) return;
-
-                  try {
-                    if (copied) {
-                      await Yasumu.workspace.rest.copy(copied, item.id);
-                    } else if (cut) {
-                      await Yasumu.workspace.rest.move(cut, item.id);
-                      setCut(null);
-                    }
-                  } catch (e) {
-                    console.error(e);
-                    toast.error('Failed to paste the item.', {
-                      description: String(e),
-                    });
-                  }
-                }}
-              >
+              <ContextMenuItem className="cursor-pointer" disabled={!copied && !cut} onClick={handlePaste}>
                 Paste
               </ContextMenuItem>
             )}
