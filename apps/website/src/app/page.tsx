@@ -9,10 +9,18 @@ export default function Home() {
     <main className="bg-[#272a37] h-screen grid place-items-center">
       <div className="flex items-center flex-col">
         <div className="flex items-center">
-          <Image src="/logo-dark.svg" alt="Logo" width={150} height={150} />
+          <Image
+            src="/logo-dark.svg"
+            alt="Logo"
+            width={200}
+            height={200}
+            className="h-32 w-32 md:h-40 md:w-40"
+          />
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-bold text-6xl text-[#8563ff]">Yasumu</h1>
+              <h1 className="font-bold text-2xl lg:text-6xl text-[#8563ff]">
+                Yasumu
+              </h1>
               <Badge variant="outline" className="bg-yellow-600 uppercase">
                 Preview
               </Badge>
