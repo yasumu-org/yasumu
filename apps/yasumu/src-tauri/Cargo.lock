@@ -7158,7 +7158,7 @@ dependencies = [
 
 [[package]]
 name = "yasumu"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "boa_engine",
  "local-ip-address",

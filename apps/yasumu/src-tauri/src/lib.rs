@@ -19,7 +19,7 @@ pub fn run() {
 
             main_window.hide_menu().unwrap();
             main_window.maximize().unwrap();
-            main_window.open_devtools();
+            // main_window.open_devtools();
 
             Ok(())
         })
