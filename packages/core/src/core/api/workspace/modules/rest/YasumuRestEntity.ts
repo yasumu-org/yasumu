@@ -22,6 +22,9 @@ export interface YasumuRestEntityData {
   body: BodyType | null;
   path: string;
   response: YasumuRestEntityResponseCache | null;
+  preRequestScript: string;
+  postResponseScript: string;
+  testScript: string;
 }
 
 export class YasumuRestEntity {
@@ -170,6 +173,54 @@ export class YasumuRestEntity {
     }
 
     this.data.response = response;
+  }
+
+  /**
+   * Set the pre-request script
+   * @param script The new pre-request script
+   */
+  public setPreRequestScript(script: string) {
+    this.data.preRequestScript = script;
+    this.#changed = true;
+  }
+
+  /**
+   * Set the post-response script
+   * @param script The new post-response script
+   */
+  public setPostResponseScript(script: string) {
+    this.data.postResponseScript = script;
+    this.#changed = true;
+  }
+
+  /**
+   * Set the test script
+   * @param script The new test script
+   */
+  public setTestScript(script: string) {
+    this.data.testScript = script;
+    this.#changed = true;
+  }
+
+  /**
+   * Returns the pre-request script
+   */
+  public getPreRequestScript() {
+    return this.data.preRequestScript ?? '';
+  }
+
+  /**
+   * Returns the post-response script
+   */
+  public getPostResponseScript() {
+    return this.data.postResponseScript ?? '';
+  }
+
+  /**
+   * Returns the test script
+   */
+  public getTestScript() {
+    return this.data.testScript ?? '';
   }
 
   /**

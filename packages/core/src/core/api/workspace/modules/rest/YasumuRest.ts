@@ -80,6 +80,9 @@ export class YasumuRest {
         body: null,
         path,
         response: null,
+        postResponseScript: '',
+        preRequestScript: '',
+        testScript: '',
       });
 
       await entity.save();
@@ -238,6 +241,9 @@ export class YasumuRest {
       body: null,
       path,
       response: null,
+      postResponseScript: '',
+      preRequestScript: '',
+      testScript: '',
     });
 
     await entity.save();
