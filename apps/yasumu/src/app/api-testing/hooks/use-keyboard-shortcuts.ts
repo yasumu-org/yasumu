@@ -9,7 +9,6 @@ interface KeyboardShortcuts {
 export const useKeyboardShortcuts = ({ onCopy, onCut, onPaste }: KeyboardShortcuts) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      e.preventDefault();
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {
           case 'x':
