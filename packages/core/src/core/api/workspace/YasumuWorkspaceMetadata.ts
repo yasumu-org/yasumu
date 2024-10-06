@@ -1,6 +1,9 @@
+import type { YasumuWorkspaceEnvironment } from './environments/YasumuEnvironmentsManager.js';
+
 export interface YasumuRawWorkspaceMetadata {
   name: string;
   id: string;
+  environments: YasumuWorkspaceEnvironment[];
 }
 
 export class YasumuWorkspaceMetadata {
@@ -14,6 +17,20 @@ export class YasumuWorkspaceMetadata {
    * @param raw The raw metadata
    */
   public constructor(private readonly raw: YasumuRawWorkspaceMetadata) {}
+
+  /**
+   * Get the environments of the workspace
+   */
+  public get environments() {
+    return this.raw.environments ?? [];
+  }
+
+  /**
+   * Set the environments of the workspace
+   */
+  public updateEnvironments(env: YasumuWorkspaceEnvironment[]) {
+    this.raw.environments = env;
+  }
 
   /**
    * Get the ID of the workspace

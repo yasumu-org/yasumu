@@ -22,7 +22,7 @@ pub struct YasumuMail {
 #[derive(Clone)]
 pub struct SmtpHandler {
     port: Option<u32>,
-    messages: Arc<RwLock<VecDeque<YasumuMail>>>,
+    pub messages: Arc<RwLock<VecDeque<YasumuMail>>>,
     app_handle: Option<tauri::AppHandle>,
     current_data: Arc<RwLock<String>>,
 }

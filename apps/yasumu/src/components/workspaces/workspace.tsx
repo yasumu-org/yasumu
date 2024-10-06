@@ -10,10 +10,12 @@ import { Yasumu } from '@/lib/yasumu';
 import { YasumuWorkspaceHistory } from '@yasumu/core';
 import { Separator } from '../ui/separator';
 import { Trash2 } from 'lucide-react';
+import { useEnvironmentLoader } from '@/hooks/use-environment-loader';
 
 export function YasumuWorkspace() {
   const [recentWorkspaces, setRecentWorkspaces] = useState<YasumuWorkspaceHistory[]>([]);
   const { currentWorkspace, setCurrentWorkspace, currentWorkspaceName, setCurrentWorkspaceName } = useWorkspaceStore();
+  const { reloadEnv } = useEnvironmentLoader();
 
   useEffect(() => {
     Yasumu.getWorkspacesHistory().then((data) => setRecentWorkspaces(data), console.error);
@@ -35,8 +37,14 @@ export function YasumuWorkspace() {
 
         setCurrentWorkspace(res);
         setCurrentWorkspaceName(workspace.metadata.name);
+        await reloadEnv().catch((e) => {
+          toast.error('Failed to load environments', {
+            description: String(e),
+          });
+        });
       }
     } catch (e) {
+      console.error(e);
       toast.error('Failed to open workspace', {
         description: String(e),
       });

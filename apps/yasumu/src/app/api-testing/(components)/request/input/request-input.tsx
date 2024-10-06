@@ -12,12 +12,15 @@ import { parseString } from 'set-cookie-parser';
 import { useDebounceCallback } from 'usehooks-ts';
 import { HttpMethodColors } from '@/lib/constants';
 import { Yasumu } from '@/lib/yasumu';
-import { useConsole } from '@/stores/api-testing/console.store';
+import { ConsoleLogScope, useConsole } from '@/stores/api-testing/console.store';
 import { canEvaluateResult } from '@/lib/scripts/script';
 import { useTest } from '@/stores/api-testing/test.store';
 import { useScriptTime } from '@/stores/api-testing/script-time.store';
+import { useEnvironment } from '@/stores/environment/environment.store';
+import { log } from 'console';
 
 export default function RequestInput() {
+  const { selected } = useEnvironment();
   const { current } = useRequestStore();
   const { add } = useConsole();
   const { add: addTest } = useTest();
@@ -89,6 +92,33 @@ export default function RequestInput() {
     }
   }, [responseStore.abortController]);
 
+  const replaceVars = useCallback(
+    (variable: string) => {
+      try {
+        if (!selected) return variable;
+
+        const match = variable.matchAll(/{{(.*?)}}/g);
+
+        let result = variable;
+
+        for (const m of match) {
+          const [full, key] = m;
+
+          const envVar = selected.variables.find((v) => v.name === key);
+
+          if (envVar) {
+            result = result.replace(full, envVar.value);
+          }
+        }
+
+        return result;
+      } catch {
+        return variable;
+      }
+    },
+    [selected],
+  );
+
   const dispatchRequest = useCallback(async () => {
     try {
       if (!Yasumu.workspace) return;
@@ -111,15 +141,15 @@ export default function RequestInput() {
         response: {} as YasumuResponseContextData,
         request: {
           id,
-          url,
-          method,
+          url: replaceVars(url),
+          method: method,
           headers: h as any,
         },
         store: storeRecord,
       };
 
       headers.forEach((header) => {
-        if (header.enabled && header.key && header.value) h.append(header.key, header.value);
+        if (header.enabled && header.key && header.value) h.append(header.key, replaceVars(header.value));
       });
 
       if (!h.has('User-Agent')) {
@@ -142,6 +172,7 @@ export default function RequestInput() {
             }
 
             bodyData = body.json || undefined;
+            if (typeof bodyData === 'string') bodyData = replaceVars(bodyData);
           }
           break;
         case BodyMode.Text:
@@ -151,6 +182,7 @@ export default function RequestInput() {
             }
 
             bodyData = body.text || undefined;
+            if (typeof bodyData === 'string') bodyData = replaceVars(bodyData);
           }
           break;
         case BodyMode.UrlencodedFormData:
@@ -202,7 +234,12 @@ export default function RequestInput() {
           }
 
           if (result.console && result.console.length) {
-            add(result.console);
+            add(
+              result.console.map((log) => ({
+                ...log,
+                scope: ConsoleLogScope.PreRequest,
+              })),
+            );
           }
 
           await Yasumu.workspace.rest.scriptResults.applyContext(result, contextData);
@@ -226,10 +263,15 @@ export default function RequestInput() {
             setUrl(result.request.url);
           }
         } else if (result && typeof result === 'object' && '$error' in result) {
-          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
+          add({
+            args: [result.$error as string],
+            timestamp: Date.now(),
+            type: 'error',
+            scope: ConsoleLogScope.PreRequest,
+          });
         }
       }
-      const finalUrl = contextData.request.url || url;
+      const finalUrl = replaceVars(contextData.request.url || url);
 
       if (!finalUrl) {
         throw new Error('No url provided');
@@ -329,12 +371,22 @@ export default function RequestInput() {
 
         if (canEvaluateResult(result)) {
           if (result.console && result.console.length) {
-            add(result.console);
+            add(
+              result.console.map((log) => ({
+                ...log,
+                scope: ConsoleLogScope.PostResponse,
+              })),
+            );
           }
 
           await Yasumu.workspace.rest.scriptResults.applyContext(result, contextData);
         } else if (result && typeof result === 'object' && '$error' in result) {
-          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
+          add({
+            args: [result.$error as string],
+            timestamp: Date.now(),
+            type: 'error',
+            scope: ConsoleLogScope.PostResponse,
+          });
         }
       }
 
@@ -349,7 +401,7 @@ export default function RequestInput() {
 
         if (canEvaluateResult(result)) {
           if (result.console && result.console.length) {
-            add(result.console);
+            add(result.console.map((log) => ({ ...log, scope: ConsoleLogScope.Test })));
           }
 
           if (result.test.length) {
@@ -358,7 +410,7 @@ export default function RequestInput() {
 
           await Yasumu.workspace.rest.scriptResults.applyContext(result, contextData);
         } else if (result && typeof result === 'object' && '$error' in result) {
-          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error' });
+          add({ args: [result.$error as string], timestamp: Date.now(), type: 'error', scope: ConsoleLogScope.Test });
         }
       }
     } catch (e) {

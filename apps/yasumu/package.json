@@ -12,8 +12,7 @@
     "lint": "next lint",
     "tauri": "tauri",
     "app": "tauri dev",
-    "ui": "shadcn-ui",
-    "format": "prettier --write \"./src\""
+    "ui": "shadcn"
   },
   "dependencies": {
     "@codemirror/lang-html": "^6.4.9",
@@ -61,9 +60,8 @@
     "lucide-react": "^0.378.0",
     "memfs": "^4.11.1",
     "mime-types": "^2.1.35",
-    "next": "^14.2.5",
+    "next": "^14.2.14",
     "next-themes": "^0.3.0",
-    "prettier": "^3.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",
@@ -89,7 +87,7 @@
     "eslint": "^9.3.0",
     "internal-ip": "7.0.0",
     "postcss": "^8.4.38",
-    "shadcn-ui": "^0.8.0",
+    "shadcn": "^2.1.0",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.0.2"
   },

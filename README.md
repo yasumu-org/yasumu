@@ -2,6 +2,9 @@
 
 Yasumu is a customizable, free and open-source application to test various types of APIs (Lightweight alternative to postman/insomnia/bruno).
 
+> [!NOTE]  
+> Yasumu is in active development. It is currently in public preview. You can help us by being a tester. Furthermore, you can join our discord server @ https://discord.yasumu.dev to stay up to date with the latest changes.
+
 ## Features Status
 
 The following table shows the status of the features in the project.

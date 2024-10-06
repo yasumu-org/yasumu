@@ -17,16 +17,19 @@ import { useRef, useState } from 'react';
 interface FsActionDialogProps {
   type: string;
   description: string;
-  onCreate: (name: string) => void;
+  allowDescription?: boolean;
+  onCreate: (name: string, description: string) => void;
 }
 
 export function FsActionDialog({
   type,
   description,
   children,
+  allowDescription,
   onCreate,
 }: React.PropsWithChildren<FsActionDialogProps>) {
   const nameRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
 
   return (
@@ -53,15 +56,31 @@ export function FsActionDialog({
               aria-autocomplete="none"
             />
           </div>
+          {allowDescription && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="description" className="text-right">
+                Description
+              </Label>
+              <Input
+                ref={descriptionRef}
+                id="description"
+                type="text"
+                className="col-span-3"
+                autoComplete="off"
+                aria-autocomplete="none"
+              />
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button
             type="submit"
             onClick={() => {
               const val = nameRef.current?.value ?? '';
+              const description = descriptionRef.current?.value ?? '';
               if (!val) return;
               setOpen(false);
-              onCreate(val);
+              onCreate(val, description);
             }}
           >
             Create

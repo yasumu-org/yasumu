@@ -1,16 +1,11 @@
-import {
-  type YasumuRawWorkspaceMetadata,
-  YasumuWorkspaceMetadata,
-} from './YasumuWorkspaceMetadata.js';
+import { type YasumuRawWorkspaceMetadata, YasumuWorkspaceMetadata } from './YasumuWorkspaceMetadata.js';
 import type { YasumuCore } from '../yasumu.js';
 import { YasumuRest } from './modules/rest/YasumuRest.js';
 import { YasumuSmtp } from './modules/smtp/YasumuSmtp.js';
 import { YasumuStoreKeys, YasumuWorkspaceFiles } from './constants.js';
-import {
-  Commands,
-  type CommandsInvocationMap,
-} from '@/core/common/commands.js';
+import { Commands, type CommandsInvocationMap } from '@/core/common/commands.js';
 import type { StoreCommon } from '@/externals/index.js';
+import { YasumuEnvironmentsManager } from './environments/YasumuEnvironmentsManager.js';
 
 export interface YasumuWorkspaceInit {
   path: string;
@@ -24,9 +19,10 @@ export interface YasumuWorkspaceHistory {
 export class YasumuWorkspace {
   private _kv: StoreCommon | null = null;
   public metadata!: YasumuWorkspaceMetadata;
+  public secrets!: StoreCommon;
   public readonly rest: YasumuRest;
   public readonly smtp: YasumuSmtp;
-
+  public readonly environments: YasumuEnvironmentsManager;
   /**
    * Create a new YasumuWorkspace
    * @param yasumu The parent YasumuCore instance
@@ -34,10 +30,11 @@ export class YasumuWorkspace {
    */
   public constructor(
     public readonly yasumu: YasumuCore,
-    private readonly options: YasumuWorkspaceInit
+    private readonly options: YasumuWorkspaceInit,
   ) {
     this.rest = new YasumuRest(this);
     this.smtp = new YasumuSmtp(this);
+    this.environments = new YasumuEnvironmentsManager(this);
   }
 
   /**
@@ -64,11 +61,7 @@ export class YasumuWorkspace {
    * Loads the necessary metadata for the workspace
    */
   public async loadMetadata() {
-    const path = YasumuWorkspace.resolvePath(
-      this.yasumu,
-      this.options.path,
-      YasumuWorkspaceFiles.Metadata
-    );
+    const path = YasumuWorkspace.resolvePath(this.yasumu, this.options.path, YasumuWorkspaceFiles.Metadata);
 
     const hasMetadata = await this.yasumu.fs.exists(path);
 
@@ -81,14 +74,16 @@ export class YasumuWorkspace {
     } else {
       const metadata: YasumuRawWorkspaceMetadata = {
         id: crypto.randomUUID(),
-        name:
-          this.getPath().split(this.yasumu.path.sep()).pop() ?? 'New Workspace',
+        name: this.getPath().split(this.yasumu.path.sep()).pop() ?? 'New Workspace',
+        environments: [],
       };
 
       this.metadata = new YasumuWorkspaceMetadata(metadata);
       this.metadata.onChange = () => this.writeMetadata();
       await this.writeMetadata();
     }
+
+    this.secrets = this.yasumu.createStore(`${this.metadata.id}:secrets`);
 
     await this.saveHistory();
   }
@@ -97,11 +92,7 @@ export class YasumuWorkspace {
    * Write the metadata to the workspace
    */
   public async writeMetadata() {
-    const path = YasumuWorkspace.resolvePath(
-      this.yasumu,
-      this.options.path,
-      YasumuWorkspaceFiles.Metadata
-    );
+    const path = YasumuWorkspace.resolvePath(this.yasumu, this.options.path, YasumuWorkspaceFiles.Metadata);
 
     await this.yasumu.fs.writeTextFile(path, JSON.stringify(this.metadata));
   }
@@ -113,9 +104,7 @@ export class YasumuWorkspace {
     try {
       const history = await this.yasumu.getWorkspacesHistory();
 
-      const index = history.findIndex(
-        (item) => item.path === this.options.path
-      );
+      const index = history.findIndex((item) => item.path === this.options.path);
 
       if (index !== -1) {
         history[index].name = this.metadata.name;
@@ -165,10 +154,10 @@ export class YasumuWorkspace {
    * @param data The data to send
    * @returns The result of the command
    */
-  public async send<
-    Cmd extends Commands,
-    InvocationData extends CommandsInvocationMap[Cmd],
-  >(command: Cmd, data: InvocationData[0]): Promise<InvocationData[1]> {
+  public async send<Cmd extends Commands, InvocationData extends CommandsInvocationMap[Cmd]>(
+    command: Cmd,
+    data: InvocationData[0],
+  ): Promise<InvocationData[1]> {
     return this.yasumu.commands.invoke(command, data);
   }
 
@@ -179,11 +168,7 @@ export class YasumuWorkspace {
    * @param file The file to resolve
    * @returns The resolved path
    */
-  public static resolvePath(
-    yasumu: YasumuCore,
-    workspacePath: string,
-    file: YasumuWorkspaceFiles
-  ) {
+  public static resolvePath(yasumu: YasumuCore, workspacePath: string, file: YasumuWorkspaceFiles) {
     if (workspacePath.endsWith(file)) {
       return workspacePath;
     }
