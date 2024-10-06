@@ -12,6 +12,12 @@ export function TestScript() {
     if (!current) return;
 
     current.setTestScript(test || '');
+
+    const timer = setTimeout(() => {
+      current?.save().catch(console.error);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, [current, test]);
 
   return <YasumuRequestScript script={test} setScript={setTest} />;

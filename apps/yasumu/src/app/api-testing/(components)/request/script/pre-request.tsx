@@ -11,6 +11,12 @@ export function PreRequestScript() {
     if (!current) return;
 
     current.setPreRequestScript(script || '');
+
+    const timer = setTimeout(() => {
+      current?.save().catch(console.error);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, [current, script]);
 
   return <YasumuRequestScript script={script} setScript={setScript} />;
