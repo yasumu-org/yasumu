@@ -1,4 +1,4 @@
-import { Home, Settings, Mail, TestTube } from 'lucide-react';
+import { Home, Settings, Mail, TestTube, Lock } from 'lucide-react';
 import { GrGraphQl } from 'react-icons/gr';
 import { SiSocketdotio } from 'react-icons/si';
 import { SideNavMenu } from './side-nav-menu';
@@ -19,6 +19,7 @@ export function SideNav() {
         <SideNavMenu link="/socketio" name="Socket.IO" comingSoon icon={<SiSocketdotio className="h-5 w-5" />} />
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+        <SideNavMenu link="/environments" name="Environments" icon={<Lock className="h-5 w-5" />} />
         <SideNavMenu link="/settings" name="Settings" icon={<Settings className="h-5 w-5" />} />
       </nav>
     </aside>

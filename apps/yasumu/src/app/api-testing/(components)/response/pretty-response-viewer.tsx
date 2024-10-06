@@ -41,7 +41,7 @@ export default function PrettyResponseViewer({ content }: { content: string }) {
     }
   }, [editor.current]);
 
-  if (!isMounted) return null;
+  // if (!isMounted) return null;
 
   return (
     <CopyToClipboard value={code || content}>

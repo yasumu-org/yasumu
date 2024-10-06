@@ -1,7 +1,4 @@
-import {
-  Commands,
-  type StartSmtpServerCommand,
-} from '@/core/common/commands.js';
+import { Commands, type StartSmtpServerCommand } from '@/core/common/commands.js';
 import type { YasumuWorkspace } from '../../YasumuWorkspace.js';
 import type { Callback } from '@/externals/index.js';
 import { YasumuEvents } from '@/core/common/events.js';
@@ -13,8 +10,7 @@ export const YasumuEmailType = {
   Read: 'read',
 } as const;
 
-export type YasumuEmailType =
-  (typeof YasumuEmailType)[keyof typeof YasumuEmailType];
+export type YasumuEmailType = (typeof YasumuEmailType)[keyof typeof YasumuEmailType];
 
 export class YasumuSmtp {
   /**
@@ -38,10 +34,7 @@ export class YasumuSmtp {
    * @returns The unsubscribe function
    */
   public async onRefreshAll(handler: Callback) {
-    return this.workspace.yasumu.events.listen(
-      YasumuEvents.RefreshAll,
-      handler
-    );
+    return this.workspace.yasumu.events.listen(YasumuEvents.RefreshAll, handler);
   }
 
   /**
@@ -49,10 +42,7 @@ export class YasumuSmtp {
    */
   public async fetch(type?: YasumuEmailType) {
     return this.workspace.send(Commands.GetEmails, {
-      read:
-        !type || type === YasumuEmailType.All
-          ? undefined
-          : type === YasumuEmailType.Read,
+      read: !type || type === YasumuEmailType.All ? undefined : type === YasumuEmailType.Read,
     });
   }
 

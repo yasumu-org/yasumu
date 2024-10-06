@@ -1,7 +1,7 @@
 'use client';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useEnvironment } from '@/stores/application/environment.store';
+import { useEnvironment } from '@/stores/environment/environment.store';
 
 export function RequestEnvironment() {
   const { environments, selected, selectById } = useEnvironment();

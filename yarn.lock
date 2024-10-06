@@ -2816,7 +2816,6 @@ __metadata:
     next: "npm:^14.2.14"
     next-themes: "npm:^0.3.0"
     postcss: "npm:^8.4.38"
-    prettier: "npm:^3.3.3"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-hook-form: "npm:^7.51.4"
@@ -8914,6 +8913,8 @@ __metadata:
 "yasumu-workspace@workspace:.":
   version: 0.0.0-use.local
   resolution: "yasumu-workspace@workspace:."
+  dependencies:
+    prettier: "npm:^3.3.3"
   languageName: unknown
   linkType: soft
 

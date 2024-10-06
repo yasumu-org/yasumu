@@ -20,9 +20,7 @@ export interface TreeViewElement {
 
 export class YasumuRest {
   public readonly imports = new YasumuRestImports(this);
-  public readonly scriptResults = new YasumuScriptResultEvaluator(
-    this.workspace
-  );
+  public readonly scriptResults = new YasumuScriptResultEvaluator(this.workspace);
 
   /**
    * Create a new YasumuRest instance
@@ -55,18 +53,9 @@ export class YasumuRest {
    */
   public async open(path: string): Promise<YasumuRestEntity>;
   public async open(path: string, create: true): Promise<YasumuRestEntity>;
-  public async open(
-    path: string,
-    create: false
-  ): Promise<YasumuRestEntity | null>;
-  public async open(
-    path: string,
-    create: boolean
-  ): Promise<YasumuRestEntity | null>;
-  public async open(
-    path: string,
-    create = true
-  ): Promise<YasumuRestEntity | null> {
+  public async open(path: string, create: false): Promise<YasumuRestEntity | null>;
+  public async open(path: string, create: boolean): Promise<YasumuRestEntity | null>;
+  public async open(path: string, create = true): Promise<YasumuRestEntity | null> {
     await this.ensureSelf();
 
     const hasRequest = await this.workspace.yasumu.fs.exists(path);
@@ -114,15 +103,12 @@ export class YasumuRest {
     const currentName = await this.workspace.yasumu.path.basename(current);
 
     const doesTargetHaveCurrentName = await this.workspace.yasumu.fs.exists(
-      await this.workspace.yasumu.path.join(target, currentName)
+      await this.workspace.yasumu.path.join(target, currentName),
     );
 
     if (doesTargetHaveCurrentName) {
       const targetName = await this.workspace.yasumu.path.basename(target);
-      target = await this.workspace.yasumu.path.join(
-        target,
-        `${targetName} - Copy`
-      );
+      target = await this.workspace.yasumu.path.join(target, `${targetName} - Copy`);
     } else {
       target = await this.workspace.yasumu.path.join(target, currentName);
     }
@@ -152,15 +138,12 @@ export class YasumuRest {
     const currentName = await this.workspace.yasumu.path.basename(current);
 
     const doesTargetHaveCurrentName = await this.workspace.yasumu.fs.exists(
-      await this.workspace.yasumu.path.join(target, currentName)
+      await this.workspace.yasumu.path.join(target, currentName),
     );
 
     if (doesTargetHaveCurrentName) {
       const targetName = await this.workspace.yasumu.path.basename(target);
-      target = await this.workspace.yasumu.path.join(
-        target,
-        `${targetName} - Copy`
-      );
+      target = await this.workspace.yasumu.path.join(target, `${targetName} - Copy`);
     } else {
       target = await this.workspace.yasumu.path.join(target, currentName);
     }
@@ -206,21 +189,13 @@ export class YasumuRest {
 
     if (!hasRequest) return;
 
-    const ext = dir
-      ? ''
-      : await this.workspace.yasumu.path.extname(path).catch(() => '');
+    const ext = dir ? '' : await this.workspace.yasumu.path.extname(path).catch(() => '');
     const dirName = dir
-      ? (await this.workspace.yasumu.path.dirname(path)).replace(
-          await this.workspace.yasumu.path.basename(path),
-          ''
-        )
+      ? (await this.workspace.yasumu.path.dirname(path)).replace(await this.workspace.yasumu.path.basename(path), '')
       : await this.workspace.yasumu.path.dirname(path);
 
     const extension = ext ? `.${ext}` : '';
-    const newPath = await this.workspace.yasumu.path.join(
-      dirName,
-      `${newName}${extension}`
-    );
+    const newPath = await this.workspace.yasumu.path.join(dirName, `${newName}${extension}`);
 
     const entity = await this.open(path, false);
 
@@ -238,20 +213,12 @@ export class YasumuRest {
    * @param method The HTTP method of the request
    * @param basePath The base path to create the request in
    */
-  public async create(
-    name: string,
-    method: null,
-    basePath?: string
-  ): Promise<void>;
-  public async create(
-    name: string,
-    method: HttpMethods,
-    basePath?: string
-  ): Promise<YasumuRestEntity>;
+  public async create(name: string, method: null, basePath?: string): Promise<void>;
+  public async create(name: string, method: HttpMethods, basePath?: string): Promise<YasumuRestEntity>;
   public async create(
     name: string,
     method: HttpMethods | null,
-    basePath = this.getPath()
+    basePath = this.getPath(),
   ): Promise<YasumuRestEntity | void> {
     await this.ensureSelf();
 
@@ -261,10 +228,7 @@ export class YasumuRest {
       return;
     }
 
-    const path = await this.workspace.yasumu.path.join(
-      basePath,
-      `${name}.${method}`
-    );
+    const path = await this.workspace.yasumu.path.join(basePath, `${name}.${method}`);
 
     const entity = new YasumuRestEntity(this, {
       name,

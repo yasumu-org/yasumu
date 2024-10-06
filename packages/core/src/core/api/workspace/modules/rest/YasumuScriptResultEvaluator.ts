@@ -85,10 +85,7 @@ export class YasumuScriptResultEvaluator {
    * @param changes The changes to apply
    * @param ctx The context to apply the changes to
    */
-  public async applyContext(
-    changes: YasumuContextMeta,
-    ctx: YasumuContextData
-  ) {
+  public async applyContext(changes: YasumuContextMeta, ctx: YasumuContextData) {
     if ('request' in changes && 'request' in ctx) {
       Object.assign(ctx.request, changes.request);
     }

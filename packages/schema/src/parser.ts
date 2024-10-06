@@ -38,7 +38,7 @@ export class YasumuSchemaParser {
         for (const x of keys) {
             if (script[x]!.required && !(x in blocks)) {
                 throw new YasumuSchemaParserError(
-                    `Missing required block '${x}'`
+                    `Missing required block '${x}'`,
                 );
             }
             blocks[x] ??= null;
@@ -52,7 +52,7 @@ export class YasumuSchemaParser {
         if (!node) {
             const { line, column } = identifier.span.start;
             throw new YasumuSchemaParserError(
-                `Unexpected block '${identifier.value}' (at line ${line}, column ${column})`
+                `Unexpected block '${identifier.value}' (at line ${line}, column ${column})`,
             );
         }
         if (node.type === "code") {
@@ -129,7 +129,7 @@ export class YasumuSchemaParser {
             if (!keys.has(x.value)) {
                 const { line, column } = x.span.start;
                 throw new YasumuSchemaParserError(
-                    `Unexpected object key '${x}' (at line ${line}, column ${column})`
+                    `Unexpected object key '${x}' (at line ${line}, column ${column})`,
                 );
             }
             this.consume(YasumuSchemaTokenTypes.COLON);
@@ -146,7 +146,7 @@ export class YasumuSchemaParser {
             if (node[x]!.required && !(x in object)) {
                 const { line, column } = end.span.start;
                 throw new YasumuSchemaParserError(
-                    `Missing required object key '${x}' (at line ${line}, column ${column})`
+                    `Missing required object key '${x}' (at line ${line}, column ${column})`,
                 );
             }
             object[x] ??= null;
@@ -196,7 +196,7 @@ export class YasumuSchemaParser {
         const { type, span } = this.currentToken!;
         const { line, column } = span.start;
         throw new YasumuSchemaParserError(
-            `Expected '${YasumuSchemaTokenTypes.TRUE}' or '${YasumuSchemaTokenTypes.FALSE}', received '${type}' (at line ${line}, column ${column})`
+            `Expected '${YasumuSchemaTokenTypes.TRUE}' or '${YasumuSchemaTokenTypes.FALSE}', received '${type}' (at line ${line}, column ${column})`,
         );
     }
 
@@ -236,7 +236,7 @@ export class YasumuSchemaParser {
         if (this.currentToken.type !== type) {
             const { line, column } = this.currentToken!.span.start;
             throw new YasumuSchemaParserError(
-                `Expected '${type}' token, received '${this.currentToken.type}' (at line ${line}, column ${column})`
+                `Expected '${type}' token, received '${this.currentToken.type}' (at line ${line}, column ${column})`,
             );
         }
     }

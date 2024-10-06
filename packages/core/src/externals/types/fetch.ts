@@ -3,7 +3,4 @@ export type FetchAdditional<T> = T & {
   timeout?: number;
 };
 
-export type FetchCommon = (
-  input: RequestInfo,
-  init?: FetchAdditional<RequestInit>
-) => Promise<Response>;
+export type FetchCommon = (input: RequestInfo, init?: FetchAdditional<RequestInit>) => Promise<Response>;

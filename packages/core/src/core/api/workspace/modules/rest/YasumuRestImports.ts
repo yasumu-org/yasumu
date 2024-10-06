@@ -23,9 +23,7 @@ export class YasumuRestImports {
    */
   public async curl(source: YasumuRestImportSource): Promise<YasumuRestEntity> {
     const data = parseCurl(source.source);
-    const method = (
-      'method' in data ? String(data.method).toUpperCase() : 'GET'
-    ) as HttpMethods;
+    const method = ('method' in data ? String(data.method).toUpperCase() : 'GET') as HttpMethods;
 
     const entity = await this.rest.create(source.name, method, source.path);
 

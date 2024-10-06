@@ -1,6 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import { Content } from '@/components/layout/content';
-import Environments from '../(components)/environments';
+import EnvironmentSelector from './(components)/selector';
 
 export default function Page() {
   return (
@@ -8,10 +8,10 @@ export default function Page() {
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-medium">Environments</h3>
-          <p className="text-sm text-muted-foreground">Create environments of workspace</p>
+          <p className="text-sm text-muted-foreground">Manage environments of the workspace.</p>
         </div>
         <Separator />
-        <Environments />
+        <EnvironmentSelector />
       </div>
     </Content>
   );

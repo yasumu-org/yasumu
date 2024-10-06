@@ -1,10 +1,6 @@
 import type { Callback } from './common.js';
 
-export type InvokeArgs =
-  | Record<string, any>
-  | number[]
-  | ArrayBuffer
-  | Uint8Array;
+export type InvokeArgs = Record<string, any> | number[] | ArrayBuffer | Uint8Array;
 
 export interface InvokeOptions {
   headers: Headers | Record<string, string>;
@@ -18,14 +14,6 @@ export interface PluginListenerCommon {
 }
 
 export interface CommandCommon {
-  addPluginListener<T = unknown>(
-    plugin: string,
-    event: string,
-    cb: Callback<[T]>
-  ): Promise<PluginListenerCommon>;
-  invoke<T = unknown>(
-    command: string,
-    args?: InvokeArgs,
-    options?: InvokeOptions
-  ): Promise<T>;
+  addPluginListener<T = unknown>(plugin: string, event: string, cb: Callback<[T]>): Promise<PluginListenerCommon>;
+  invoke<T = unknown>(command: string, args?: InvokeArgs, options?: InvokeOptions): Promise<T>;
 }

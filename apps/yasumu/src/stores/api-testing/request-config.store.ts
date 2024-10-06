@@ -1,13 +1,6 @@
 import { YasumuRestEntity, BodyMode, HttpMethods } from '@yasumu/core';
 import { create } from 'zustand';
 
-export const useEnvironment = create((set) => ({
-  environment: null as string | null,
-  variables: {} as Record<string, string>,
-  setEnvironment: (environment: string) => set({ environment }),
-  setVariables: (variables: Record<string, string>) => set({ variables }),
-}));
-
 export interface IParamOrHeader {
   key: string;
   value: string;
