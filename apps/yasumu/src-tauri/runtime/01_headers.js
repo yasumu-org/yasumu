@@ -57,8 +57,8 @@
           } catch (e) {
             console.error(
               "set-cookie-parser encountered an error while decoding a cookie with value '" +
-              value +
-              "'. Set options.decodeValues to false to disable this feature.",
+                value +
+                "'. Set options.decodeValues to false to disable this feature.",
               e,
             );
           }
@@ -115,9 +115,9 @@
             } else {
               var sch =
                 input.headers[
-                Object.keys(input.headers).find(function (key) {
-                  return key.toLowerCase() === 'set-cookie';
-                })
+                  Object.keys(input.headers).find(function (key) {
+                    return key.toLowerCase() === 'set-cookie';
+                  })
                 ];
               if (!sch && input.headers.cookie && !options.silent) {
                 console.warn(

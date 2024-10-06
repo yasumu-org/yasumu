@@ -1,11 +1,5 @@
-import {
-  YasumuWorkspace,
-  type YasumuWorkspaceHistory,
-} from './workspace/YasumuWorkspace.js';
-import {
-  YasumuStoreKeys,
-  YasumuWorkspaceFiles,
-} from './workspace/constants.js';
+import { YasumuWorkspace, type YasumuWorkspaceHistory } from './workspace/YasumuWorkspace.js';
+import { YasumuStoreKeys, YasumuWorkspaceFiles } from './workspace/constants.js';
 import { Commands } from '../common/commands.js';
 import type {
   StoreCommon,
@@ -154,10 +148,7 @@ export class YasumuCore {
    * Retrieve the history of workspaces
    */
   public async getWorkspacesHistory() {
-    const history =
-      (await this.store.get<YasumuWorkspaceHistory[]>(
-        YasumuStoreKeys.YasumuWorkspaces
-      )) ?? [];
+    const history = (await this.store.get<YasumuWorkspaceHistory[]>(YasumuStoreKeys.YasumuWorkspaces)) ?? [];
 
     return history;
   }
@@ -170,9 +161,7 @@ export class YasumuCore {
   }
 }
 
-export type YasumuCreate<T extends unknown[] = void[], R = unknown> = (
-  ...args: T
-) => R;
+export type YasumuCreate<T extends unknown[] = void[], R = unknown> = (...args: T) => R;
 
 export interface YasumuCoreConfiguration {
   createStore: YasumuCreate<[string], StoreCommon>;

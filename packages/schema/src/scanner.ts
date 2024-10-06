@@ -55,7 +55,7 @@ export class YasumuSchemaScanner {
 
     readNumber(
         value: string,
-        start: YasumuSchemaTokenSpanPosition
+        start: YasumuSchemaTokenSpanPosition,
     ): YasumuSchemaToken {
         while (YasumuSchemaUtils.isNumericChar(this.lexer.peek())) {
             value += this.lexer.advance();
@@ -72,7 +72,7 @@ export class YasumuSchemaScanner {
 
     readString(
         delimiter: string,
-        start: YasumuSchemaTokenSpanPosition
+        start: YasumuSchemaTokenSpanPosition,
     ): YasumuSchemaToken {
         let value = "";
         let escaped = false;
@@ -172,7 +172,7 @@ export class YasumuSchemaScanner {
 
     readIdentifier(
         value: string,
-        start: YasumuSchemaTokenSpanPosition
+        start: YasumuSchemaTokenSpanPosition,
     ): YasumuSchemaToken {
         while (YasumuSchemaUtils.isAlphaNumericChar(this.lexer.peek())) {
             value += this.lexer.advance();

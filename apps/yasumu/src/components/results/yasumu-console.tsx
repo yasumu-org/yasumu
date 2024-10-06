@@ -1,11 +1,12 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useConsole } from '@/stores/api-testing/console.store';
+import { ConsoleLogScope, useConsole } from '@/stores/api-testing/console.store';
 import { Button } from '../ui/button';
 import { Trash2 } from 'lucide-react';
 import { LogStream as ConsoleStream } from '@yasumu/core';
 import { useEffect, useRef } from 'react';
+import { Badge } from '../ui/badge';
 
 export function YasumuConsole() {
   const { logs, clear } = useConsole();
@@ -17,16 +18,16 @@ export function YasumuConsole() {
           <Trash2 className="h-4 w-4 text-destructive" />
         </Button>
       </div>
-      <div className="p-2 text-white">
+      <div className="p-2 text-white select-text">
         {logs.map((log, index, array) => (
-          <LogStream key={log.timestamp} log={log} scroll={index === array.length - 1} />
+          <LogStream key={log.timestamp} log={log} scroll={index === array.length - 1} scope={log.scope} />
         ))}
       </div>
     </div>
   );
 }
 
-function LogStream({ log, scroll = false }: { log: ConsoleStream; scroll?: boolean }) {
+function LogStream({ log, scroll = false, scope }: { log: ConsoleStream; scroll?: boolean; scope: ConsoleLogScope }) {
   const ref = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
@@ -36,20 +37,32 @@ function LogStream({ log, scroll = false }: { log: ConsoleStream; scroll?: boole
   }, [scroll]);
 
   return (
-    <pre
-      ref={ref}
-      className={cn(
-        'py-1 text-xs font-normal font-mono select-text',
-        {
+    <div className="flex gap-2 font-mono font-normal text-xs py-1">
+      <LogScope scope={scope} />
+      <pre
+        ref={ref}
+        className={cn('whitespace-pre-wrap break-all', {
           'text-red-500': log.type === 'error',
           'text-yellow-500': log.type === 'warn',
           'text-blue-500': log.type === 'info',
           'text-gray-500 dark:text-gray-200': log.type === 'log',
-        },
-        'whitespace-pre-wrap break-all',
-      )}
+        })}
+      >
+        {log.args.join(' ')}
+      </pre>
+    </div>
+  );
+}
+
+function LogScope({ scope }: { scope: ConsoleLogScope }) {
+  return (
+    <span
+      className={cn('rounded px-2 select-none', {
+        'bg-green-600 ': scope === ConsoleLogScope.PreRequest,
+        'bg-blue-600': scope === ConsoleLogScope.PostResponse,
+      })}
     >
-      {log.args.join(' ')}
-    </pre>
+      {scope}
+    </span>
   );
 }

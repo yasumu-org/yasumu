@@ -35,9 +35,12 @@ export class YasumuSchemaUtils {
     }
 
     static enum<T extends string>(values: readonly T[]) {
-        return values.reduce((pv, cv) => {
-            pv[cv] = cv;
-            return pv;
-        }, {} as { [K in T]: K });
+        return values.reduce(
+            (pv, cv) => {
+                pv[cv] = cv;
+                return pv;
+            },
+            {} as { [K in T]: K },
+        );
     }
 }

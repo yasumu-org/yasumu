@@ -9,7 +9,7 @@ export class YasumuScripts {
    */
   public constructor(
     public readonly yasumu: YasumuCore,
-    private readonly adapter: ScriptsCommon
+    private readonly adapter: ScriptsCommon,
   ) {}
 
   /**
@@ -28,11 +28,7 @@ export class YasumuScripts {
    * @param config The configuration for the script. Useful for passing additional data to the script.
    * @returns The result of the script.
    */
-  public async run<T = unknown, C = unknown>(
-    script: string,
-    context: C,
-    config: Record<string, unknown>
-  ): Promise<T> {
+  public async run<T = unknown, C = unknown>(script: string, context: C, config: Record<string, unknown>): Promise<T> {
     const ctx = this.createContextData(context);
     const result = await this.adapter.evaluate<T>(script, ctx, config);
 

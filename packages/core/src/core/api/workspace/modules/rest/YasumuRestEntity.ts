@@ -35,7 +35,7 @@ export class YasumuRestEntity {
    */
   public constructor(
     public readonly rest: YasumuRest,
-    private data: YasumuRestEntityData
+    private data: YasumuRestEntityData,
   ) {}
 
   /**
@@ -181,7 +181,7 @@ export class YasumuRestEntity {
 
       const newName = await this.rest.workspace.yasumu.path.join(
         await this.rest.workspace.yasumu.path.dirname(this.getPath()),
-        `${name}.${this.data.method}`
+        `${name}.${this.data.method}`,
       );
 
       await this.rest.workspace.yasumu.fs.remove(this.data.path);

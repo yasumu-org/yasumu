@@ -43,10 +43,7 @@ export interface StartSmtpServerCommand {
 export interface CommandsInvocationMap {
   // Workspace
   [Commands.GetCurrentWorkspace]: CommandInvocation<{}, string | null>;
-  [Commands.SetCurrentWorkspace]: CommandInvocation<
-    SetCurrentWorkspaceCommand,
-    void
-  >;
+  [Commands.SetCurrentWorkspace]: CommandInvocation<SetCurrentWorkspaceCommand, void>;
   [Commands.ClearCurrentWorkspaceSession]: CommandInvocation<{}, void>;
   // Network
   [Commands.GetLocalAddress]: CommandInvocation<{}, string>;

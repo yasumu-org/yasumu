@@ -37,8 +37,8 @@ type OpenDialogReturn<T extends OpenDialogOptions> = T['directory'] extends true
     ? string[] | null
     : string | null
   : T['multiple'] extends true
-  ? FileResponse[] | null
-  : FileResponse | null;
+    ? FileResponse[] | null
+    : FileResponse | null;
 
 export interface DialogCommon {
   open<T extends OpenDialogOptions>(options?: T): Promise<OpenDialogReturn<T>>;

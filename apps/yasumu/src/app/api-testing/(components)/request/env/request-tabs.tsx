@@ -45,7 +45,7 @@ export function RequestTabs() {
           return <RequestTab tab={tab} key={tab.getPath()} />;
         })}
       </div>
-      <div className="inline-flex">
+      <div className="inline-flex ml-auto">
         <Button size="sm" variant="ghost" onClick={onScrollRight} className="border-x border-muted/80 rounded-none">
           <ArrowRight className="h-4 w-4" />
         </Button>

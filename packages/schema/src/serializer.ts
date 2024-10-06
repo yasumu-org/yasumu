@@ -32,21 +32,21 @@ export class YasumuSchemaSerializer {
 
     serialize<T extends YasumuSchemaParasableScript>(
         script: T,
-        value: YasumuSchemaParasableScriptToType<T>
+        value: YasumuSchemaParasableScriptToType<T>,
     ) {
         try {
             return this._serialize(script, value);
         } catch (err) {
             throw new Error(
                 `Error occured when serializing "${this.keyPath.join(".")}"`,
-                { cause: err }
+                { cause: err },
             );
         }
     }
 
     _serialize<T extends YasumuSchemaParasableScript>(
         script: T,
-        value: YasumuSchemaParasableScriptToType<T>
+        value: YasumuSchemaParasableScriptToType<T>,
     ) {
         let output = "";
         for (const x of Object.keys(script)) {
@@ -66,7 +66,7 @@ export class YasumuSchemaSerializer {
     serializeBlock<T extends YasumuSchemaParsableBlock>(
         identifier: string,
         node: T,
-        value: YasumuSchemaParsableBlockToType<T>
+        value: YasumuSchemaParsableBlockToType<T>,
     ) {
         let output = identifier + " ";
         if (node.type === "code") {
@@ -74,7 +74,7 @@ export class YasumuSchemaSerializer {
                 node,
                 value as NonNullable<
                     YasumuSchemaParsableCodeBlockToType<YasumuSchemaParsableCodeBlock>
-                >
+                >,
             );
             return output;
         }
@@ -83,7 +83,7 @@ export class YasumuSchemaSerializer {
                 node,
                 value as NonNullable<
                     YasumuSchemaParsableObjectBlockToType<YasumuSchemaParsableObjectBlock>
-                >
+                >,
             );
             return output;
         }
@@ -92,7 +92,7 @@ export class YasumuSchemaSerializer {
 
     serializeCodeBlock<T extends YasumuSchemaParsableCodeBlock>(
         _: T,
-        value: NonNullable<YasumuSchemaParsableCodeBlockToType<T>>
+        value: NonNullable<YasumuSchemaParsableCodeBlockToType<T>>,
     ) {
         let output = this.indent() + "{\n";
         this.incrementIndent();
@@ -106,30 +106,30 @@ export class YasumuSchemaSerializer {
 
     serializeNode<T extends YasumuSchemaParsable>(
         node: T,
-        value: YasumuSchemaParsableToType<T>
+        value: YasumuSchemaParsableToType<T>,
     ) {
         if (node.type === "object") {
             return this.serializeObject(
                 node,
-                value as YasumuSchemaParsableObjectToType<YasumuSchemaParsableObject>
+                value as YasumuSchemaParsableObjectToType<YasumuSchemaParsableObject>,
             );
         }
         if (node.type === "record") {
             return this.serializeRecord(
                 node,
-                value as YasumuSchemaParsableRecordToType<YasumuSchemaParsableRecord>
+                value as YasumuSchemaParsableRecordToType<YasumuSchemaParsableRecord>,
             );
         }
         if (node.type === "list") {
             return this.serializeList(
                 node,
-                value as YasumuSchemaParsableListToType<YasumuSchemaParsableList>
+                value as YasumuSchemaParsableListToType<YasumuSchemaParsableList>,
             );
         }
         if (YasumuSchemaSerializer._isConstantNode(node)) {
             return this.serializeConstant(
                 node,
-                value as YasumuSchemaParsableConstantToType<typeof node>
+                value as YasumuSchemaParsableConstantToType<typeof node>,
             );
         }
         throw new YasumuSchemaUnexpectedSerializerError();
@@ -137,14 +137,14 @@ export class YasumuSchemaSerializer {
 
     serializeObject<T extends YasumuSchemaParsableObject>(
         node: T,
-        value: YasumuSchemaParsableObjectToType<T>
+        value: YasumuSchemaParsableObjectToType<T>,
     ) {
         return this.serializeKeyPairs(node.schema, value);
     }
 
     serializeKeyPairs<T extends YasumuSchemaParsableKeyPairs>(
         node: T,
-        value: YasumuSchemaParsableKeyPairsToType<T>
+        value: YasumuSchemaParsableKeyPairsToType<T>,
     ) {
         let output = "{\n";
         this.incrementIndent();
@@ -158,7 +158,7 @@ export class YasumuSchemaSerializer {
             output += this.indent() + x + ": ";
             output += this.serializeNode(
                 xNode.schema as T[typeof x]["schema"],
-                xValue as YasumuSchemaParsableToType<T[typeof x]["schema"]>
+                xValue as YasumuSchemaParsableToType<T[typeof x]["schema"]>,
             );
             output += "\n";
             this.keyPath.pop();
@@ -170,7 +170,7 @@ export class YasumuSchemaSerializer {
 
     serializeRecord<T extends YasumuSchemaParsableRecord>(
         node: T,
-        value: YasumuSchemaParsableRecordToType<T>
+        value: YasumuSchemaParsableRecordToType<T>,
     ) {
         let output = "{\n";
         this.incrementIndent();
@@ -188,7 +188,7 @@ export class YasumuSchemaSerializer {
 
     serializeList<T extends YasumuSchemaParsableList>(
         node: T,
-        value: YasumuSchemaParsableListToType<T>
+        value: YasumuSchemaParsableListToType<T>,
     ) {
         let output = "[\n";
         this.incrementIndent();
@@ -206,7 +206,7 @@ export class YasumuSchemaSerializer {
 
     serializeConstant<T extends YasumuSchemaParsableConstant>(
         _: T,
-        value: YasumuSchemaParsableConstantToType<T>
+        value: YasumuSchemaParsableConstantToType<T>,
     ) {
         if (value === undefined) {
             // @ts-expect-error
