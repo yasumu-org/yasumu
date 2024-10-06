@@ -32,11 +32,27 @@ export function RequestParameters() {
     }
   });
 
+  const updateUrlFromParameters = (params: IParameter[]) => {
+    try {
+      const urlObject = new URL(url || '');
+      urlObject.search = '';
+
+      params.forEach(({ key, value, enabled }) => {
+        if (key && enabled) {
+          urlObject.searchParams.append(key, value);
+        }
+      });
+
+      setUrl(urlObject.toString());
+    } catch {}
+  };
+
   const onEdit = useCallback(
     (index: number, key: string, value: string, enabled: boolean) => {
       const newParameters = [...parameters];
       newParameters[index] = { ...newParameters[index], key, value, enabled };
       setParameters(newParameters);
+      updateUrlFromParameters(newParameters);
     },
     [parameters],
   );
@@ -46,26 +62,50 @@ export function RequestParameters() {
       const newParameters = [...parameters];
       newParameters.splice(index, 1);
       setParameters(newParameters);
+      updateUrlFromParameters(newParameters);
     },
     [parameters],
   );
 
   const onAdd = useCallback(() => {
     setParameters((prev) => [...prev, { key: '', value: '', enabled: true }]);
+    updateUrlFromParameters(parameters);
   }, []);
 
   useEffect(() => {
     try {
       if (!url) return setParameters([]);
+
       const _url = new URL(url);
-      const params = Array.from(_url.searchParams.entries()).map(([k, v]) => ({
+      const newParams = Array.from(_url.searchParams.entries()).map(([k, v]) => ({
         key: k,
         value: v || '',
         enabled: true,
       }));
 
-      setParameters(params);
-    } catch {}
+      // Compare newParams with existing parameters
+      const updatedParams = parameters.map((existingParam) => {
+        const matchingNewParam = newParams.find((newParam) => newParam.key === existingParam.key);
+
+        if (matchingNewParam) {
+          return {
+            ...existingParam,
+            value: matchingNewParam.value,
+            enabled: existingParam.enabled,
+          };
+        }
+        return existingParam;
+      });
+      newParams.forEach((newParam) => {
+        if (!updatedParams.find((existingParam) => existingParam.key === newParam.key)) {
+          updatedParams.push(newParam);
+        }
+      });
+
+      setParameters(updatedParams);
+    } catch (err) {
+      console.error('Failed to parse URL or update parameters:', err);
+    }
   }, [url]);
 
   return (
