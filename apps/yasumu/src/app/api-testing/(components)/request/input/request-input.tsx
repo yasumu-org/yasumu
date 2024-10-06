@@ -17,7 +17,6 @@ import { canEvaluateResult } from '@/lib/scripts/script';
 import { useTest } from '@/stores/api-testing/test.store';
 import { useScriptTime } from '@/stores/api-testing/script-time.store';
 import { useEnvironment } from '@/stores/environment/environment.store';
-import { log } from 'console';
 
 export default function RequestInput() {
   const { selected } = useEnvironment();

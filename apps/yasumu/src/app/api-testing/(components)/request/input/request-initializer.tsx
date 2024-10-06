@@ -23,13 +23,15 @@ const ReqTabs = {
 
 export default function RequestInitializer() {
   const { current } = useRequestStore();
-  const { setId, setUrl, setMethod, setHeaders, setBody } = useRequestConfig();
+  const { setId, setUrl, setMethod, setHeaders, setBody, setScript: setPreRequestScript } = useRequestConfig();
   const {
     setBody: setResponseBody,
     setHeaders: setResponseHeaders,
     setResponseSize,
     setResponseStatus,
     setResponseTime,
+    setTest,
+    setScript: setPostResponseScript,
   } = useResponse();
 
   useEffect(() => {
@@ -47,6 +49,9 @@ export default function RequestInitializer() {
     );
     // @ts-expect-error
     setBody(current.getBody() ?? {});
+    setPreRequestScript(current.getPreRequestScript());
+    setPostResponseScript(current.getPostResponseScript());
+    setTest(current.getTestScript());
 
     const res = current.getResponse();
 

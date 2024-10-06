@@ -4,20 +4,36 @@ import { FileUI } from '@/components/fs/http/file';
 import { Folder, TreeViewElement } from '@/components/magicui/file-tree';
 import { YasumuRestEntity } from '@yasumu/core';
 import { Yasumu } from '@/lib/yasumu';
-import { useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
+import { useRequestConfig, useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { toast } from 'sonner';
 import { FsContextMenu } from './fs-context-menu';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useRequestHistory } from '@/stores/api-testing/request-history.store';
 import { useKeyboardShortcuts } from '../../hooks/use-keyboard-shortcuts';
+import { useResponse } from '@/stores/api-testing/response.store';
 
 function FileTreeItem(item: TreeViewElement) {
   const { setCurrent, current } = useRequestStore();
+  const { setScript: setRequestScript } = useRequestConfig();
+  const { setScript, setTest } = useResponse();
   const { cut, selectedPath, setSelectedPath, setCopied, setCut, copied } = useRequestFs();
   const { addHistory, removeHistoryByPath } = useRequestHistory();
 
   const selectedItem = useRef<TreeViewElement | null>(null);
+
+  useEffect(() => {
+    if (!current) {
+      setRequestScript('');
+      setScript('');
+      setTest('');
+      return;
+    }
+
+    setRequestScript(current.getPreRequestScript());
+    setScript(current.getPostResponseScript());
+    setTest(current.getTestScript());
+  }, [current]);
 
   const handleCopy = () => {
     if (!selectedItem.current) return;
