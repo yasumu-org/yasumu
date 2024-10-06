@@ -16,37 +16,6 @@ export interface YasumuEnvironment {
   deleteVariable(variable: YasumuEnvironmentVariable): void;
 }
 
-const defaultVars = [
-  {
-    id: crypto.randomUUID(),
-    name: 'Local',
-    description: 'Local environment',
-    variables: [
-      {
-        id: crypto.randomUUID(),
-        enabled: true,
-        name: 'API_URL',
-        type: YasumuEnvironmentVariableType.Variable,
-        value: 'https://jsonplaceholder.typicode.com/todos/1',
-      },
-    ],
-  },
-  {
-    id: crypto.randomUUID(),
-    name: 'Production',
-    description: 'Production environment',
-    variables: [
-      {
-        id: crypto.randomUUID(),
-        enabled: true,
-        name: 'API_URL',
-        type: YasumuEnvironmentVariableType.Variable,
-        value: 'https://jsonplaceholder.typicode.com/users/1',
-      },
-    ],
-  },
-];
-
 export const useEnvironment = create<YasumuEnvironment>((set) => ({
   environments: [],
   setEnvironments: (env) => set({ environments: env }),
