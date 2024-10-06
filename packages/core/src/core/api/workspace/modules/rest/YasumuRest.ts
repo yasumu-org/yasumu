@@ -1,7 +1,7 @@
 import { HttpMethods, isHttpMethod } from '@/core/common/constants.js';
 import { YasumuWorkspace } from '../../YasumuWorkspace.js';
 import { YasumuWorkspaceFiles } from '../../constants.js';
-import { YasumuRestEntity } from './YasumuRestEntity.js';
+import { YasumuRestEntity, type YasumuPartialRestEntity } from './YasumuRestEntity.js';
 import { YasumuRestImports } from './YasumuRestImports.js';
 import { YasumuScriptResultEvaluator } from './YasumuScriptResultEvaluator.js';
 
@@ -45,6 +45,82 @@ export class YasumuRest {
     if (!hasPath) {
       await this.workspace.yasumu.fs.mkdir(path);
     }
+  }
+
+  /**
+   * Get the last opened request
+   */
+  public async getLastOpenedRequest(): Promise<YasumuRestEntity | null> {
+    const path = this.workspace.metadata.lastOpenedRequest;
+
+    if (!path) return null;
+
+    return this.open(path);
+  }
+
+  /**
+   * Adds a request to the last opened request.
+   * @param request The request to add
+   */
+  public async setLastOpenedRequest(request: YasumuRestEntity | string | null) {
+    const target = request ? (typeof request === 'string' ? request : request.getPath()) : null;
+    this.workspace.metadata.setLastOpenedRequest(target);
+    return this.workspace.writeMetadata();
+  }
+
+  /**
+   * Adds a request to the last opened requests history list
+   * @param request The request to add
+   */
+  public async addToHistory(request: YasumuRestEntity) {
+    const history = this.workspace.metadata.lastOpenedRequests;
+    const index = history.findIndex((item) => item === request.getPath());
+
+    if (index !== -1) {
+      return;
+    }
+
+    history.unshift(request.getPath());
+
+    this.workspace.metadata.setLastOpenedRequests(history);
+
+    return this.workspace.writeMetadata();
+  }
+
+  /**
+   * Remove a request from the last opened requests history list
+   * @param request The request to remove
+   */
+  public async removeFromHistory(request: YasumuRestEntity | string) {
+    const history = this.workspace.metadata.lastOpenedRequests;
+    const index = history.findIndex((item) => item === (typeof request === 'string' ? request : request.getPath()));
+
+    if (index === -1) {
+      return;
+    }
+
+    history.splice(index, 1);
+
+    this.workspace.metadata.setLastOpenedRequests(history);
+
+    return this.workspace.writeMetadata();
+  }
+
+  /**
+   * Get the last opened requests
+   */
+  public async getLastOpenedRequests(): Promise<YasumuPartialRestEntity[]> {
+    const history = this.workspace.metadata.lastOpenedRequests;
+
+    return Promise.all(
+      history.map(async (path) => {
+        const data = await this.open(path, false);
+
+        if (!data) return null;
+
+        return { name: data.getName(), method: data.getMethod(), path: data.getPath() };
+      }),
+    ).then((res) => res.filter((r) => r !== null));
   }
 
   /**
@@ -169,8 +245,9 @@ export class YasumuRest {
     await this.ensureSelf();
 
     const hasRequest = await this.workspace.yasumu.fs.exists(path);
-
     if (!hasRequest) return;
+
+    await this.removeFromHistory(path).catch(() => {});
 
     await this.workspace.yasumu.fs.remove(path, {
       recursive: true,

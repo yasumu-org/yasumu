@@ -6,14 +6,27 @@ import { useCallback, useEffect, useState } from 'react';
 import { Yasumu } from '@/lib/yasumu';
 import { toast } from 'sonner';
 import { FullAreaContextMenu } from './full-area-context-menu';
+import { useRequestHistory } from '@/stores/api-testing/request-history.store';
+import { useRequestStore } from '@/stores/api-testing/request-config.store';
 
 export default function HistoryTree() {
+  const { current, setCurrent } = useRequestStore();
+  const { setHistory } = useRequestHistory();
   const [tree, setTree] = useState<TreeViewElement[]>([]);
+
+  useEffect(() => {
+    Yasumu.workspace?.rest.getLastOpenedRequest().then((data) => {
+      if (!current && data) setCurrent(data);
+    }, console.error);
+  }, []);
 
   const loadTree = useCallback((silent = false) => {
     Yasumu.workspace?.rest.getAsTree().then(
       (tree) => {
         setTree(tree);
+        Yasumu.workspace?.rest.getLastOpenedRequests().then((data) => {
+          setHistory(data);
+        }, console.error);
       },
       (e) => {
         if (silent) return;

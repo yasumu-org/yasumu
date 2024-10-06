@@ -1,3 +1,4 @@
+import { YasumuRestEntity } from '@yasumu/core';
 import { create } from 'zustand';
 
 export interface ICookie {
@@ -53,6 +54,8 @@ export interface IResponse {
   setUrl: (url: string) => void;
   setScript: (script: string) => void;
   setTest: (test: string) => void;
+  clearResponseData: () => void;
+  applyResponseData: (data: YasumuRestEntity) => void;
 }
 
 export const useResponse = create<IResponse>((set) => ({
@@ -60,9 +63,9 @@ export const useResponse = create<IResponse>((set) => ({
   body: '',
   headers: [],
   cookies: [],
-  responseTime: 56,
-  responseSize: 292,
-  responseStatus: 200,
+  responseTime: 0,
+  responseSize: 0,
+  responseStatus: 0,
   secure: false,
   localAddress: '',
   remoteAddress: '',
@@ -72,11 +75,28 @@ export const useResponse = create<IResponse>((set) => ({
   issuerCN: '',
   validUntil: '',
   abortController: null,
-  script: `console.log('Sent the request to', Yasumu.request.url, 'and got status', Yasumu.response.status)`,
-  test: `test("should have response status code", () => {
-  expect(typeof Yasumu.response.status).toBe('number')
-})
-`,
+  script: '',
+  test: '',
+  clearResponseData() {
+    set({
+      url: '',
+      body: '',
+      headers: [],
+      cookies: [],
+      responseTime: 0,
+      responseSize: 0,
+      responseStatus: 0,
+      secure: false,
+      localAddress: '',
+      remoteAddress: '',
+      tlsProtocol: '',
+      cipherName: '',
+      certificateCN: '',
+      issuerCN: '',
+      validUntil: '',
+      abortController: null,
+    });
+  },
   setBody: (body: string) => set({ body }),
   setHeaders: (headers: IHeader[]) => set({ headers }),
   setCookies: (cookies: ICookie[]) => set({ cookies }),
@@ -95,4 +115,22 @@ export const useResponse = create<IResponse>((set) => ({
   setUrl: (url: string) => set({ url }),
   setScript: (script: string) => set({ script }),
   setTest: (test: string) => set({ test }),
+  applyResponseData: (data: YasumuRestEntity) => {
+    set({
+      abortController: null,
+      body: data.getResponse()?.body,
+      cookies: [],
+      headers:
+        data.getResponse()?.headers.map((header) => ({
+          key: header.key,
+          value: header.value,
+        })) ?? [],
+      responseSize: data.getResponse()?.size ?? 0,
+      responseStatus: data.getResponse()?.status ?? 0,
+      responseTime: data.getResponse()?.time ?? 0,
+      test: data.getTestScript() ?? '',
+      script: data.getPostResponseScript() ?? '',
+      url: data.getUrl(),
+    });
+  },
 }));

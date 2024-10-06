@@ -27,6 +27,31 @@ export interface YasumuWorkspaceEnvironment {
 export class YasumuEnvironmentsManager {
   public constructor(public readonly workspace: YasumuWorkspace) {}
 
+  public getSelectedEnvironmentId(): string | null {
+    return this.workspace.metadata.selectedEnvironmentId;
+  }
+
+  public getSelectedEnvironment(): YasumuEnvironment | null {
+    const id = this.workspace.metadata.selectedEnvironmentId;
+
+    if (!id) {
+      return null;
+    }
+
+    const environment = this.environments.find((env) => env.id === id);
+
+    if (!environment) {
+      return null;
+    }
+
+    return new YasumuEnvironment(this, environment);
+  }
+
+  public selectEnvironment(id: string | null): Promise<void> {
+    this.workspace.metadata.setSelectedEnvironmentId(id);
+    return this.workspace.writeMetadata();
+  }
+
   public get environments(): YasumuWorkspaceEnvironment[] {
     return this.workspace.metadata.environments;
   }
