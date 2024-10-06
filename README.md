@@ -44,6 +44,7 @@ Release branch contains stable features and updates after testing on the `canary
 | 1.  | [`@yasumu/app`](./apps/yasumu)        | The desktop application of Yasumu                                        |
 | 2.  | [`@yasumu/core`](./packages/core)     | The core api used by Yasumu's applications across different environments |
 | 3.  | [`@yasumu/schema`](./packages/schema) | Yasumu's custom schema definition language                               |
+| 4.  | [`tanxium`](tanxium)                  | Yasumu's custom JavaScript runtime                                       |
 
 ## Contributing
 
@@ -64,7 +65,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you like this project, please consider supporting it by starring ⭐ the repository. Additionally, you can support the project by contributing to it or by making a donation.
 
-<a href="https://www.buymeacoffee.com/twlite"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a coffee" width="200" height="50"></a> <a href="https://www.patreon.com/twlite"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200" height="50"></a>
+<a href="https://www.patreon.com/twlite"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200" height="50"></a>
 
 ## Contact
 
