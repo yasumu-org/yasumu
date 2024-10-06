@@ -5,6 +5,7 @@ import VariableEditor from './variable-editor';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { YasumuEnvironmentVariableType } from '@yasumu/core';
+import { Yasumu } from '@/lib/yasumu';
 
 export default function EnvironmentEditor({ total }: { total: number }) {
   const { setSelected, selected: selectedEnv, focused } = useEnvironment();
@@ -24,6 +25,7 @@ export default function EnvironmentEditor({ total }: { total: number }) {
           onCheckedChange={(checked) => {
             if (checked === 'indeterminate') checked = false;
             setSelected(checked ? focused : null);
+            Yasumu.workspace?.environments.selectEnvironment(focused?.id ?? null).catch(console.error);
           }}
         />
         <Label>Use this environment in this workspace.</Label>

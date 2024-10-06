@@ -76,6 +76,10 @@ export class YasumuWorkspace {
         id: crypto.randomUUID(),
         name: this.getPath().split(this.yasumu.path.sep()).pop() ?? 'New Workspace',
         environments: [],
+        selectedEnvironmentId: null,
+        lastOpenedRequests: [],
+        restEntities: {},
+        lastOpenedRequest: null,
       };
 
       this.metadata = new YasumuWorkspaceMetadata(metadata);

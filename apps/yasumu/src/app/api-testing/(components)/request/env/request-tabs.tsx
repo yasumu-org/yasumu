@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { RequestEnvironment } from './request-environment';
 import { useRequestStore } from '@/stores/api-testing/request-config.store';
 import { useRequestHistory } from '@/stores/api-testing/request-history.store';
-import { HttpMethods, YasumuRestEntity } from '@yasumu/core';
+import { HttpMethods, YasumuPartialRestEntity, YasumuRestEntity } from '@yasumu/core';
+import { Yasumu } from '@/lib/yasumu';
 
 export function RequestTabs() {
   const ref = useHorizontalScroll();
@@ -42,7 +43,7 @@ export function RequestTabs() {
       </Button>
       <div ref={ref} className="flex flex-row items-center overflow-x-auto max-w-full w-fit zw-scrollbar">
         {history.map((tab) => {
-          return <RequestTab tab={tab} key={tab.getPath()} />;
+          return <RequestTab tab={tab} key={tab.path} />;
         })}
       </div>
       <div className="inline-flex ml-auto">
@@ -55,10 +56,10 @@ export function RequestTabs() {
   );
 }
 
-function RequestTab({ tab }: { tab: YasumuRestEntity }) {
+function RequestTab({ tab }: { tab: YasumuPartialRestEntity }) {
   const { current, setCurrent } = useRequestStore();
-  const isActive = tab.getPath() === current?.getPath();
-  const { removeHistoryByPath } = useRequestHistory();
+  const isActive = tab.path === current?.getPath();
+  const { removeHistoryByPath, history } = useRequestHistory();
 
   return (
     <button
@@ -68,20 +69,31 @@ function RequestTab({ tab }: { tab: YasumuRestEntity }) {
         'border-x border-muted/80',
         'group',
       )}
-      onClick={() => {
-        setCurrent(tab);
+      onClick={async () => {
+        const req = await Yasumu.workspace?.rest.open(tab.path, false);
+        if (req) {
+          setCurrent(req);
+          await Yasumu.workspace?.rest.setLastOpenedRequest(req).catch(console.error);
+        }
       }}
     >
       <span>
-        <span className={cn('font-semibold', HttpMethodColors[tab.getMethod() as HttpMethods])}>{tab.getMethod()}</span>{' '}
-        {tab.getName()}
+        <span className={cn('font-semibold', HttpMethodColors[tab.method])}>{tab.method}</span> {tab.name}
       </span>
       <X
         className={cn('h-3 w-3', !isActive && 'invisible group-hover:visible')}
-        onClick={(e) => {
+        onClick={async (e) => {
           e.stopPropagation();
-          removeHistoryByPath(tab.getPath());
-          setCurrent(null);
+          removeHistoryByPath(tab.path);
+
+          await Yasumu.workspace?.rest.removeFromHistory(tab.path).catch(console.error);
+
+          if (isActive) {
+            const nextItem = history.filter((item) => item.path !== tab.path)[0] ?? null;
+            const item = nextItem ? await Yasumu.workspace?.rest.open(nextItem?.path) : null;
+            setCurrent(item ?? null);
+            await Yasumu.workspace?.rest.setLastOpenedRequest(item ?? null).catch(console.error);
+          }
         }}
       />
     </button>

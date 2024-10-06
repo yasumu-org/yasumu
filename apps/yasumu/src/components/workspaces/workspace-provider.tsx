@@ -41,6 +41,20 @@ export function YasumuWorkspaceProvider({ children }: React.PropsWithChildren) {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
+
+    document.addEventListener(
+      'contextmenu',
+      (e) => {
+        e.preventDefault();
+      },
+      { signal: controller.signal },
+    );
+
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
     if (currentWorkspace && currentWorkspaceName) return setLoading(false);
 
     handleWorkspace();
@@ -48,5 +62,5 @@ export function YasumuWorkspaceProvider({ children }: React.PropsWithChildren) {
 
   if (loading) return <LoadingSpinner />;
 
-  return <>{children}</>;
+  return <div>{children}</div>;
 }

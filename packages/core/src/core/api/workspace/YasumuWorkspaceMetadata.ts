@@ -1,9 +1,21 @@
+import type { HttpMethods } from '@/core/common/constants.js';
 import type { YasumuWorkspaceEnvironment } from './environments/YasumuEnvironmentsManager.js';
+
+export interface YasumuRootRestEntityData {
+  name: string;
+  id: string;
+  method: HttpMethods;
+  path: string;
+}
 
 export interface YasumuRawWorkspaceMetadata {
   name: string;
   id: string;
+  selectedEnvironmentId: string | null;
   environments: YasumuWorkspaceEnvironment[];
+  lastOpenedRequests: string[];
+  lastOpenedRequest: string | null;
+  restEntities: Record<string, YasumuRootRestEntityData>;
 }
 
 export class YasumuWorkspaceMetadata {
@@ -17,6 +29,50 @@ export class YasumuWorkspaceMetadata {
    * @param raw The raw metadata
    */
   public constructor(private readonly raw: YasumuRawWorkspaceMetadata) {}
+
+  /**
+   * Get the last opened request
+   */
+  public get lastOpenedRequest() {
+    return this.raw.lastOpenedRequest ?? null;
+  }
+
+  /**
+   * Set the last opened request
+   */
+  public setLastOpenedRequest(id: string | null) {
+    this.raw.lastOpenedRequest = id;
+  }
+
+  /**
+   * Get last opened requests
+   */
+  public get lastOpenedRequests() {
+    const data = new Set(this.raw.lastOpenedRequests ?? []);
+    return Array.from(data);
+  }
+
+  /**
+   * Set last opened requests
+   */
+  public setLastOpenedRequests(requests: string[]) {
+    this.raw.lastOpenedRequests = Array.from(new Set(requests));
+  }
+
+  /**
+   * Get the selected environment ID
+   */
+  public get selectedEnvironmentId() {
+    return this.raw.selectedEnvironmentId ?? null;
+  }
+
+  /**
+   * Set the selected environment ID
+   */
+  public setSelectedEnvironmentId(id: string | null) {
+    this.raw.selectedEnvironmentId = id;
+    this.onChange?.();
+  }
 
   /**
    * Get the environments of the workspace

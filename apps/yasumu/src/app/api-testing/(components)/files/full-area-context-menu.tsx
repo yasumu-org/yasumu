@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { HttpMethods } from '@yasumu/core';
 
 export function FullAreaContextMenu() {
-  const { current, setCurrent } = useRequestStore();
+  const { setFocused } = useRequestStore();
   const [isGroup, setIsGroup] = useState(false);
   const { copied, cut, setCut } = useRequestFs();
   const handleCreate = async (name: string) => {
@@ -36,7 +36,7 @@ export function FullAreaContextMenu() {
       <ContextMenu>
         <ContextMenuTrigger
           onClick={() => {
-            setCurrent(null);
+            setFocused(null);
           }}
         >
           <div className="h-full"></div>

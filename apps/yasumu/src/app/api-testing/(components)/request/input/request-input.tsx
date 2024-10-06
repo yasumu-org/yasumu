@@ -21,34 +21,10 @@ import { useEnvironment } from '@/stores/environment/environment.store';
 export default function RequestInput() {
   const { selected } = useEnvironment();
   const { current } = useRequestStore();
-  const { setTest, setScript: setPostResponseScript } = useResponse();
   const { add } = useConsole();
   const { add: addTest } = useTest();
   const { setPostResponse, setPreRequest, setTestScript } = useScriptTime();
-  const {
-    method,
-    setMethod,
-    url,
-    setUrl,
-    body,
-    headers,
-    bodyMode,
-    id,
-    script: preRequestScript,
-    setScript: setPreRequestScript,
-  } = useRequestConfig();
-
-  useEffect(() => {
-    if (current) {
-      setPreRequestScript(current.getPreRequestScript());
-      setPostResponseScript(current.getPostResponseScript());
-      setTest(current.getTestScript());
-    } else {
-      setPreRequestScript('');
-      setPostResponseScript('');
-      setTest('');
-    }
-  }, [current]);
+  const { method, setMethod, url, setUrl, body, headers, bodyMode, id, script: preRequestScript } = useRequestConfig();
 
   const save = useDebounceCallback(() => {
     if (!current) return;

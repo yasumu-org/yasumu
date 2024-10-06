@@ -1,6 +1,12 @@
 import type { BodyType, HttpMethods } from '@/core/common/constants.js';
 import type { YasumuRest } from './YasumuRest.js';
 
+export interface YasumuPartialRestEntity {
+  name: string;
+  method: HttpMethods;
+  path: string;
+}
+
 export interface KeyValue<K, V> {
   key: K;
   value: V;
@@ -247,6 +253,17 @@ export class YasumuRestEntity {
 
       await this.rest.workspace.yasumu.fs.writeTextFile(this.data.path, data);
     }
+  }
+
+  /**
+   * Returns the partial data of this entity
+   */
+  public toPartial(): YasumuPartialRestEntity {
+    return {
+      name: this.data.name,
+      method: this.data.method,
+      path: this.data.path,
+    };
   }
 
   /**

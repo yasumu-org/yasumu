@@ -4,36 +4,19 @@ import { FileUI } from '@/components/fs/http/file';
 import { Folder, TreeViewElement } from '@/components/magicui/file-tree';
 import { YasumuRestEntity } from '@yasumu/core';
 import { Yasumu } from '@/lib/yasumu';
-import { useRequestConfig, useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
+import { useRequestFs, useRequestStore } from '@/stores/api-testing/request-config.store';
 import { toast } from 'sonner';
 import { FsContextMenu } from './fs-context-menu';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useRequestHistory } from '@/stores/api-testing/request-history.store';
 import { useKeyboardShortcuts } from '../../hooks/use-keyboard-shortcuts';
-import { useResponse } from '@/stores/api-testing/response.store';
 
 function FileTreeItem(item: TreeViewElement) {
-  const { setCurrent, current } = useRequestStore();
-  const { setScript: setRequestScript } = useRequestConfig();
-  const { setScript, setTest } = useResponse();
+  const { setCurrent, setFocused, focused } = useRequestStore();
   const { cut, selectedPath, setSelectedPath, setCopied, setCut, copied } = useRequestFs();
   const { addHistory, removeHistoryByPath } = useRequestHistory();
-
   const selectedItem = useRef<TreeViewElement | null>(null);
-
-  useEffect(() => {
-    if (!current) {
-      setRequestScript('');
-      setScript('');
-      setTest('');
-      return;
-    }
-
-    setRequestScript(current.getPreRequestScript());
-    setScript(current.getPostResponseScript());
-    setTest(current.getTestScript());
-  }, [current]);
 
   const handleCopy = () => {
     if (!selectedItem.current) return;
@@ -56,6 +39,7 @@ function FileTreeItem(item: TreeViewElement) {
       });
     }
   };
+
   const handleCut = () => {
     if (!selectedItem.current) return;
     setCut(selectedItem.current.id);
@@ -103,12 +87,12 @@ function FileTreeItem(item: TreeViewElement) {
           value={item.id}
           element={item.name}
           className={cn({
-            'text-orange-300': current?.getPath() === item.id || selectedPath === item.id,
+            'text-orange-300': focused?.getPath() === item.id || selectedPath === item.id,
             'text-blue-400': cut === item.id,
           })}
           onClick={() => {
             setSelectedPath(item.id);
-            setCurrent(null);
+            setFocused(null);
             selectedItem.current = item;
           }}
         >
@@ -141,7 +125,7 @@ function FileTreeItem(item: TreeViewElement) {
         value={item.id}
         method={YasumuRestEntity.getMethod(item.name)}
         className={cn({
-          'text-orange-300': current?.getPath() === item.id || selectedPath === item.id,
+          'text-orange-300': focused?.getPath() === item.id || selectedPath === item.id,
           'text-blue-300': item.id === cut,
         })}
         handleSelect={async () => {
@@ -157,8 +141,11 @@ function FileTreeItem(item: TreeViewElement) {
             const file = await Yasumu.workspace.rest.open(item.id);
             if (!file) return;
 
-            addHistory(file);
+            Yasumu.workspace.rest.setLastOpenedRequest(file).catch(console.error);
+            Yasumu.workspace.rest.addToHistory(file).catch(console.error);
+            addHistory(file.toPartial());
             setCurrent(file);
+            setFocused(file);
             selectedItem.current = item;
           } catch (e) {
             toast.error('Failed to read the request data', {

@@ -8,24 +8,24 @@ export function useEnvironmentLoader() {
   const { setEnvironments, setFocused, setSelected, focused, selected } = useEnvironment();
 
   const reloadEnv = useCallback(async () => {
-    console.log('Reloading environments');
     const workspace = Yasumu.workspace;
-    console.log('workspace', workspace?.metadata.id);
     if (!workspace) return;
 
     const envs = await Promise.all(workspace.environments.getEnvironments().map((e) => e.getData()));
 
-    console.log('envs', envs);
-
     setEnvironments(envs);
 
     if (selected) {
-      console.log('selected', selected.id);
       setSelected(envs.find((e) => e.id === selected.id) ?? null);
+    } else {
+      const lastSelected = workspace.environments.getSelectedEnvironment();
+      if (lastSelected) {
+        const data = await lastSelected.getData().catch(() => null);
+        if (data) setSelected(data);
+      }
     }
 
     if (focused) {
-      console.log('focused', focused.id);
       setFocused(envs.find((e) => e.id === focused.id) ?? null);
     }
   }, [selected, focused]);
