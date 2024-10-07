@@ -1,4 +1,4 @@
-import { YasumuSchemaUtils } from "./utils";
+import { YasumuSchemaUtils } from "./utils.js";
 
 const YasumuSchemaTokenType = [
     "ILLEGAL",

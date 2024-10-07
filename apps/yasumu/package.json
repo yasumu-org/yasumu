@@ -51,6 +51,7 @@
     "@uiw/react-codemirror": "^4.22.1",
     "@yasumu/core": "workspace:^",
     "@yasumu/schema": "workspace:^",
+    "@yasumu/tsconfig": "workspace:^",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "codehike": "^1.0.0",

@@ -1,24 +1,24 @@
-import {
+import type {
     YasumuSchemaParasableScript,
     YasumuSchemaParsable,
     YasumuSchemaParsableKeyPairs,
     YasumuSchemaParsableList,
     YasumuSchemaParsableObject,
     YasumuSchemaParsableRecord,
-} from "./parsable";
-import {
+} from "./parsable.js";
+import type {
     YasumuSchemaParasableScriptToType,
     YasumuSchemaParsableKeyPairsToType,
     YasumuSchemaParsableListToType,
     YasumuSchemaParsableObjectToType,
     YasumuSchemaParsableRecordToType,
-} from "./parsable-typings";
-import { YasumuSchemaScanner } from "./scanner";
+} from "./parsable-typings.js";
+import { YasumuSchemaScanner } from "./scanner.js";
 import {
-    YasumuSchemaToken,
-    YasumuSchemaTokenType,
+    type YasumuSchemaToken,
+    type YasumuSchemaTokenType,
     YasumuSchemaTokenTypes,
-} from "./tokens";
+} from "./tokens.js";
 
 export class YasumuSchemaParser {
     currentToken = DUMMY_TOKEN;

@@ -1,4 +1,4 @@
-import {
+import type {
     YasumuSchemaParasableScript,
     YasumuSchemaParsable,
     YasumuSchemaParsableBlock,
@@ -9,8 +9,8 @@ import {
     YasumuSchemaParsableObject,
     YasumuSchemaParsableObjectBlock,
     YasumuSchemaParsableRecord,
-} from "./parsable";
-import {
+} from "./parsable.js";
+import type {
     YasumuSchemaParasableScriptToType,
     YasumuSchemaParsableBlockToType,
     YasumuSchemaParsableCodeBlockToType,
@@ -21,7 +21,7 @@ import {
     YasumuSchemaParsableObjectToType,
     YasumuSchemaParsableRecordToType,
     YasumuSchemaParsableToType,
-} from "./parsable-typings";
+} from "./parsable-typings.js";
 
 /**
  * This is highly experimental. Use with caution.
@@ -39,6 +39,7 @@ export class YasumuSchemaSerializer {
         } catch (err) {
             throw new Error(
                 `Error occured when serializing "${this.keyPath.join(".")}"`,
+                // @ts-ignore
                 { cause: err },
             );
         }
