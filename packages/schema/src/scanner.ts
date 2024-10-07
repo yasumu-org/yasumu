@@ -1,11 +1,11 @@
-import { YasumuSchemaLexer } from "./lexer";
+import { YasumuSchemaLexer } from "./lexer.js";
 import {
-    YasumuSchemaToken,
-    YasumuSchemaTokenSpanPosition,
-    YasumuSchemaTokenType,
+    type YasumuSchemaToken,
+    type YasumuSchemaTokenSpanPosition,
+    type YasumuSchemaTokenType,
     YasumuSchemaTokenTypes,
-} from "./tokens";
-import { YasumuSchemaUtils } from "./utils";
+} from "./tokens.js";
+import { YasumuSchemaUtils } from "./utils.js";
 
 export class YasumuSchemaScanner {
     constructor(public readonly lexer: YasumuSchemaLexer) {}

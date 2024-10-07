@@ -1,5 +1,5 @@
-import { YasumuSchemaTokenSpanPosition } from "./tokens";
-import { YasumuSchemaUtils } from "./utils";
+import type { YasumuSchemaTokenSpanPosition } from "./tokens.js";
+import { YasumuSchemaUtils } from "./utils.js";
 
 export class YasumuSchemaLexer {
     length: number;

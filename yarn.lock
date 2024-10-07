@@ -2801,6 +2801,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^4.2.1"
     "@yasumu/core": "workspace:^"
     "@yasumu/schema": "workspace:^"
+    "@yasumu/tsconfig": "workspace:^"
     autoprefixer: "npm:^10.4.19"
     class-variance-authority: "npm:^0.7.0"
     clsx: "npm:^2.1.1"
@@ -2839,6 +2840,7 @@ __metadata:
   resolution: "@yasumu/core@workspace:packages/core"
   dependencies:
     "@yasumu/schema": "workspace:^"
+    "@yasumu/tsconfig": "workspace:^"
     rimraf: "npm:^6.0.1"
     tsc-alias: "npm:^1.8.10"
     tsx: "npm:^4.17.0"
@@ -2853,6 +2855,14 @@ __metadata:
     "@types/node": "npm:^22.4.1"
     rimraf: "npm:^6.0.1"
     typescript: "npm:^5.5.4"
+  languageName: unknown
+  linkType: soft
+
+"@yasumu/tsconfig@workspace:^, @yasumu/tsconfig@workspace:packages/tsconfig":
+  version: 0.0.0-use.local
+  resolution: "@yasumu/tsconfig@workspace:packages/tsconfig"
+  dependencies:
+    typescript: "npm:^5.6.2"
   languageName: unknown
   linkType: soft
 
@@ -8637,7 +8647,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5":
+"typescript@npm:^5, typescript@npm:^5.6.2":
   version: 5.6.2
   resolution: "typescript@npm:5.6.2"
   bin:
@@ -8657,7 +8667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.6.2#optional!builtin<compat/typescript>":
   version: 5.6.2
   resolution: "typescript@patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"
   bin:

@@ -1,4 +1,4 @@
-import {
+import type {
     YasumuSchemaParasableScript,
     YasumuSchemaParsable,
     YasumuSchemaParsableBlock,
@@ -9,7 +9,7 @@ import {
     YasumuSchemaParsableObject,
     YasumuSchemaParsableObjectBlock,
     YasumuSchemaParsableRecord,
-} from "./parsable";
+} from "./parsable.js";
 
 export type YasumuSchemaParasableScriptToType<
     T extends YasumuSchemaParasableScript,

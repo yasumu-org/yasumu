@@ -1,9 +1,9 @@
-import { YasumuSchemaLexer } from "./lexer";
-import { YasumuSchemaParasableScript } from "./parsable";
-import { YasumuSchemaParasableScriptToType } from "./parsable-typings";
-import { YasumuSchemaParser } from "./parser";
-import { YasumuSchemaScanner } from "./scanner";
-import { YasumuSchemaSerializer } from "./serializer";
+import { YasumuSchemaLexer } from "./lexer.js";
+import type { YasumuSchemaParasableScript } from "./parsable.js";
+import type { YasumuSchemaParasableScriptToType } from "./parsable-typings.js";
+import { YasumuSchemaParser } from "./parser.js";
+import { YasumuSchemaScanner } from "./scanner.js";
+import { YasumuSchemaSerializer } from "./serializer.js";
 
 export const YasumuSchemaScript = {
     Metadata: {
