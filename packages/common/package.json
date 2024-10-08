@@ -1,7 +1,7 @@
 {
-  "name": "@yasumu/core",
+  "name": "@yasumu/common",
   "version": "0.0.10",
-  "description": "Yasumu core api",
+  "description": "Yasumu common api",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -39,9 +39,5 @@
     "tsc-alias": "^1.8.10",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4"
-  },
-  "dependencies": {
-    "@yasumu/common": "workspace:^",
-    "@yasumu/schema": "workspace:^"
   }
 }

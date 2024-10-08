@@ -1,6 +1,6 @@
 import { Commands, type StartSmtpServerCommand } from '@/core/common/commands.js';
 import type { YasumuWorkspace } from '../../YasumuWorkspace.js';
-import type { Callback } from '@/externals/index.js';
+import type { Callback } from '@yasumu/common';
 import { YasumuEvents } from '@/core/common/events.js';
 import type { YasumuMail } from './types.js';
 

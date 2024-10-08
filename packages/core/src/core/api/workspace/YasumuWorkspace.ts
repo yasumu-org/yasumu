@@ -4,7 +4,7 @@ import { YasumuRest } from './modules/rest/YasumuRest.js';
 import { YasumuSmtp } from './modules/smtp/YasumuSmtp.js';
 import { YasumuStoreKeys, YasumuWorkspaceFiles } from './constants.js';
 import { Commands, type CommandsInvocationMap } from '@/core/common/commands.js';
-import type { StoreCommon } from '@/externals/index.js';
+import type { StoreCommon } from '@yasumu/common';
 import { YasumuEnvironmentsManager } from './environments/YasumuEnvironmentsManager.js';
 
 export interface YasumuWorkspaceInit {

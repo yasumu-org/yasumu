@@ -10,11 +10,11 @@ import type {
   ProcessCommon,
   ApplicationCommon,
   EventsCommon,
-} from '../../externals/types/index.js';
-import type { FetchCommon } from '../../externals/types/fetch.js';
+} from '@yasumu/common';
+import type { FetchCommon } from '@yasumu/common';
 import type { ScriptsCommon } from '@/scripts/types.js';
 import { YasumuScripts } from '@/scripts/YasumuScripts.js';
-import type { ShellCommon } from '@/externals/types/shell.js';
+import type { ShellCommon } from '@yasumu/common';
 import { YasumuSchemaUtilities } from './utils/schema.js';
 
 export class YasumuCore {
