@@ -1,4 +1,4 @@
-import type { InvokeArgs } from '@/externals/index.js';
+import type { InvokeArgs } from '@yasumu/common';
 import type { YasumuMail } from '../api/workspace/modules/smtp/types.js';
 
 export const Commands = {

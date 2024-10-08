@@ -118,7 +118,7 @@ export class YasumuRest {
 
         if (!data) return null;
 
-        return { name: data.getName(), method: data.getMethod(), path: data.getPath() };
+        return data.toPartial();
       }),
     ).then((res) => res.filter((r) => r !== null));
   }

@@ -17,7 +17,6 @@ export interface YasumuRestEntityResponseCache {
   size: number;
   time: number;
   headers: Array<KeyValue<string, string>>;
-  body: string;
 }
 
 export interface YasumuRestEntityData {
@@ -34,9 +33,6 @@ export interface YasumuRestEntityData {
 }
 
 export class YasumuRestEntity {
-  #changed = false;
-  #methodChanged = false;
-
   /**
    * Create a new YasumuRestEntity
    * @param rest The parent YasumuRest instance
@@ -68,10 +64,6 @@ export class YasumuRestEntity {
    * @param name The new name
    */
   public setName(name: string) {
-    if (this.data.name !== name) {
-      this.#changed = true;
-    }
-
     this.data.name = name;
   }
 
@@ -87,13 +79,6 @@ export class YasumuRestEntity {
    * @param method The new HTTP method
    */
   public setMethod(method: HttpMethods) {
-    if (this.data.method !== method) {
-      this.#changed = true;
-      this.#methodChanged = true;
-    } else {
-      this.#methodChanged = false;
-    }
-
     this.data.method = method;
   }
 
@@ -110,10 +95,6 @@ export class YasumuRestEntity {
    * @param url The new URL
    */
   public setUrl(url: string) {
-    if (this.data.url !== url) {
-      this.#changed = true;
-    }
-
     this.data.url = url;
   }
 
@@ -129,10 +110,6 @@ export class YasumuRestEntity {
    * @param headers The new headers
    */
   public setHeaders(headers: Array<KeyValue<string, string>>) {
-    if (this.data.headers !== headers) {
-      this.#changed = true;
-    }
-
     this.data.headers = headers;
   }
 
@@ -148,10 +125,6 @@ export class YasumuRestEntity {
    * @param body The new body
    */
   public setBody(body: BodyType | null) {
-    if (this.data.body !== body) {
-      this.#changed = true;
-    }
-
     this.data.body = body;
   }
 
@@ -174,10 +147,6 @@ export class YasumuRestEntity {
    * @param response The new response
    */
   public setResponse(response: YasumuRestEntityResponseCache | null) {
-    if (this.data.response !== response) {
-      this.#changed = true;
-    }
-
     this.data.response = response;
   }
 
@@ -186,8 +155,7 @@ export class YasumuRestEntity {
    * @param script The new pre-request script
    */
   public setPreRequestScript(script: string) {
-    this.data.preRequestScript = script;
-    this.#changed = true;
+    this.data.preRequestScript = script?.trim();
   }
 
   /**
@@ -195,8 +163,7 @@ export class YasumuRestEntity {
    * @param script The new post-response script
    */
   public setPostResponseScript(script: string) {
-    this.data.postResponseScript = script;
-    this.#changed = true;
+    this.data.postResponseScript = script?.trim();
   }
 
   /**
@@ -204,55 +171,36 @@ export class YasumuRestEntity {
    * @param script The new test script
    */
   public setTestScript(script: string) {
-    this.data.testScript = script;
-    this.#changed = true;
+    this.data.testScript = script?.trim();
   }
 
   /**
    * Returns the pre-request script
    */
   public getPreRequestScript() {
-    return this.data.preRequestScript ?? '';
+    return this.data.preRequestScript?.trim() ?? '';
   }
 
   /**
    * Returns the post-response script
    */
   public getPostResponseScript() {
-    return this.data.postResponseScript ?? '';
+    return this.data.postResponseScript?.trim() ?? '';
   }
 
   /**
    * Returns the test script
    */
   public getTestScript() {
-    return this.data.testScript ?? '';
+    return this.data.testScript?.trim() ?? '';
   }
 
   /**
    * Save this entity to the workspace
    */
   public async save() {
-    if (this.#methodChanged) {
-      const name = YasumuRestEntity.getName(this.data.name);
-
-      const newName = await this.rest.workspace.yasumu.path.join(
-        await this.rest.workspace.yasumu.path.dirname(this.getPath()),
-        `${name}.${this.data.method}`,
-      );
-
-      await this.rest.workspace.yasumu.fs.remove(this.data.path);
-
-      this.data.path = newName;
-
-      const data = JSON.stringify(this.data);
-
-      await this.rest.workspace.yasumu.fs.writeTextFile(newName, data);
-    } else {
-      const data = JSON.stringify(this.data);
-
-      await this.rest.workspace.yasumu.fs.writeTextFile(this.data.path, data);
-    }
+    const data = JSON.stringify(this.data);
+    return this.rest.workspace.yasumu.fs.writeTextFile(this.getPath(), data);
   }
 
   /**
@@ -280,5 +228,12 @@ export class YasumuRestEntity {
    */
   public static getMethod(name: string) {
     return name.split('.').pop() as HttpMethods;
+  }
+
+  /**
+   * JSON representation of the entity
+   */
+  public toJSON() {
+    return this.data;
   }
 }

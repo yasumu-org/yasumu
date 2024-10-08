@@ -2835,10 +2835,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@yasumu/common@workspace:^, @yasumu/common@workspace:packages/common":
+  version: 0.0.0-use.local
+  resolution: "@yasumu/common@workspace:packages/common"
+  dependencies:
+    "@yasumu/tsconfig": "workspace:^"
+    rimraf: "npm:^6.0.1"
+    tsc-alias: "npm:^1.8.10"
+    tsx: "npm:^4.17.0"
+    typescript: "npm:^5.5.4"
+  languageName: unknown
+  linkType: soft
+
 "@yasumu/core@workspace:^, @yasumu/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@yasumu/core@workspace:packages/core"
   dependencies:
+    "@yasumu/common": "workspace:^"
     "@yasumu/schema": "workspace:^"
     "@yasumu/tsconfig": "workspace:^"
     rimraf: "npm:^6.0.1"
