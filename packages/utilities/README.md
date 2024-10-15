@@ -1,25 +1,30 @@
-# `@yasumu/core`
+# `@yasumu/utilities`
 
-Yasumu core api
+Yasumu utilities api
 
 ## Installation
 
 ```bash
-npm install @yasumu/core
+npm install @yasumu/utilities
 ```
 
 ## Usage
 
 ```typescript
-import { createYasumu } from '@yasumu/core';
+import { parseCurl } from '@yasumu/utilities';
 
-const Yasumu = createYasumu({
-  createStore(path) {
-    return resolveStoreSomehow();
-  },
-  fs: resolveFsSomehow(),
-  path: resolvePathSomehow(),
-  commands: resolveCommandsSomehow(),
-  ...
-});
+const curl = `curl "https://api.example.com/v1/users/123" -X GET`;
+const result = parseCurl(curl);
+
+console.log(result);
+```
+
+Returns
+
+```js
+{
+  url: 'https://api.example.com/v1/users/123',
+  method: 'GET',
+  headers: []
+}
 ```
