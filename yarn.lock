@@ -2854,6 +2854,7 @@ __metadata:
     "@yasumu/common": "workspace:^"
     "@yasumu/schema": "workspace:^"
     "@yasumu/tsconfig": "workspace:^"
+    "@yasumu/utilities": "workspace:^"
     rimraf: "npm:^6.0.1"
     tsc-alias: "npm:^1.8.10"
     tsx: "npm:^4.17.0"
@@ -2876,6 +2877,20 @@ __metadata:
   resolution: "@yasumu/tsconfig@workspace:packages/tsconfig"
   dependencies:
     typescript: "npm:^5.6.2"
+  languageName: unknown
+  linkType: soft
+
+"@yasumu/utilities@workspace:^, @yasumu/utilities@workspace:packages/utilities":
+  version: 0.0.0-use.local
+  resolution: "@yasumu/utilities@workspace:packages/utilities"
+  dependencies:
+    "@yasumu/common": "workspace:^"
+    "@yasumu/schema": "workspace:^"
+    "@yasumu/tsconfig": "workspace:^"
+    rimraf: "npm:^6.0.1"
+    tsc-alias: "npm:^1.8.10"
+    tsx: "npm:^4.17.0"
+    typescript: "npm:^5.5.4"
   languageName: unknown
   linkType: soft
 

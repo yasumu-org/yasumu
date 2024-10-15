@@ -1,7 +1,7 @@
 {
-  "name": "@yasumu/core",
-  "version": "0.0.10",
-  "description": "Yasumu core api",
+  "name": "@yasumu/utilities",
+  "version": "0.1.0",
+  "description": "Yasumu utilities api",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@yasumu/common": "workspace:^",
-    "@yasumu/schema": "workspace:^",
-    "@yasumu/utilities": "workspace:^"
+    "@yasumu/schema": "workspace:^"
   }
 }
