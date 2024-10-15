@@ -1,4 +1,4 @@
-import { parseCurl } from '@/utils/curlParser.js';
+import { parseCurl } from '@yasumu/utilities';
 import type { YasumuRest } from './YasumuRest.js';
 import type { YasumuRestEntity } from './YasumuRestEntity.js';
 import type { HttpMethods } from '@/core/common/constants.js';
