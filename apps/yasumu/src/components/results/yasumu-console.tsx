@@ -6,10 +6,13 @@ import { Button } from '../ui/button';
 import { Trash2 } from 'lucide-react';
 import { LogStream as ConsoleStream } from '@yasumu/core';
 import { useEffect, useRef } from 'react';
+import Ansi from 'ansi-to-react';
 import { Badge } from '../ui/badge';
 
 export function YasumuConsole() {
   const { logs, clear } = useConsole();
+
+  console.log({ logs });
 
   return (
     <div className="relative min-h-44 overflow-auto max-h-[18rem]">
@@ -37,18 +40,17 @@ function LogStream({ log, scroll = false, scope }: { log: ConsoleStream; scroll?
   }, [scroll]);
 
   return (
-    <div className="flex gap-2 font-mono font-normal text-xs py-1">
-      <LogScope scope={scope} />
+    <div className="flex items-start gap-2 font-mono font-normal text-xs py-1">
+      {/* <LogScope scope={scope} /> */}
       <pre
         ref={ref}
         className={cn('whitespace-pre-wrap break-all', {
           'text-red-500': log.type === 'error',
           'text-yellow-500': log.type === 'warn',
-          'text-blue-500': log.type === 'info',
           'text-gray-500 dark:text-gray-200': log.type === 'log',
         })}
       >
-        {log.args.join(' ')}
+        <Ansi linkify={true}>{log.args.join(' ')}</Ansi>
       </pre>
     </div>
   );

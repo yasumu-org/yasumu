@@ -52,6 +52,7 @@
     "@yasumu/core": "workspace:^",
     "@yasumu/schema": "workspace:^",
     "@yasumu/tsconfig": "workspace:^",
+    "ansi-to-react": "^6.1.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "codehike": "^1.0.0",

@@ -4,16 +4,8 @@ import * as events from '@tauri-apps/api/event';
 import * as path from '@tauri-apps/api/path';
 import * as fs from '@tauri-apps/plugin-fs';
 import * as dialog from '@tauri-apps/plugin-dialog';
-import {
-  createYasumu,
-  FileSystemCommon,
-  StoreCommon,
-  PathCommon,
-  EventsCommon,
-  ScriptsCommon,
-  DialogCommon,
-  Commands,
-} from '@yasumu/core';
+import { createYasumu, ScriptsCommon, Commands } from '@yasumu/core';
+import { FileSystemCommon, StoreCommon, PathCommon, EventsCommon, DialogCommon } from '@yasumu/common';
 import * as app from '@tauri-apps/api/app';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 import * as shell from '@tauri-apps/plugin-shell';
@@ -38,10 +30,9 @@ export const CreateYasumuNative = () => {
     scripts: {
       async evaluate<T>(script: string, contextData: string, config: Record<string, unknown>): Promise<T> {
         try {
-          const prescript = `Yasumu.setContextData(${contextData});`;
           const result = await Yasumu.commands.invoke<string>(Commands.EvaluateJavaScript, {
             code: script,
-            prepare: prescript,
+            prepare: `JSON.parse(${contextData})`,
             id: Yasumu.workspace?.metadata.id ?? config.id ?? 'anonymous',
             typescript: typeof config.typescript === 'boolean' ? config.typescript : true,
             test: !!config.test,
@@ -49,6 +40,8 @@ export const CreateYasumuNative = () => {
 
           try {
             const res = JSON.parse(result);
+
+            console.log(res);
 
             return res as unknown as T;
           } catch {

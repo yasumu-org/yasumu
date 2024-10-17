@@ -137,6 +137,7 @@ export default function RequestInput() {
       );
 
       const contextData: YasumuContextData = {
+        console: [],
         response: {} as YasumuResponseContextData,
         request: {
           id,
