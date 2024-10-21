@@ -6,7 +6,8 @@ import { BaseJavaScriptRuntime, type YasumuRuntimeData } from './BaseJavaScriptR
 const WEB_WORKER_BOOTSTRAP = `async function executeModule(data) {
   const { module, code } = data;
   
-  await eval(code);
+  const script = new Function(code);
+  await script();
 }
 ;(async () => {
 const Yasumu = {
@@ -49,6 +50,8 @@ globalThis.addEventListener('message', async (event) => {
 });
 })();`;
 
+
+
 export class WebWorkerRuntime extends BaseJavaScriptRuntime {
   private worker: Worker | null = null;
 
@@ -60,19 +63,36 @@ export class WebWorkerRuntime extends BaseJavaScriptRuntime {
       }
 
       this.worker.onmessage = (event) => {
-        resolve(event.data);
+        try {
+          const response = JSON.parse(event.data)
+          if(response.error){
+            reject(new Error(response.error.message));
+          }else{
+            resolve(response)
+          }
+        } catch (error) {
+          reject(new Error('Failed to parse worker response.'));
+        }
       };
 
       this.worker.onerror = (event) => {
-        reject(event.error);
+        reject(event.error || new Error(`Worker Error: ${event.message}`));
       };
 
-      this.worker.postMessage(data);
+      this.worker.postMessage(JSON.stringify(data));
     });
   }
 
   public initialize(data: YasumuRuntimeData): Promise<void> {
-    this.worker = new Worker(WEB_WORKER_BOOTSTRAP, { type: 'module', name: 'YasumuJavaScriptRuntime' });
+    
+    const workerBlob = new Blob([WEB_WORKER_BOOTSTRAP],{ type: 'application/javascript' })
+    const workerURL =  URL.createObjectURL(workerBlob)
+
+    if(this.worker){
+      this.worker.terminate();
+      this.worker = null
+    }
+    this.worker = new Worker(workerURL, { type: 'module', name: 'YasumuJavaScriptRuntime' });
     return Promise.resolve();
   }
 
