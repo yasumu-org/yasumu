@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use ::tanxium::tanxium::TanxiumExtensionEntry;
-use tanxium::tanxium;
+use tanxium::deno_runtime::{self, deno_core};
+use tanxium::tanxium::{Tanxium, TanxiumExtensionEntry, TanxiumOptions};
 // use tauri::Manager;
 
 use super::workspace::WorkspaceState;
@@ -12,7 +12,6 @@ pub async fn evaluate_javascript(
     code: &str,
     prepare: &str,
     // id: &str,
-    test: Option<bool>,
     workspace_state: tauri::State<'_, WorkspaceState>,
     // smtp_server_state: tauri::State<'_, super::smtp::ServerState>,
 ) -> Result<String, String> {
@@ -42,17 +41,14 @@ pub async fn evaluate_javascript(
             )
         })?;
 
-        let options = tanxium::TanxiumOptions {
+        let options = TanxiumOptions {
             main_module: module_specifier.clone(),
             cwd: current_workspace_dir.clone(),
             extensions: vec![],
-            test: test.unwrap_or(false),
-            stderr: None,
-            stdin: None,
-            stdout: None,
+            mode: deno_runtime::WorkerExecutionMode::Run,
         };
 
-        let mut tanxium = tanxium::Tanxium::new(options).map_err(|e| e.to_string())?;
+        let mut tanxium = Tanxium::new(options).map_err(|e| e.to_string())?;
 
         let js_apis = vec![TanxiumExtensionEntry {
             code: include_str!("./runtime/01_console.js"),
@@ -88,5 +84,5 @@ pub async fn evaluate_javascript(
         output
     };
 
-    smol::block_on(fut)
+    tauri::async_runtime::block_on(fut)
 }
