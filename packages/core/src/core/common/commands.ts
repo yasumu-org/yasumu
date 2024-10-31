@@ -22,6 +22,7 @@ export const Commands = {
   GetReadEmailsCount: 'get_read_emails_count',
   GetAllEmailsCount: 'get_all_emails_count',
   DeleteEmail: 'delete_email',
+  PopulateEmails: 'populate_emails',
   // Scripting
   EvaluateJavaScript: 'evaluate_javascript',
 } as const;
@@ -66,6 +67,7 @@ export interface CommandsInvocationMap {
   [Commands.GetReadEmailsCount]: CommandInvocation<{}, number>;
   [Commands.GetAllEmailsCount]: CommandInvocation<{}, number>;
   [Commands.DeleteEmail]: CommandInvocation<{ id: string }, void>;
+  [Commands.PopulateEmails]: CommandInvocation<{ emails: YasumuMail[] }, void>;
   // Scripting
   [Commands.EvaluateJavaScript]: CommandInvocation<{ code: string }, any>;
 }

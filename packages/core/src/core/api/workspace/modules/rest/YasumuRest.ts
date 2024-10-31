@@ -114,7 +114,7 @@ export class YasumuRest {
 
     return Promise.all(
       history.map(async (path) => {
-        const data = await this.open(path, false);
+        const data = await this.open(path);
 
         if (!data) return null;
 
@@ -127,44 +127,15 @@ export class YasumuRest {
    * Open a request from the workspace
    * @param path The path to the request
    */
-  public async open(path: string): Promise<YasumuRestEntity>;
-  public async open(path: string, create: true): Promise<YasumuRestEntity>;
-  public async open(path: string, create: false): Promise<YasumuRestEntity | null>;
-  public async open(path: string, create: boolean): Promise<YasumuRestEntity | null>;
-  public async open(path: string, create = true): Promise<YasumuRestEntity | null> {
+  public async open(path: string): Promise<YasumuRestEntity | null> {
     await this.ensureSelf();
 
     const hasRequest = await this.workspace.yasumu.fs.exists(path);
-
     if (!hasRequest) return null;
 
     const data = await this.workspace.yasumu.fs.readTextFile(path);
 
-    try {
-      return new YasumuRestEntity(this, JSON.parse(data));
-    } catch {
-      if (!create) return null;
-      const id = await this.workspace.yasumu.path.basename(path);
-      const name = (await YasumuRestEntity.getName(id)) ?? 'New request';
-      const method = YasumuRestEntity.getMethod(id) ?? HttpMethods.GET;
-
-      const entity = new YasumuRestEntity(this, {
-        name,
-        method,
-        url: '',
-        headers: [],
-        body: null,
-        path,
-        response: null,
-        postResponseScript: '',
-        preRequestScript: '',
-        testScript: '',
-      });
-
-      await entity.save();
-
-      return entity;
-    }
+    return new YasumuRestEntity(this, JSON.parse(data));
   }
 
   /**
@@ -192,7 +163,7 @@ export class YasumuRest {
       target = await this.workspace.yasumu.path.join(target, currentName);
     }
 
-    const entity = await this.open(current, false);
+    const entity = await this.open(current);
 
     if (entity) {
       entity.setPath(target);
@@ -227,7 +198,7 @@ export class YasumuRest {
       target = await this.workspace.yasumu.path.join(target, currentName);
     }
 
-    const entity = await this.open(current, false);
+    const entity = await this.open(current);
 
     if (entity) {
       entity.setPath(target);
@@ -269,22 +240,33 @@ export class YasumuRest {
 
     if (!hasRequest) return;
 
-    const ext = dir ? '' : await this.workspace.yasumu.path.extname(path).catch(() => '');
-    const dirName = dir
-      ? (await this.workspace.yasumu.path.dirname(path)).replace(await this.workspace.yasumu.path.basename(path), '')
-      : await this.workspace.yasumu.path.dirname(path);
+    // const ext = dir ? '' : await this.workspace.yasumu.path.extname(path).catch(() => '');
+    // const dirName = dir
+    //   ? (await this.workspace.yasumu.path.dirname(path)).replace(await this.workspace.yasumu.path.basename(path), '')
+    //   : await this.workspace.yasumu.path.dirname(path);
 
-    const extension = ext ? `.${ext}` : '';
-    const newPath = await this.workspace.yasumu.path.join(dirName, `${newName}${extension}`);
+    // const extension = ext ? `.${ext}` : '';
+    // const newPath = await this.workspace.yasumu.path.join(dirName, `${newName}${extension}`);
 
-    const entity = await this.open(path, false);
+    // const entity = await this.open(path);
 
-    if (entity) {
-      entity.setPath(newPath);
-      await entity.save();
+    // if (entity) {
+    //   entity.setPath(newPath);
+    //   await entity.save();
+    // }
+
+    // await this.workspace.yasumu.fs.rename(path, newPath);
+
+    if (dir) {
+      await this.workspace.yasumu.fs.rename(path, await this.workspace.yasumu.path.join(path, '..', newName));
+      return;
     }
 
-    await this.workspace.yasumu.fs.rename(path, newPath);
+    const entity = await this.open(path);
+
+    if (entity) {
+      entity.setName(newName);
+    }
   }
 
   /**
@@ -308,9 +290,11 @@ export class YasumuRest {
       return;
     }
 
-    const path = await this.workspace.yasumu.path.join(basePath, `${name}.${method}`);
+    const id = crypto.randomUUID();
+    const path = await this.workspace.yasumu.path.join(basePath, `${id}.ysl`);
 
     const entity = new YasumuRestEntity(this, {
+      id,
       name,
       method,
       url: '',
@@ -325,7 +309,24 @@ export class YasumuRest {
 
     await entity.save();
 
+    this.workspace.metadata.appendRestEntity(entity.toJSON());
+    await this.workspace.writeMetadata();
+
     return entity;
+  }
+
+  /**
+   * Saves a snapshot of the rest metadata
+   */
+  public async saveMetadataSnapshot() {
+    const entities = await this.getRequestsRaw();
+
+    const data = await Promise.all(
+      entities.map(async (entity) => {
+        const data = await this.workspace.yasumu.fs.readTextFile(entity.path);
+        return JSON.parse(data);
+      }),
+    );
   }
 
   /**
@@ -356,6 +357,22 @@ export class YasumuRest {
   }
 
   /**
+   * Get all raw requests in the workspace
+   * @returns array of requests
+   */
+  public async getRequestsRaw(): Promise<YasumuRestRequest[]> {
+    const path = this.getPath();
+    const hasRequests = await this.workspace.yasumu.fs.exists(path);
+
+    if (!hasRequests) {
+      await this.workspace.yasumu.fs.mkdir(path);
+      return [];
+    }
+
+    return this.#scanRaw(path);
+  }
+
+  /**
    * Get all requests in the workspace
    * @returns array of requests
    */
@@ -369,6 +386,11 @@ export class YasumuRest {
     }
 
     return this.#scan(path);
+  }
+
+  async #scanRaw(path: string): Promise<YasumuRestRequestRawEntry[]> {
+    const entries = await this.workspace.yasumu.fs.readDir(path);
+    const data: YasumuRestRequestRawEntry[] = [];
   }
 
   async #scan(path: string): Promise<YasumuRestRequest[]> {

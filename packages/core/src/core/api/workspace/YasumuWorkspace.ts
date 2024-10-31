@@ -80,6 +80,7 @@ export class YasumuWorkspace {
         lastOpenedRequests: [],
         restEntities: {},
         lastOpenedRequest: null,
+        smtp: this.smtp.toJSON(),
       };
 
       this.metadata = new YasumuWorkspaceMetadata(metadata);

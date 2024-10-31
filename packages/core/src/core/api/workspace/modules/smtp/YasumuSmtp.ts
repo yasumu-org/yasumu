@@ -2,7 +2,7 @@ import { Commands, type StartSmtpServerCommand } from '@/core/common/commands.js
 import type { YasumuWorkspace } from '../../YasumuWorkspace.js';
 import type { Callback } from '@yasumu/common';
 import { YasumuEvents } from '@/core/common/events.js';
-import type { YasumuMail } from './types.js';
+import type { YasumuMail, YasumuSmtpMetadata } from './types.js';
 
 export const YasumuEmailType = {
   All: 'all',
@@ -12,12 +12,31 @@ export const YasumuEmailType = {
 
 export type YasumuEmailType = (typeof YasumuEmailType)[keyof typeof YasumuEmailType];
 
+const DEFAULT_SMTP_CONFIG: StartSmtpServerCommand = {
+  port: 5656,
+};
+
 export class YasumuSmtp {
+  /**
+   * The configuration for the smtp server
+   */
+  public config: StartSmtpServerCommand = DEFAULT_SMTP_CONFIG;
+
   /**
    * Creates Yasumu smtp server controller
    * @param workspace The parent Yasumu workspace instance
    */
   public constructor(public readonly workspace: YasumuWorkspace) {}
+
+  /**
+   * Update the smtp server configuration
+   * @param options The new options
+   */
+  private _updateConfig(options: Partial<StartSmtpServerCommand>) {
+    this.config = Object.assign({}, this.config, options);
+    this.workspace.metadata.setSmtpMetadata(this.toJSON());
+    this.workspace.writeMetadata().catch(Object);
+  }
 
   /**
    * Register a handler for new emails
@@ -51,6 +70,14 @@ export class YasumuSmtp {
    */
   public async delete(id: string) {
     return this.workspace.send(Commands.DeleteEmail, { id });
+  }
+
+  /**
+   * Populate emails data
+   * @param emails The emails data
+   */
+  public async populate(emails: YasumuMail[]) {
+    return this.workspace.send(Commands.PopulateEmails, { emails });
   }
 
   /**
@@ -111,6 +138,7 @@ export class YasumuSmtp {
    * @param options The options for the smtp server
    */
   public async start(options: StartSmtpServerCommand) {
+    this._updateConfig(options);
     await this.workspace.send(Commands.StartSmtpServer, options);
   }
 
@@ -127,5 +155,15 @@ export class YasumuSmtp {
    */
   public async isRunning() {
     return this.workspace.send(Commands.IsSmtpServerRunning, {});
+  }
+
+  /**
+   * JSON representation of the smtp server data
+   */
+  public toJSON(): YasumuSmtpMetadata {
+    return {
+      port: this.config.port,
+      emails: [],
+    };
   }
 }
