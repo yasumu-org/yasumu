@@ -1,3 +1,4 @@
+import { COMMAND_BINDINGS } from '@/common/binding.js';
 import type { Callback, CommandCommon, InvokeArgs, InvokeOptions, PluginListenerCommon } from '@yasumu/common';
 
 export class CommandsListener implements PluginListenerCommon {
@@ -20,6 +21,12 @@ export class CommandsMock implements CommandCommon {
   }
 
   public async invoke<T = unknown>(command: string, args?: InvokeArgs, options?: InvokeOptions): Promise<T> {
-    return {} as T;
+    const handler = COMMAND_BINDINGS.get(command);
+
+    if (!handler) {
+      throw new Error(`Command ${command} not found`);
+    }
+
+    return handler.invoke(args);
   }
 }
