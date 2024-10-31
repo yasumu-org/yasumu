@@ -32,7 +32,7 @@ export interface FileResponse {
   width?: number;
 }
 
-type OpenDialogReturn<T extends OpenDialogOptions> = T['directory'] extends true
+export type OpenDialogReturn<T extends OpenDialogOptions> = T['directory'] extends true
   ? T['multiple'] extends true
     ? string[] | null
     : string | null
