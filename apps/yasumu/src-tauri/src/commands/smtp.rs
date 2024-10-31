@@ -4,7 +4,6 @@ use serde::Serialize;
 use std::collections::VecDeque;
 use std::io::Error;
 use std::sync::{Arc, RwLock};
-use tauri::async_runtime::{spawn, JoinHandle};
 use tauri::{Emitter, State};
 use uuid::Uuid;
 
@@ -136,7 +135,7 @@ impl Handler for SmtpHandler {
 }
 
 pub struct ServerState {
-    handle: RwLock<Option<JoinHandle<()>>>,
+    handle: RwLock<Option<tauri::async_runtime::JoinHandle<()>>>,
     handler: RwLock<SmtpHandler>,
 }
 
@@ -176,7 +175,7 @@ pub async fn start_smtp_server(
     handler.app_handle = Some(app_handle.clone());
     handler.port = Some(port);
 
-    let handle = spawn(async move {
+    let handle = tauri::async_runtime::spawn(async move {
         let mut server = Server::new(handler);
         server.with_addr(addr).expect("Failed to set address");
         server.serve().expect("Failed to start server");

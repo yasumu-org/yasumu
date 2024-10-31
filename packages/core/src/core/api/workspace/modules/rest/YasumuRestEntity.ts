@@ -2,6 +2,7 @@ import type { BodyType, HttpMethods } from '@/core/common/constants.js';
 import type { YasumuRest } from './YasumuRest.js';
 
 export interface YasumuPartialRestEntity {
+  id: string;
   name: string;
   method: HttpMethods;
   path: string;
@@ -20,6 +21,7 @@ export interface YasumuRestEntityResponseCache {
 }
 
 export interface YasumuRestEntityData {
+  id: string;
   name: string;
   method: HttpMethods;
   url: string;
@@ -42,6 +44,13 @@ export class YasumuRestEntity {
     public readonly rest: YasumuRest,
     private data: YasumuRestEntityData,
   ) {}
+
+  /**
+   * The id of this entity
+   */
+  public get id() {
+    return this.data.id;
+  }
 
   /**
    * Set the path of this entity
@@ -196,11 +205,45 @@ export class YasumuRestEntity {
   }
 
   /**
+   * Delete this entity
+   */
+  public async delete() {
+    await this.rest.workspace.yasumu.fs.remove(this.getPath());
+
+    return this.rest.saveMetadataSnapshot();
+  }
+
+  /**
+   * Copy this entity
+   * @param path The new path
+   */
+  public copy(path: string) {
+    const clone = this.clone();
+    clone.setPath(path);
+
+    return clone.save();
+  }
+
+  /**
+   * Move this entity
+   * @param path The new path
+   */
+  public async move(path: string) {
+    this.setPath(path);
+
+    await this.save();
+    await this.delete();
+  }
+
+  /**
    * Save this entity to the workspace
    */
   public async save() {
     const data = JSON.stringify(this.data);
-    return this.rest.workspace.yasumu.fs.writeTextFile(this.getPath(), data);
+
+    await this.rest.workspace.yasumu.fs.writeTextFile(this.getPath(), data);
+
+    return this.rest.saveMetadataSnapshot();
   }
 
   /**
@@ -208,6 +251,7 @@ export class YasumuRestEntity {
    */
   public toPartial(): YasumuPartialRestEntity {
     return {
+      id: this.id,
       name: this.data.name,
       method: this.data.method,
       path: this.data.path,
@@ -215,19 +259,16 @@ export class YasumuRestEntity {
   }
 
   /**
-   * Get the name of the entity
-   * @param name The name of the entity
+   * Clone this entity
    */
-  public static getName(name: string) {
-    return name.split('.').shift() ?? null;
-  }
+  public clone() {
+    const data = JSON.stringify({
+      ...this.data,
+      path: this.rest.getPath(),
+      id: crypto.randomUUID(),
+    });
 
-  /**
-   * Get the HTTP method of the entity
-   * @param name The name of the entity
-   */
-  public static getMethod(name: string) {
-    return name.split('.').pop() as HttpMethods;
+    return new YasumuRestEntity(this.rest, JSON.parse(data));
   }
 
   /**

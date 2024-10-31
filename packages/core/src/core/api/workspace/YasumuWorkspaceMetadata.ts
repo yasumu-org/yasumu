@@ -1,12 +1,5 @@
-import type { HttpMethods } from '@/core/common/constants.js';
 import type { YasumuWorkspaceEnvironment } from './environments/YasumuEnvironmentsManager.js';
-
-export interface YasumuRootRestEntityData {
-  name: string;
-  id: string;
-  method: HttpMethods;
-  path: string;
-}
+import type { YasumuPartialRestEntity, YasumuRestEntityData, YasumuSmtpMetadata } from './modules/index.js';
 
 export interface YasumuRawWorkspaceMetadata {
   name: string;
@@ -15,7 +8,8 @@ export interface YasumuRawWorkspaceMetadata {
   environments: YasumuWorkspaceEnvironment[];
   lastOpenedRequests: string[];
   lastOpenedRequest: string | null;
-  restEntities: Record<string, YasumuRootRestEntityData>;
+  restEntities: Record<string, YasumuPartialRestEntity>;
+  smtp: YasumuSmtpMetadata;
 }
 
 export class YasumuWorkspaceMetadata {
@@ -29,6 +23,45 @@ export class YasumuWorkspaceMetadata {
    * @param raw The raw metadata
    */
   public constructor(private readonly raw: YasumuRawWorkspaceMetadata) {}
+
+  /**
+   * Update smtp metadata
+   * @param metadata The new metadata
+   */
+  public setSmtpMetadata(metadata: YasumuSmtpMetadata) {
+    this.raw.smtp = metadata;
+  }
+
+  /**
+   * Get the rest entities of the workspace
+   */
+  public getRestEntities() {
+    return this.raw.restEntities ?? [];
+  }
+
+  /**
+   * Set the rest entities of the workspace
+   * @param entities The new entities
+   */
+  public setRestEntities(entities: Record<string, YasumuPartialRestEntity>) {
+    this.raw.restEntities = entities;
+  }
+
+  /**
+   * Append a rest entity to the workspace
+   * @param entity The entity to append
+   */
+  public appendRestEntity(entity: YasumuPartialRestEntity) {
+    this.raw.restEntities[entity.id] = entity;
+  }
+
+  /**
+   * Delete a rest entity from the workspace
+   */
+  public deleteRestEntity(identifier: YasumuPartialRestEntity | string) {
+    const id = typeof identifier === 'string' ? identifier : identifier.id;
+    delete this.raw.restEntities[id];
+  }
 
   /**
    * Get the last opened request

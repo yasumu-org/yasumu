@@ -1,4 +1,5 @@
-/// <reference path="./_common.d.ts" />
+/// <reference path="./_common.d.ts"/>
+
 import { core } from 'ext:core/mod.js';
 import * as console from 'ext:deno_console/01_console.js';
 
