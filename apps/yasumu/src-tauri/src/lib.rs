@@ -1,4 +1,3 @@
-use javascript::runtime::TanxiumRuntimeManager;
 use tauri::Manager;
 
 mod javascript;
@@ -17,7 +16,6 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .manage(commands::smtp::ServerState::new())
         .manage(commands::workspace::WorkspaceState::new())
-        .manage(TanxiumRuntimeManager::new())
         .setup(|app| {
             let main_window = app.get_webview_window("main").unwrap();
 
