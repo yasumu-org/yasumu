@@ -1,6 +1,6 @@
-import { BaseJavaScriptRuntime, type YasumuRuntimeData } from './BaseJavaScriptRuntime.js';
+import { BaseScriptRuntime, type YasumuRuntimeData } from './BaseScriptRuntime.js';
 
-export class TanxiumRuntime extends BaseJavaScriptRuntime {
+export class TanxiumRuntime extends BaseScriptRuntime {
   public async executeModule(module: string, code: string): Promise<YasumuRuntimeData> {
     return {};
   }

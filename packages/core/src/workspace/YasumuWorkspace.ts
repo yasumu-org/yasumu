@@ -4,8 +4,7 @@ import type { Yasumu } from '@/Yasumu.js';
 import { createWorkspaceMetadata, YasumuWorkspaceMetadata } from './YasumuWorkspaceMetadata.js';
 import { WorkspaceNotLoadedError } from '@/common/index.js';
 import { YasumuGraphql, YasumuRest, YasumuSmtp, YasumuSocketIO, YasumuWebSocket } from './modules/index.js';
-import { TanxiumRuntime } from './runtime/TanxiumRuntime.js';
-import type { BaseJavaScriptRuntime } from './runtime/BaseJavaScriptRuntime.js';
+import type { BaseScriptRuntime } from './runtime/BaseScriptRuntime.js';
 
 export interface YasumuWorkspaceOptions {
   /**
@@ -56,9 +55,9 @@ export class YasumuWorkspace {
   public readonly socketio = new YasumuSocketIO(this);
 
   /**
-   * The javascript runtime for this workspace.
+   * The script runtime for this workspace.
    */
-  #runtime: BaseJavaScriptRuntime | null = null;
+  #runtime: BaseScriptRuntime | null = null;
 
   /**
    * Creates a new Yasumu workspace.
@@ -71,17 +70,17 @@ export class YasumuWorkspace {
   ) {}
 
   /**
-   * The JavaScript runtime environment for this workspace.
+   * The script runtime environment for this workspace.
    */
   public get runtime() {
     return this.#runtime;
   }
 
   /**
-   * Sets the JavaScript runtime environment for this workspace.
-   * @param runtime The JavaScript runtime to set.
+   * Sets the script runtime environment for this workspace.
+   * @param runtime The script runtime to set.
    */
-  public setJavaScriptRuntime(runtime: BaseJavaScriptRuntime) {
+  public setScriptRuntime(runtime: BaseScriptRuntime) {
     this.#runtime = runtime;
   }
 
