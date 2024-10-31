@@ -1,12 +1,34 @@
 import { RuntimeNotInitializedError } from '@/common/errors/RuntimeNotInitializedError.js';
 import { BaseJavaScriptRuntime, type YasumuRuntimeData } from './BaseJavaScriptRuntime.js';
 
+// Types
+
+type WorkerMessage = {
+  type: 'executeModule';
+  data : {
+    module: string;
+    code: string;
+  }
+}
+
+type WorkerResponse = {
+  console: { type: string; args: string[]; timestamp: number }[];
+  request: Record<string, any>;
+  response: Record<string, any>;
+};
+
+type WorkerError = {
+  error: { message: string; timestamp: number };
+};
+
+
 // This runtime is designed for debugging purposes only. The production runtime should not use web worker version.
 
 const WEB_WORKER_BOOTSTRAP = `async function executeModule(data) {
   const { module, code } = data;
   
-  await eval(code);
+  const script = new Function(code);
+  await script();
 }
 ;(async () => {
 const Yasumu = {
@@ -49,39 +71,58 @@ globalThis.addEventListener('message', async (event) => {
 });
 })();`;
 
+
+
 export class WebWorkerRuntime extends BaseJavaScriptRuntime {
   private worker: Worker | null = null;
 
-  #send<T>(data: any): Promise<T> {
+  private async send(data: WorkerMessage): Promise<WorkerResponse> {
     return new Promise((resolve, reject) => {
       if (!this.worker) {
         reject(new RuntimeNotInitializedError());
         return;
       }
 
-      this.worker.onmessage = (event) => {
-        resolve(event.data);
+      this.worker.onmessage = (event : MessageEvent<string>) => {
+        try {
+          const responseData : WorkerResponse | WorkerError = JSON.parse(event.data)
+          if('error' in responseData){
+            reject(new Error(responseData.error.message));
+          }else{
+            resolve(responseData)
+          }
+        } catch (error) {
+          reject(new Error('Failed to parse worker response.'));
+        }
       };
 
       this.worker.onerror = (event) => {
-        reject(event.error);
+        reject(event.error || new Error(`Worker Error: ${event.message}`));
       };
 
-      this.worker.postMessage(data);
+      this.worker.postMessage(JSON.stringify(data));
     });
   }
 
   public initialize(data: YasumuRuntimeData): Promise<void> {
-    this.worker = new Worker(WEB_WORKER_BOOTSTRAP, { type: 'module', name: 'YasumuJavaScriptRuntime' });
+    
+    const workerBlob = new Blob([WEB_WORKER_BOOTSTRAP],{ type: 'application/javascript' })
+    const workerURL =  URL.createObjectURL(workerBlob)
+
+    if(this.worker){
+      this.worker.terminate();
+      this.worker = null
+    }
+    this.worker = new Worker(workerURL, { type: 'module', name: 'YasumuJavaScriptRuntime' });
     return Promise.resolve();
   }
 
-  public async executeModule(module: string, code: string): Promise<YasumuRuntimeData> {
+  public async executeModule(module: string, code: string): Promise<WorkerResponse> {
     if (!this.worker) {
       throw new RuntimeNotInitializedError();
     }
 
-    const result = await this.#send<YasumuRuntimeData>({
+    const result = await this.send({
       type: 'executeModule',
       data: {
         module,
