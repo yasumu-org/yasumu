@@ -8,6 +8,7 @@ import type {
   WatchOptions,
   WriteFileOptions,
 } from '@yasumu/common';
+// TODO: use memfs instead of node fs
 import fs from 'node:fs';
 import type { IDirent } from 'memfs/lib/node/types/misc.js';
 
