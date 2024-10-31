@@ -15,7 +15,8 @@
     "prepublishOnly": "yarn build",
     "build": "rimraf dist && tsc && tsc-alias",
     "build:check": "tsc --noEmit",
-    "test": "tsx ./test/index.ts"
+    "test": "tsx ./test/index.ts",
+    "test2": "tsx ./test/command.ts"
   },
   "repository": {
     "type": "git",
