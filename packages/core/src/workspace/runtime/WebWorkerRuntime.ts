@@ -1,15 +1,15 @@
 import { RuntimeNotInitializedError } from '@/common/errors/RuntimeNotInitializedError.js';
-import { BaseJavaScriptRuntime, type YasumuRuntimeData } from './BaseJavaScriptRuntime.js';
+import { BaseScriptRuntime, type YasumuRuntimeData } from './BaseScriptRuntime.js';
 
 // Types
 
 type WorkerMessage = {
   type: 'executeModule';
-  data : {
+  data: {
     module: string;
     code: string;
-  }
-}
+  };
+};
 
 type WorkerResponse = {
   console: { type: string; args: string[]; timestamp: number }[];
@@ -20,7 +20,6 @@ type WorkerResponse = {
 type WorkerError = {
   error: { message: string; timestamp: number };
 };
-
 
 // This runtime is designed for debugging purposes only. The production runtime should not use web worker version.
 
@@ -71,9 +70,7 @@ globalThis.addEventListener('message', async (event) => {
 });
 })();`;
 
-
-
-export class WebWorkerRuntime extends BaseJavaScriptRuntime {
+export class WebWorkerRuntime extends BaseScriptRuntime {
   private worker: Worker | null = null;
 
   private async send(data: WorkerMessage): Promise<WorkerResponse> {
@@ -83,13 +80,13 @@ export class WebWorkerRuntime extends BaseJavaScriptRuntime {
         return;
       }
 
-      this.worker.onmessage = (event : MessageEvent<string>) => {
+      this.worker.onmessage = (event: MessageEvent<string>) => {
         try {
-          const responseData : WorkerResponse | WorkerError = JSON.parse(event.data)
-          if('error' in responseData){
+          const responseData: WorkerResponse | WorkerError = JSON.parse(event.data);
+          if ('error' in responseData) {
             reject(new Error(responseData.error.message));
-          }else{
-            resolve(responseData)
+          } else {
+            resolve(responseData);
           }
         } catch (error) {
           reject(new Error('Failed to parse worker response.'));
@@ -105,13 +102,12 @@ export class WebWorkerRuntime extends BaseJavaScriptRuntime {
   }
 
   public initialize(data: YasumuRuntimeData): Promise<void> {
-    
-    const workerBlob = new Blob([WEB_WORKER_BOOTSTRAP],{ type: 'application/javascript' })
-    const workerURL =  URL.createObjectURL(workerBlob)
+    const workerBlob = new Blob([WEB_WORKER_BOOTSTRAP], { type: 'application/javascript' });
+    const workerURL = URL.createObjectURL(workerBlob);
 
-    if(this.worker){
+    if (this.worker) {
       this.worker.terminate();
-      this.worker = null
+      this.worker = null;
     }
     this.worker = new Worker(workerURL, { type: 'module', name: 'YasumuJavaScriptRuntime' });
     return Promise.resolve();

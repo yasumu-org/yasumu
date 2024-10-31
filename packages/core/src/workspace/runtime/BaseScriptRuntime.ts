@@ -2,15 +2,15 @@ import type { YasumuWorkspace } from '../YasumuWorkspace.js';
 
 export interface YasumuRuntimeData {}
 
-export abstract class BaseJavaScriptRuntime {
+export abstract class BaseScriptRuntime {
   /**
-   * The JavaScript runtime of the workspace.
+   * The script runtime of the workspace.
    * @param workspace The workspace that this runtime is running in.
    */
   public constructor(public readonly workspace: YasumuWorkspace) {}
 
   /**
-   * Initializes the JavaScript runtime.
+   * Initializes the script runtime.
    */
   public abstract initialize(data: YasumuRuntimeData): Promise<void>;
 
