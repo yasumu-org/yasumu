@@ -1,0 +1,15 @@
+Metadata {
+    id: '12343'
+    name: 'Get users'
+    method: 'GET'
+}
+
+Request {
+    url: 'https://api.example.com/users'
+    headers: {
+        'Authorization
+}
+
+Response {
+    status: 200
+}

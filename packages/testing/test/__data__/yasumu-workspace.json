@@ -2,5 +2,13 @@
   "createdAt": "2024-10-31T06:48:07.225Z",
   "version": "0.0",
   "name": "Untitled Workspace",
-  "id": "938b9090-edd4-4def-bf53-eb392b85156f"
+  "id": "938b9090-edd4-4def-bf53-eb392b85156f",
+  "rest": {
+    "12343": {
+      "name": "Hello World",
+      "id": "12343",
+      "method": "GET",
+      "path": "/users"
+    }
+  }
 }

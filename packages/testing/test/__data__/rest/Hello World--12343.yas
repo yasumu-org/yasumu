@@ -1,0 +1,13 @@
+Metadata {
+    id: '12343'
+    name: 'Hello World'
+    method: 'GET'
+}
+
+Request {
+    url: 'https://api.example.com/hello'
+}
+
+Response {
+    status: 200
+}
