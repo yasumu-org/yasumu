@@ -6,9 +6,19 @@ const workspace = await Yasumu.openWorkspace({
   path: dir,
 });
 
-const metadata = workspace.getMetadata();
+const entity = await workspace.rest.create({
+  method: 'GET',
+  name: 'Get users',
+  url: 'https://example.com/users',
+});
 
-console.log(metadata.toJSON());
+const result = await entity.execute();
+
+await workspace.rest.get('id');
+
+// const metadata = workspace.getMetadata();
+
+// console.log(metadata.toJSON());
 
 /*
 {

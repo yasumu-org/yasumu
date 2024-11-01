@@ -4,6 +4,6 @@ new CommandInterceptor('ping').intercept(() => {
   return 'Pong!';
 });
 
-Yasumu.command.invoke('ping').then((result) => {
+await Yasumu.command.invoke('ping').then((result) => {
   console.log(result); // Pong!
 });
