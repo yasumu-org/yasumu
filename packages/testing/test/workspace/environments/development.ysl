@@ -1,0 +1,16 @@
+@Environment
+
+Metadata {
+    name: 'development'
+    id: 'b1b3b1b3-1b3b-1b3b-1b3b-1b3b1b3b1b3b'
+}
+
+# this block will contain variable name and value
+Variables {
+    API_URL: 'https://dev.example.com'
+}
+
+# this block will only contain the variable name and not the value
+Secrets {
+    API_KEY
+}

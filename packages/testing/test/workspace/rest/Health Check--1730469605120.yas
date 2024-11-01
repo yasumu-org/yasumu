@@ -1,0 +1,71 @@
+@Rest
+
+Metadata {
+    id: '6a32f965-c6c4-4ebc-b1d9-abf6d82c2260'
+    name: 'Health Check'
+    method: 'GET'
+}
+
+Request {
+    url: 'https://api.example.com/healthcheck'
+    headers: [
+        {
+            key: 'Content-Type'
+            value: 'application/json'
+        },
+        {
+            key: 'Accept'
+            value: 'application/json'
+        }
+    ]
+}
+
+Response {
+    status: 200
+    time: 134
+    headers: [
+        {
+            key: 'Content-Type'
+            value: 'application/json'
+        },
+        {
+            key: 'Server'
+            value: 'nginx'
+        },
+        {
+            key: 'Date'
+            value: 'Tue, 01 Jun 2021 12:00:00 GMT'
+        },
+        {
+            key: 'Content-Length'
+            value: '2'
+        },
+        {
+            key: 'Connection'
+            value: 'keep-alive'
+        }
+    ]
+    body: '{"ok":true}'
+}
+
+Script {
+    type: 'pre-request'
+    name: 'Health Check.ts'
+    content: 'console.log("This runs before the request")'
+}
+
+Script {
+    type: 'post-response'
+    name: 'Health Check.ts'
+    content: 'console.log("This runs after the response")'
+}
+
+Script {
+    type: 'test'
+    name: 'Health Check.spec.ts'
+    content: ====
+    test('Health Check', () => {
+        expect(response.status).toBe(200);
+    });
+    ====
+}

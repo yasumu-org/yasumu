@@ -1,6 +1,6 @@
 import { Yasumu } from '@yasumu/testing';
 
-const dir = import.meta.dirname + '/__data__';
+const dir = import.meta.dirname + '/workspace';
 
 const workspace = await Yasumu.openWorkspace({
   path: dir,
