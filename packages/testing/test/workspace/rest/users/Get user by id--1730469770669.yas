@@ -1,0 +1,72 @@
+@Rest
+
+Metadata {
+    id: '4764c30c-7b98-49ec-a536-15f3d54b575d'
+    name: 'Get user by id'
+    method: 'POST'
+}
+
+Request {
+    url: 'https://api.example.com/users'
+    headers: [
+        {
+            key: 'Content-Type'
+            value: 'application/json'
+        },
+        {
+            key: 'Accept'
+            value: 'application/json'
+        }
+    ]
+    body: '{"id":1}'
+}
+
+Response {
+    status: 200
+    time: 134
+    headers: [
+        {
+            key: 'Content-Type'
+            value: 'application/json'
+        },
+        {
+            key: 'Server'
+            value: 'nginx'
+        },
+        {
+            key: 'Date'
+            value: 'Tue, 01 Jun 2021 12:00:00 GMT'
+        },
+        {
+            key: 'Content-Length'
+            value: '2'
+        },
+        {
+            key: 'Connection'
+            value: 'keep-alive'
+        }
+    ]
+    body: '{"id":1,"name":"John Doe"}'
+}
+
+Script {
+    type: 'pre-request'
+    name: 'Get user by id.ts'
+    content: 'console.log("This runs before the request")'
+}
+
+Script {
+    type: 'post-response'
+    name: 'Get user by id.ts'
+    content: 'console.log("This runs after the response")'
+}
+
+Script {
+    type: 'test'
+    name: 'Get user by id.spec.ts'
+    content: ====
+    test('Get user by id', () => {
+        expect(response.body.id).toBe(1);
+    });
+    ====
+}

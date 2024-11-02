@@ -1,0 +1,48 @@
+{
+  "name": "@yasumu/testing",
+  "version": "0.0.1",
+  "description": "Yasumu testing api",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn build",
+    "build": "rimraf dist && tsc && tsc-alias",
+    "build:check": "tsc --noEmit",
+    "test": "tsx ./test/index.ts",
+    "test2": "tsx ./test/command.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yasumu-org/yasumu.git"
+  },
+  "keywords": [
+    "yasumu",
+    "testing",
+    "api"
+  ],
+  "author": "twlite <hello@twlite.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yasumu-org/yasumu/issues"
+  },
+  "homepage": "https://github.com/yasumu-org/yasumu#readme",
+  "packageManager": "yarn@4.4.0",
+  "devDependencies": {
+    "@yasumu/tsconfig": "workspace:^",
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.10",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@yasumu/core": "workspace:^",
+    "memfs": "^4.14.0"
+  }
+}

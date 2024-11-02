@@ -1,23 +1,26 @@
-import type { Metadata } from 'next';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import './globals.css';
-import { Inter as FontSans } from 'next/font/google';
-import { cn } from '@/lib/utils';
-import { SideNav } from '@/components/layout/side-nav';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { ThemeProvider } from '@/components/themes/theme-provider';
-import { Toaster } from '@/components/ui/toaster';
-import { Toaster as Sonner } from '@/components/ui/sonner';
-import { YasumuWorkspaceProvider } from '@/components/workspaces/workspace-provider';
-
-const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
+import type { Metadata } from 'next';
+import { JetBrains_Mono, Poppins } from 'next/font/google';
+import { AppSidebar } from '@/components/app-sidebar';
+import LayoutGroup from '@/components/layout-group';
 
 export const metadata: Metadata = {
   title: 'Yasumu',
-  description: 'Your api testing tool',
 };
+
+const poppins = Poppins({
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  weight: 'variable',
+  display: 'swap',
+  variable: '--font-jetbrains-mono',
+});
 
 export default function RootLayout({
   children,
@@ -25,21 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body className={cn('min-h-screen bg-background font-sans antialiased select-none', fontSans.variable)}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Sonner />
-          <Toaster />
-          <TooltipProvider>
-            <YasumuWorkspaceProvider>
-              <div className="flex flex-col bg-muted/40 w-full px-4">
-                <SideNav />
-                {children}
-              </div>
-            </YasumuWorkspaceProvider>
-          </TooltipProvider>
-        </ThemeProvider>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`dark ${poppins.variable} ${jetbrainsMono.variable} antialiased`}
+    >
+      <body>
+        <SidebarProvider>
+          <LayoutGroup>
+            <AppSidebar />
+            {children}
+          </LayoutGroup>
+        </SidebarProvider>
       </body>
     </html>
   );

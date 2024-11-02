@@ -1,0 +1,71 @@
+@Rest
+
+Metadata {
+    id: '4764c30c-7b98-49ec-a536-15f3d54b575b'
+    name: 'Get all users'
+    method: 'GET'
+}
+
+Request {
+    url: 'https://api.example.com/users'
+    headers: [
+        {
+            key: 'Content-Type'
+            value: 'application/json'
+        },
+        {
+            key: 'Accept'
+            value: 'application/json'
+        }
+    ]
+}
+
+Response {
+    status: 200
+    time: 134
+    headers: [
+        {
+            key: 'Content-Type'
+            value: 'application/json'
+        },
+        {
+            key: 'Server'
+            value: 'nginx'
+        },
+        {
+            key: 'Date'
+            value: 'Tue, 01 Jun 2021 12:00:00 GMT'
+        },
+        {
+            key: 'Content-Length'
+            value: '2'
+        },
+        {
+            key: 'Connection'
+            value: 'keep-alive'
+        }
+    ]
+    body: '[{"id":1,"name":"John Doe"},{"id":2,"name":"Jane Doe"}]'
+}
+
+Script {
+    type: 'pre-request'
+    name: 'Get all users.ts'
+    content: 'console.log("This runs before the request")'
+}
+
+Script {
+    type: 'post-response'
+    name: 'Get all users.ts'
+    content: 'console.log("This runs after the response")'
+}
+
+Script {
+    type: 'test'
+    name: 'Get all users.spec.ts'
+    content: ====
+    test('Get all users', () => {
+        expect(response.body.length).toBe(2);
+    });
+    ====
+}

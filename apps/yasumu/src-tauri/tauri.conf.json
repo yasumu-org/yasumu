@@ -1,11 +1,12 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
   "productName": "Yasumu",
   "version": "0.0.1",
-  "identifier": "com.yasumu.dev",
+  "identifier": "dev.yasumu.app",
   "build": {
     "beforeDevCommand": "yarn dev",
-    "beforeBuildCommand": "yarn build",
     "devUrl": "http://localhost:3000",
+    "beforeBuildCommand": "yarn build",
     "frontendDist": "../out"
   },
   "app": {

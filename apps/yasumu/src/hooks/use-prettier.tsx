@@ -88,7 +88,7 @@ export function usePrettier(source: string, contentType = '') {
     formatCode(source, parser.parser).then((formatted) => {
       setFormatted(formatted);
     });
-  }, [source]);
+  }, [source, parser.parser]);
 
   return { code: formatted, parser };
 }

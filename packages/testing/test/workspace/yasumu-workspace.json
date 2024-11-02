@@ -1,0 +1,37 @@
+{
+  "createdAt": "2024-10-31T06:48:07.225Z",
+  "version": "0.0",
+  "name": "Untitled Workspace",
+  "id": "938b9090-edd4-4def-bf53-eb392b85156f",
+  "activeEnvironment": "b1b3b1b3-1b3b-1b3b-1b3b-1b3b1b3b1b3b",
+  "environments": {
+    "b1b3b1b3-1b3b-1b3b-1b3b-1b3b1b3b1b3b": "development",
+    "a1b3b1b3-1b3b-1b3b-1b3b-1b3b1b3b1b3c": "production"
+  },
+  "rest": {
+    "6a32f965-c6c4-4ebc-b1d9-abf6d82c2260": {
+      "name": "Health Check",
+      "id": "6a32f965-c6c4-4ebc-b1d9-abf6d82c2260",
+      "method": "GET",
+      "path": "/"
+    },
+    "4764c30c-7b98-49ec-a536-15f3d54b575b": {
+      "name": "Get all users",
+      "id": "4764c30c-7b98-49ec-a536-15f3d54b575b",
+      "method": "GET",
+      "path": "/users"
+    },
+    "4764c30c-7b98-49ec-a536-15f3d54b575c": {
+      "name": "Get user by id",
+      "id": "4764c30c-7b98-49ec-a536-15f3d54b575c",
+      "method": "GET",
+      "path": "/users"
+    },
+    "4764c30c-7b98-49ec-a536-15f3d54b575d": {
+      "name": "Get user by id",
+      "id": "4764c30c-7b98-49ec-a536-15f3d54b575d",
+      "method": "POST",
+      "path": "/users"
+    }
+  }
+}
