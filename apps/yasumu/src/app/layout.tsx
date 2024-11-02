@@ -20,6 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
   weight: 'variable',
   display: 'swap',
   variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
 });
 
 export default function RootLayout({

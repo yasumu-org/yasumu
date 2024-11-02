@@ -1,4 +1,12 @@
-import type { BodyType, KeyValue } from '@yasumu/core';
+export interface KeyValue<K, V> {
+  key: K;
+  value: V;
+}
+
+export interface BodyType {
+  text?: string;
+  json?: string;
+}
 
 export interface CurlParsedResult {
   url: string;
