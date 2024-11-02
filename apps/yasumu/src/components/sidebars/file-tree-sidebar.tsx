@@ -19,55 +19,33 @@ import { cn } from '@/lib/utils';
 // This is sample data.
 const data = {
   tree: [
-    // ['app', ['api', ['hello', ['route.ts']], 'page.tsx', 'layout.tsx', ['blog', ['page.tsx']]]],
-    // ['components', ['ui', 'button.tsx', 'card.tsx'], 'header.tsx', 'footer.tsx'],
-    // ['lib', ['util.ts']],
-    // ['public', 'favicon.ico', 'vercel.svg'],
-    // '.eslintrc.json',
-    // '.gitignore',
-    // 'next.config.js',
-    // 'tailwind.config.js',
-    // 'package.json',
-    // 'README.md',
     {
-      name: 'Users',
+      name: 'Account',
       children: [
         {
-          name: 'List users',
+          name: 'Authenticate',
+          children: [
+            {
+              name: 'Login',
+              method: 'POST',
+            },
+            {
+              name: 'Logout',
+              method: 'POST',
+            },
+            {
+              name: 'Register',
+              method: 'POST',
+            },
+          ],
+        },
+        {
+          name: 'Current user',
           method: 'GET',
         },
         {
-          name: 'Create user',
-          method: 'POST',
-        },
-        {
-          name: 'Update user',
-          method: 'PUT',
-        },
-        {
-          name: 'Delete user',
-          method: 'DELETE',
-        },
-      ],
-    },
-    {
-      name: 'Todos',
-      children: [
-        {
-          name: 'List todos',
-          method: 'GET',
-        },
-        {
-          name: 'Create todo',
-          method: 'POST',
-        },
-        {
-          name: 'Update todo',
-          method: 'PUT',
-        },
-        {
-          name: 'Delete todo',
-          method: 'DELETE',
+          name: 'Update current user',
+          method: 'PATCH',
         },
       ],
     },
@@ -93,11 +71,59 @@ const data = {
       ],
     },
     {
+      name: 'Users',
+      children: [
+        {
+          name: 'List users',
+          method: 'GET',
+        },
+        {
+          name: 'Create user',
+          method: 'POST',
+        },
+        {
+          name: 'Update user',
+          method: 'PUT',
+        },
+        {
+          name: 'Delete user',
+          method: 'DELETE',
+        },
+      ],
+    },
+    {
+      name: 'Todo lists',
+      children: [
+        {
+          name: 'List todos',
+          method: 'GET',
+        },
+        {
+          name: 'Create todo',
+          method: 'POST',
+        },
+        {
+          name: 'Update todo',
+          method: 'PUT',
+        },
+        {
+          name: 'Delete todo',
+          method: 'DELETE',
+        },
+      ],
+    },
+    {
       name: 'Health check',
+      method: 'GET',
+    },
+    {
+      name: 'Ping',
       method: 'GET',
     },
   ],
 };
+
+const truncate = (str: string, length: number) => (str.length > length ? `${str.slice(0, length)}...` : str);
 
 export function FileTreeSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -137,7 +163,7 @@ function Tree({ item }: { item: (typeof data.tree)[number] }) {
         {/* <File /> */}
         {method && (
           <span
-            className={cn({
+            className={cn('font-mono font-bold', {
               'text-green-500': method === 'GET',
               'text-blue-500': method === 'POST',
               'text-yellow-500': method === 'PATCH',
@@ -145,10 +171,10 @@ function Tree({ item }: { item: (typeof data.tree)[number] }) {
               'text-red-500': method === 'DELETE',
             })}
           >
-            {method.slice(0, 3)}
+            {method.length > 5 ? method.slice(0, 3) : method}
           </span>
         )}
-        {name}
+        {truncate(name, 20)}
       </SidebarMenuButton>
     );
   }
@@ -164,7 +190,7 @@ function Tree({ item }: { item: (typeof data.tree)[number] }) {
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <SidebarMenuSub>
+          <SidebarMenuSub className="px-1 py-0">
             {children.map((subItem, index) => (
               <Tree key={index} item={subItem} />
             ))}

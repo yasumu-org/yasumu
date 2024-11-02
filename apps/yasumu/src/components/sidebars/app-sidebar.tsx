@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronsUpDown, DownloadCloud, Home, Keyboard, Logs, Mail, Network, Settings, User } from 'lucide-react';
+import { ChevronsUpDown, DownloadCloud, Home, Info, Keyboard, Logs, Mail, Network, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -23,9 +23,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import YasumuLogo from './assets/YasumuLogo';
+import YasumuLogo from '../assets/YasumuLogo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import SidebarThemeSelector from './theme-selector';
 
 const data = {
   user: {
@@ -66,11 +67,11 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
               <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[#272a37] text-sidebar-primary-foreground">
                   <YasumuLogo className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Acme Inc</span>
+                  <span className="truncate font-semibold">Yasumu</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
               </Link>
@@ -134,15 +135,11 @@ function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage alt={'Settings'} />
                 <AvatarFallback className="rounded-lg">
-                  <User className="size-4" />
+                  <Settings className="size-4" />
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -155,14 +152,14 @@ function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage alt={user.name} />
                   <AvatarFallback className="rounded-lg">
-                    <User className="size-4" />
+                    <YasumuLogo className="size-4 dark:invert-0 invert" />
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">Yasumu</span>
+                  <span className="truncate text-xs">v0.0.1</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -172,6 +169,7 @@ function NavUser({
                 <Settings />
                 Settings
               </DropdownMenuItem>
+              <SidebarThemeSelector />
               <DropdownMenuItem>
                 <Keyboard />
                 Keyboard Shortcuts
@@ -183,6 +181,10 @@ function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <Info />
+                About
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <DownloadCloud />
                 Check for Updates

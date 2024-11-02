@@ -2,8 +2,9 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import './globals.css';
 import type { Metadata } from 'next';
 import { JetBrains_Mono, Poppins } from 'next/font/google';
-import { AppSidebar } from '@/components/app-sidebar';
+import { AppSidebar } from '@/components/sidebars/app-sidebar';
 import LayoutGroup from '@/components/layout-group';
+import ThemeProvider from '@/providers/ThemeProvider';
 
 export const metadata: Metadata = {
   title: 'Yasumu',
@@ -29,18 +30,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`dark ${poppins.variable} ${jetbrainsMono.variable} antialiased`}
-    >
+    <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}>
       <body>
-        <SidebarProvider>
-          <LayoutGroup>
-            <AppSidebar />
-            {children}
-          </LayoutGroup>
-        </SidebarProvider>
+        <ThemeProvider>
+          <SidebarProvider>
+            <LayoutGroup>
+              <AppSidebar />
+              {children}
+            </LayoutGroup>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

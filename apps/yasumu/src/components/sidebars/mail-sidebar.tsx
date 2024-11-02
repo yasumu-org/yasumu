@@ -1,7 +1,7 @@
 'use client';
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarInput } from './ui/sidebar';
-import { Switch } from './ui/switch';
-import { Label } from './ui/label';
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarInput } from '../ui/sidebar';
+import { Switch } from '../ui/switch';
+import { Label } from '../ui/label';
 
 const data = [
   {
