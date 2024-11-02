@@ -94,3 +94,8 @@
 .zw-scrollbar {
   scrollbar-width: none;
 }
+
+/* debug */
+.debug {
+  @apply outline-red-500 outline;
+}

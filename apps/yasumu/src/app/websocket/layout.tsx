@@ -1,14 +1,9 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
 import LayoutGroup from '@/components/layout-group';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import {
-  DeleteMethodIcon,
-  GetMethodIcon,
-  PatchMethodIcon,
-  PostMethodIcon,
-  PutMethodIcon,
-} from '@/components/assets/HttpMethods';
-const restData = [
+import WebSocketLogo from '@/components/assets/WebSocketLogo';
+
+const websocketData = [
   {
     name: 'Account',
     children: [
@@ -17,25 +12,25 @@ const restData = [
         children: [
           {
             name: 'Login',
-            icon: PostMethodIcon,
+            icon: () => <WebSocketLogo />,
           },
           {
             name: 'Logout',
-            icon: PostMethodIcon,
+            icon: () => <WebSocketLogo />,
           },
           {
             name: 'Register',
-            icon: PostMethodIcon,
+            icon: () => <WebSocketLogo />,
           },
         ],
       },
       {
         name: 'Current user',
-        icon: GetMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Update current user',
-        icon: PatchMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
     ],
   },
@@ -44,19 +39,19 @@ const restData = [
     children: [
       {
         name: 'List comments',
-        icon: GetMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Create comment',
-        icon: PostMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Update comment',
-        icon: PutMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Delete comment',
-        icon: DeleteMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
     ],
   },
@@ -65,19 +60,19 @@ const restData = [
     children: [
       {
         name: 'List users',
-        icon: GetMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Create user',
-        icon: PostMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Update user',
-        icon: PutMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Delete user',
-        icon: DeleteMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
     ],
   },
@@ -86,42 +81,42 @@ const restData = [
     children: [
       {
         name: 'List todos',
-        icon: GetMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Create todo',
-        icon: PostMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Update todo',
-        icon: PutMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
       {
         name: 'Delete todo',
-        icon: DeleteMethodIcon,
+        icon: () => <WebSocketLogo />,
       },
     ],
   },
   {
     name: 'Health check',
-    icon: GetMethodIcon,
+    icon: () => <WebSocketLogo />,
   },
   {
     name: 'Ping',
-    icon: GetMethodIcon,
+    icon: () => <WebSocketLogo />,
   },
 ];
 
 export default function RestLayout({ children }: React.PropsWithChildren) {
   return (
     <LayoutGroup>
-      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-rest-layout">
+      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-ws-layout">
         <ResizablePanel defaultSize={17}>
-          <FileTreeSidebar fileTree={restData} className="font-sans w-full" collapsible="none" />
+          <FileTreeSidebar fileTree={websocketData} className="font-sans w-full" collapsible="none" />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
-          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-rest-layout-2">
+          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-ws-layout-2">
             <ResizablePanel>{children}</ResizablePanel>
             <ResizableHandle />
             <ResizablePanel>

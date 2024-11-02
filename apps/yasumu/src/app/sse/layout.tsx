@@ -1,14 +1,9 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
 import LayoutGroup from '@/components/layout-group';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import {
-  DeleteMethodIcon,
-  GetMethodIcon,
-  PatchMethodIcon,
-  PostMethodIcon,
-  PutMethodIcon,
-} from '@/components/assets/HttpMethods';
-const restData = [
+import { Zap } from 'lucide-react';
+
+const sseData = [
   {
     name: 'Account',
     children: [
@@ -17,25 +12,25 @@ const restData = [
         children: [
           {
             name: 'Login',
-            icon: PostMethodIcon,
+            icon: () => <Zap />,
           },
           {
             name: 'Logout',
-            icon: PostMethodIcon,
+            icon: () => <Zap />,
           },
           {
             name: 'Register',
-            icon: PostMethodIcon,
+            icon: () => <Zap />,
           },
         ],
       },
       {
         name: 'Current user',
-        icon: GetMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Update current user',
-        icon: PatchMethodIcon,
+        icon: () => <Zap />,
       },
     ],
   },
@@ -44,19 +39,19 @@ const restData = [
     children: [
       {
         name: 'List comments',
-        icon: GetMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Create comment',
-        icon: PostMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Update comment',
-        icon: PutMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Delete comment',
-        icon: DeleteMethodIcon,
+        icon: () => <Zap />,
       },
     ],
   },
@@ -65,19 +60,19 @@ const restData = [
     children: [
       {
         name: 'List users',
-        icon: GetMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Create user',
-        icon: PostMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Update user',
-        icon: PutMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Delete user',
-        icon: DeleteMethodIcon,
+        icon: () => <Zap />,
       },
     ],
   },
@@ -86,42 +81,42 @@ const restData = [
     children: [
       {
         name: 'List todos',
-        icon: GetMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Create todo',
-        icon: PostMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Update todo',
-        icon: PutMethodIcon,
+        icon: () => <Zap />,
       },
       {
         name: 'Delete todo',
-        icon: DeleteMethodIcon,
+        icon: () => <Zap />,
       },
     ],
   },
   {
     name: 'Health check',
-    icon: GetMethodIcon,
+    icon: () => <Zap />,
   },
   {
     name: 'Ping',
-    icon: GetMethodIcon,
+    icon: () => <Zap />,
   },
 ];
 
 export default function RestLayout({ children }: React.PropsWithChildren) {
   return (
     <LayoutGroup>
-      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-rest-layout">
+      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-sse-layout">
         <ResizablePanel defaultSize={17}>
-          <FileTreeSidebar fileTree={restData} className="font-sans w-full" collapsible="none" />
+          <FileTreeSidebar fileTree={sseData} className="font-sans w-full" collapsible="none" />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
-          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-rest-layout-2">
+          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-sse-layout-2">
             <ResizablePanel>{children}</ResizablePanel>
             <ResizableHandle />
             <ResizablePanel>

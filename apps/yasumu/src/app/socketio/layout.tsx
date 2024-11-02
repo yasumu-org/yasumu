@@ -1,14 +1,9 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
 import LayoutGroup from '@/components/layout-group';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import {
-  DeleteMethodIcon,
-  GetMethodIcon,
-  PatchMethodIcon,
-  PostMethodIcon,
-  PutMethodIcon,
-} from '@/components/assets/HttpMethods';
-const restData = [
+import { SiSocketdotio } from 'react-icons/si';
+
+const graphqlData = [
   {
     name: 'Account',
     children: [
@@ -17,25 +12,25 @@ const restData = [
         children: [
           {
             name: 'Login',
-            icon: PostMethodIcon,
+            icon: () => <SiSocketdotio />,
           },
           {
             name: 'Logout',
-            icon: PostMethodIcon,
+            icon: () => <SiSocketdotio />,
           },
           {
             name: 'Register',
-            icon: PostMethodIcon,
+            icon: () => <SiSocketdotio />,
           },
         ],
       },
       {
         name: 'Current user',
-        icon: GetMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Update current user',
-        icon: PatchMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
     ],
   },
@@ -44,19 +39,19 @@ const restData = [
     children: [
       {
         name: 'List comments',
-        icon: GetMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Create comment',
-        icon: PostMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Update comment',
-        icon: PutMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Delete comment',
-        icon: DeleteMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
     ],
   },
@@ -65,19 +60,19 @@ const restData = [
     children: [
       {
         name: 'List users',
-        icon: GetMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Create user',
-        icon: PostMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Update user',
-        icon: PutMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Delete user',
-        icon: DeleteMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
     ],
   },
@@ -86,42 +81,42 @@ const restData = [
     children: [
       {
         name: 'List todos',
-        icon: GetMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Create todo',
-        icon: PostMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Update todo',
-        icon: PutMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
       {
         name: 'Delete todo',
-        icon: DeleteMethodIcon,
+        icon: () => <SiSocketdotio />,
       },
     ],
   },
   {
     name: 'Health check',
-    icon: GetMethodIcon,
+    icon: () => <SiSocketdotio />,
   },
   {
     name: 'Ping',
-    icon: GetMethodIcon,
+    icon: () => <SiSocketdotio />,
   },
 ];
 
 export default function RestLayout({ children }: React.PropsWithChildren) {
   return (
     <LayoutGroup>
-      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-rest-layout">
+      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-socketio-layout">
         <ResizablePanel defaultSize={17}>
-          <FileTreeSidebar fileTree={restData} className="font-sans w-full" collapsible="none" />
+          <FileTreeSidebar fileTree={graphqlData} className="font-sans w-full" collapsible="none" />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
-          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-rest-layout-2">
+          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-socketio-layout-2">
             <ResizablePanel>{children}</ResizablePanel>
             <ResizableHandle />
             <ResizablePanel>

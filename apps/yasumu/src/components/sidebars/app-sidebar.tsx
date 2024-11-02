@@ -1,6 +1,7 @@
 'use client';
 
-import { ChevronsUpDown, DownloadCloud, Home, Info, Keyboard, Logs, Mail, Network, Settings } from 'lucide-react';
+import { ChevronsUpDown, Home, Keyboard, Lock, Logs, Mail, Settings, Zap } from 'lucide-react';
+import { IoSync } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -27,6 +28,10 @@ import YasumuLogo from '../assets/YasumuLogo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import SidebarThemeSelector from './theme-selector';
+import { TbWorldWww } from 'react-icons/tb';
+import { SiDiscord, SiGithub, SiGraphql, SiSocketdotio } from 'react-icons/si';
+import WebSocketLogo from '../assets/WebSocketLogo';
+import { YasumuSocials } from '@/lib/constants/socials';
 
 const data = {
   user: {
@@ -42,9 +47,33 @@ const data = {
       isActive: true,
     },
     {
-      title: 'Rest',
+      title: 'Rest API',
       url: '/rest',
-      icon: Network,
+      icon: TbWorldWww,
+      isActive: false,
+    },
+    {
+      title: 'GraphQL',
+      url: '/graphql',
+      icon: SiGraphql,
+      isActive: false,
+    },
+    {
+      title: 'Socket.IO',
+      url: '/socketio',
+      icon: SiSocketdotio,
+      isActive: false,
+    },
+    {
+      title: 'WebSocket',
+      url: '/websocket',
+      icon: WebSocketLogo,
+      isActive: false,
+    },
+    {
+      title: 'Server Sent Events',
+      url: '/sse',
+      icon: Zap,
       isActive: false,
     },
     {
@@ -52,6 +81,11 @@ const data = {
       url: '/emails',
       icon: Mail,
       isActive: false,
+    },
+    {
+      title: 'Environment',
+      url: '/environment',
+      icon: Lock,
     },
   ],
 };
@@ -66,15 +100,9 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-              <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[#272a37] text-sidebar-primary-foreground">
-                  <YasumuLogo className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Yasumu</span>
-                  <span className="truncate text-xs">Enterprise</span>
-                </div>
-              </Link>
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[#272a37] text-sidebar-primary-foreground">
+                <YasumuLogo className="size-4" />
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -181,12 +209,21 @@ function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <Link href={YasumuSocials.GitHub} target="_blank">
+                <DropdownMenuItem>
+                  <SiGithub />
+                  GitHub
+                </DropdownMenuItem>
+              </Link>
+              <Link href={YasumuSocials.Discord} target="_blank">
+                <DropdownMenuItem>
+                  <SiDiscord />
+                  Discord
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Info />
-                About
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <DownloadCloud />
+                <IoSync />
                 Check for Updates
               </DropdownMenuItem>
             </DropdownMenuGroup>

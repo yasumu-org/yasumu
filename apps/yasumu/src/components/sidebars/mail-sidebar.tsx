@@ -85,9 +85,9 @@ const data = [
   },
 ];
 
-export function MailSidebar() {
+export function MailSidebar(props: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="none" className="hidden flex-1 md:flex max-h-screen w-full">
+    <Sidebar collapsible="none" {...props}>
       <SidebarHeader className="gap-3.5 border-b p-4">
         <div className="flex w-full items-center justify-between">
           <div className="text-base font-medium text-foreground">Emails</div>

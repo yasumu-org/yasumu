@@ -14,118 +14,21 @@ import {
   SidebarMenuSub,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
 
-// This is sample data.
-const data = {
-  tree: [
-    {
-      name: 'Account',
-      children: [
-        {
-          name: 'Authenticate',
-          children: [
-            {
-              name: 'Login',
-              method: 'POST',
-            },
-            {
-              name: 'Logout',
-              method: 'POST',
-            },
-            {
-              name: 'Register',
-              method: 'POST',
-            },
-          ],
-        },
-        {
-          name: 'Current user',
-          method: 'GET',
-        },
-        {
-          name: 'Update current user',
-          method: 'PATCH',
-        },
-      ],
-    },
-    {
-      name: 'Comments',
-      children: [
-        {
-          name: 'List comments',
-          method: 'GET',
-        },
-        {
-          name: 'Create comment',
-          method: 'POST',
-        },
-        {
-          name: 'Update comment',
-          method: 'PUT',
-        },
-        {
-          name: 'Delete comment',
-          method: 'DELETE',
-        },
-      ],
-    },
-    {
-      name: 'Users',
-      children: [
-        {
-          name: 'List users',
-          method: 'GET',
-        },
-        {
-          name: 'Create user',
-          method: 'POST',
-        },
-        {
-          name: 'Update user',
-          method: 'PUT',
-        },
-        {
-          name: 'Delete user',
-          method: 'DELETE',
-        },
-      ],
-    },
-    {
-      name: 'Todo lists',
-      children: [
-        {
-          name: 'List todos',
-          method: 'GET',
-        },
-        {
-          name: 'Create todo',
-          method: 'POST',
-        },
-        {
-          name: 'Update todo',
-          method: 'PUT',
-        },
-        {
-          name: 'Delete todo',
-          method: 'DELETE',
-        },
-      ],
-    },
-    {
-      name: 'Health check',
-      method: 'GET',
-    },
-    {
-      name: 'Ping',
-      method: 'GET',
-    },
-  ],
-};
+export interface FileTree {
+  name: string;
+  icon?: () => React.ReactNode;
+  children?: FileTree[];
+}
 
 const truncate = (str: string, length: number) => (str.length > length ? `${str.slice(0, length)}...` : str);
 
-export function FileTreeSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function FileTreeSidebar({
+  fileTree,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  fileTree: FileTree[];
+}) {
   return (
     <Sidebar {...props}>
       <SidebarContent>
@@ -141,7 +44,7 @@ export function FileTreeSidebar({ ...props }: React.ComponentProps<typeof Sideba
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {data.tree.map((item, index) => (
+              {fileTree.map((item, index) => (
                 <Tree key={index} item={item} />
               ))}
             </SidebarMenu>
@@ -154,26 +57,13 @@ export function FileTreeSidebar({ ...props }: React.ComponentProps<typeof Sideba
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Tree({ item }: { item: (typeof data.tree)[number] }) {
-  const { name, method, children } = item;
+function Tree({ item }: { item: FileTree }) {
+  const { name, children } = item;
 
   if (!children?.length) {
     return (
       <SidebarMenuButton className="data-[active=true]:bg-transparent text-xs">
-        {/* <File /> */}
-        {method && (
-          <span
-            className={cn('font-mono font-bold', {
-              'text-green-500': method === 'GET',
-              'text-blue-500': method === 'POST',
-              'text-yellow-500': method === 'PATCH',
-              'text-pink-500': method === 'PUT',
-              'text-red-500': method === 'DELETE',
-            })}
-          >
-            {method.length > 5 ? method.slice(0, 3) : method}
-          </span>
-        )}
+        {item.icon && <item.icon />}
         {truncate(name, 20)}
       </SidebarMenuButton>
     );

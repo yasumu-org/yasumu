@@ -2294,6 +2294,8 @@ __metadata:
     prettier: "npm:^3.3.3"
     react: "npm:19.0.0-rc-02c0e824-20241028"
     react-dom: "npm:19.0.0-rc-02c0e824-20241028"
+    react-icons: "npm:^5.3.0"
+    react-resizable-panels: "npm:^2.1.6"
     shadcn: "npm:^2.1.3"
     sonner: "npm:^1.5.0"
     tailwind-merge: "npm:^2.5.4"
@@ -6501,6 +6503,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-icons@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "react-icons@npm:5.3.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/a53af0de558f0e2bacfbafc973aa8ca1e6a429006a2f83d70becad5be431726a691e096336c95949bb0d967587b145264c5046d2bc1518969dbae731855d0712
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -6540,6 +6551,16 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/c5881c537477d986e8d25d2588a9b6f7fe1254e05946fb4f4b55baeead502b0e1875fc3c42bb6f82736772cd96a50266e41d84e3c4cd25e9525bdfe2d838e96d
+  languageName: node
+  linkType: hard
+
+"react-resizable-panels@npm:^2.1.6":
+  version: 2.1.6
+  resolution: "react-resizable-panels@npm:2.1.6"
+  peerDependencies:
+    react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/f81aa13b70aeac24feaeee648aadbeab13c0f048c06c46d23a0cc746216928b1aa8a169567009cac8352ffe86b58dbe5a8b957eda357400af38bd71a56874ab5
   languageName: node
   linkType: hard
 

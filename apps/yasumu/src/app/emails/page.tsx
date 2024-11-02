@@ -1,3 +1,3 @@
 export default function Emails() {
-  return <div className="w-full">This is an email page</div>;
+  return <div className="grid place-items-center h-screen">This is an email page</div>;
 }

@@ -1,14 +1,9 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
 import LayoutGroup from '@/components/layout-group';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import {
-  DeleteMethodIcon,
-  GetMethodIcon,
-  PatchMethodIcon,
-  PostMethodIcon,
-  PutMethodIcon,
-} from '@/components/assets/HttpMethods';
-const restData = [
+import { SiGraphql } from 'react-icons/si';
+
+const graphqlData = [
   {
     name: 'Account',
     children: [
@@ -17,25 +12,25 @@ const restData = [
         children: [
           {
             name: 'Login',
-            icon: PostMethodIcon,
+            icon: () => <SiGraphql className="text-pink-500" />,
           },
           {
             name: 'Logout',
-            icon: PostMethodIcon,
+            icon: () => <SiGraphql className="text-pink-500" />,
           },
           {
             name: 'Register',
-            icon: PostMethodIcon,
+            icon: () => <SiGraphql className="text-pink-500" />,
           },
         ],
       },
       {
         name: 'Current user',
-        icon: GetMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Update current user',
-        icon: PatchMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
     ],
   },
@@ -44,19 +39,19 @@ const restData = [
     children: [
       {
         name: 'List comments',
-        icon: GetMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Create comment',
-        icon: PostMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Update comment',
-        icon: PutMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Delete comment',
-        icon: DeleteMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
     ],
   },
@@ -65,19 +60,19 @@ const restData = [
     children: [
       {
         name: 'List users',
-        icon: GetMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Create user',
-        icon: PostMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Update user',
-        icon: PutMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Delete user',
-        icon: DeleteMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
     ],
   },
@@ -86,42 +81,42 @@ const restData = [
     children: [
       {
         name: 'List todos',
-        icon: GetMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Create todo',
-        icon: PostMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Update todo',
-        icon: PutMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
       {
         name: 'Delete todo',
-        icon: DeleteMethodIcon,
+        icon: () => <SiGraphql className="text-pink-500" />,
       },
     ],
   },
   {
     name: 'Health check',
-    icon: GetMethodIcon,
+    icon: () => <SiGraphql className="text-pink-500" />,
   },
   {
     name: 'Ping',
-    icon: GetMethodIcon,
+    icon: () => <SiGraphql className="text-pink-500" />,
   },
 ];
 
 export default function RestLayout({ children }: React.PropsWithChildren) {
   return (
     <LayoutGroup>
-      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-rest-layout">
+      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-graphql-layout">
         <ResizablePanel defaultSize={17}>
-          <FileTreeSidebar fileTree={restData} className="font-sans w-full" collapsible="none" />
+          <FileTreeSidebar fileTree={graphqlData} className="font-sans w-full" collapsible="none" />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
-          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-rest-layout-2">
+          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-graphql-layout-2">
             <ResizablePanel>{children}</ResizablePanel>
             <ResizableHandle />
             <ResizablePanel>
