@@ -1,3 +1,4 @@
+import type { HttpMethod } from '@/common/constants.js';
 import type { WorkspaceModuleType } from '../common/constants.js';
 
 export interface YasumuRawRestEntity extends RestIndex {
@@ -91,7 +92,7 @@ export interface RestIndex {
   /**
    * The method of the REST entity.
    */
-  method: string;
+  method: HttpMethod;
   /**
    * The path to the REST entity without the file name.
    */
