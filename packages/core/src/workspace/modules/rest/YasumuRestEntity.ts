@@ -2,7 +2,7 @@ import { generateId } from '@/common/utils.js';
 import { Executable, type ExecutionOptions, type ExecutionResult } from '../common/Executable.js';
 import type { RestIndex, YasumuRawRestEntity } from './types.js';
 import type { YasumuRest } from './YasumuRest.js';
-import { HttpMethod } from '@/common/constants.js';
+import { HttpMethod } from '@/common/index.js';
 
 export class YasumuRestEntity extends Executable {
   public data!: YasumuRawRestEntity;
@@ -144,6 +144,31 @@ export class YasumuRestEntity extends Executable {
     if (oldPath === this.fullPath) return;
 
     return this.#handleRename(oldPath);
+  }
+
+  /**
+   * Copies this entity to a new path
+   * @param path The new path
+   */
+  public async copy(path: string) {
+    const entity = new YasumuRestEntity(this.rest, {
+      ...this.data,
+      id: generateId(),
+      createdAt: Date.now(),
+      path,
+    });
+
+    await entity.save();
+
+    return entity;
+  }
+
+  /**
+   * Move this entity to a new path
+   * @param path The new path
+   */
+  public async move(path: string) {
+    return this.setPath(path);
   }
 
   /**

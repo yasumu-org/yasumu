@@ -1,4 +1,4 @@
-import { HttpMethod } from '@/common/constants.js';
+import { HttpMethod } from '@/common/index.js';
 import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
 import { YasumuRestEntity } from './YasumuRestEntity.js';
