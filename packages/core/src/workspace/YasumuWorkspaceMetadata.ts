@@ -1,5 +1,8 @@
 import { generateId } from '@/common/utils.js';
 import type { YasumuWorkspace } from './YasumuWorkspace.js';
+import type { RestIndex } from './modules/index.js';
+
+export type RootIndex<T> = Record<string, T>;
 
 export interface YasumuRawWorkspaceMetadata {
   /**
@@ -18,7 +21,46 @@ export interface YasumuRawWorkspaceMetadata {
    * The version of the workspace.
    */
   version: string;
+  /**
+   * The associated REST entities of this workspace.
+   */
+  rest: RootIndex<RestIndex>;
+  /**
+   * The associated GraphQL entities of this workspace.
+   */
+  graphql: RootIndex<unknown>;
+  /**
+   * The associated SMTP entities of this workspace.
+   */
+  smtp: RootIndex<unknown>;
+  /**
+   * The associated WebSocket entities of this workspace.
+   */
+  websocket: RootIndex<unknown>;
+  /**
+   * The associated Socket.IO entities of this workspace.
+   */
+  socketio: RootIndex<unknown>;
+  /**
+   * The associated SSE entities of this workspace.
+   */
+  sse: RootIndex<unknown>;
 }
+
+const deepMerge = (target: any, source: any) => {
+  for (const key in source) {
+    if (source[key] instanceof Object) {
+      if (!target[key]) Object.assign(target, { [key]: {} });
+      deepMerge(target[key], source[key]);
+    } else {
+      Object.assign(target, { [key]: source[key] });
+    }
+  }
+};
+
+export type MetadataSetter =
+  | ((data: YasumuRawWorkspaceMetadata) => Partial<YasumuRawWorkspaceMetadata>)
+  | Partial<YasumuRawWorkspaceMetadata>;
 
 export class YasumuWorkspaceMetadata {
   /**
@@ -43,6 +85,12 @@ export class YasumuWorkspaceMetadata {
     this.data.version ??= this.workspace.yasumu.apiVersion;
     this.data.name ??= 'Untitled Workspace';
     this.data.id ??= generateId();
+    this.data.rest ??= {};
+    this.data.graphql ??= {};
+    this.data.smtp ??= {};
+    this.data.websocket ??= {};
+    this.data.socketio ??= {};
+    this.data.sse ??= {};
   }
 
   /**
@@ -60,11 +108,34 @@ export class YasumuWorkspaceMetadata {
   }
 
   /**
+   * The raw metadata of this workspace.
+   */
+  public getRawData(): YasumuRawWorkspaceMetadata {
+    return this.data;
+  }
+
+  /**
    * Sets the name of this workspace.
    * @param value The new name.
    */
   public setName(value: string) {
     this.data.name = value;
+  }
+
+  /**
+   * Updates the metadata.
+   * @param value The value to update the metadata with.
+   */
+  public update(value: MetadataSetter) {
+    let data: Partial<typeof this.data>;
+
+    if (typeof value === 'function') {
+      data = value(this.data);
+    } else {
+      data = value;
+    }
+
+    deepMerge(this.data, data);
   }
 
   /**

@@ -5,6 +5,8 @@ import { createWorkspaceMetadata, YasumuWorkspaceMetadata } from './YasumuWorksp
 import { WorkspaceNotLoadedError } from '@/common/index.js';
 import { YasumuGraphql, YasumuRest, YasumuSmtp, YasumuSocketIO, YasumuWebSocket } from './modules/index.js';
 import type { BaseScriptRuntime } from './runtime/BaseScriptRuntime.js';
+import { YasumuIndexerService } from './indexer/YasumuIndexerService.js';
+import { WorkspaceModuleType } from './modules/common/constants.js';
 
 export interface YasumuWorkspaceOptions {
   /**
@@ -19,6 +21,11 @@ export interface YasumuWorkspaceOptions {
 }
 
 export class YasumuWorkspace {
+  /**
+   * The path to the workspace.
+   */
+  #path!: string;
+
   /**
    * The path to the workspace metadata.
    */
@@ -53,6 +60,11 @@ export class YasumuWorkspace {
    * The socket.io module for this workspace.
    */
   public readonly socketio = new YasumuSocketIO(this);
+
+  /**
+   * The indexer service for this workspace.
+   */
+  public readonly indexer = new YasumuIndexerService(this);
 
   /**
    * The script runtime for this workspace.
@@ -105,6 +117,13 @@ export class YasumuWorkspace {
   }
 
   /**
+   * The path to the workspace.
+   */
+  public get path(): string {
+    return this.#path;
+  }
+
+  /**
    * Loads this workspace's metadata.
    */
   public async loadMetadata(): Promise<YasumuWorkspaceMetadata> {
@@ -121,5 +140,30 @@ export class YasumuWorkspace {
     this.#metadata = await createWorkspaceMetadata(this, {}, !exists);
 
     return this.#metadata;
+  }
+
+  /**
+   * Resolves a module path relative to this workspace.
+   * @param type The type of module to resolve.
+   */
+  public async resolvePath(type: WorkspaceModuleType) {
+    const workspacePath = this.path;
+
+    switch (type) {
+      case WorkspaceModuleType.Rest:
+        return this.yasumu.path.join(workspacePath, 'rest');
+      case WorkspaceModuleType.GraphQL:
+        return this.yasumu.path.join(workspacePath, 'graphql');
+      case WorkspaceModuleType.SMTP:
+        return this.yasumu.path.join(workspacePath, 'smtp');
+      case WorkspaceModuleType.Websocket:
+        return this.yasumu.path.join(workspacePath, 'websocket');
+      case WorkspaceModuleType.SocketIO:
+        return this.yasumu.path.join(workspacePath, 'socketio');
+      case WorkspaceModuleType.SSE:
+        return this.yasumu.path.join(workspacePath, 'sse');
+      default:
+        throw new TypeError(`Unknown module type: ${type}`);
+    }
   }
 }
