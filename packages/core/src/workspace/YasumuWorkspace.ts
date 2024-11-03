@@ -151,7 +151,7 @@ export class YasumuWorkspace {
 
     if (exists) {
       const metadata = await this.yasumu.fs.readTextFile(this.#metadataPath);
-      this.#metadata = await createWorkspaceMetadata(this, JSON.parse(metadata), false);
+      this.#metadata = await createWorkspaceMetadata(this, YasumuWorkspaceMetadata.deserialize(metadata), false);
     } else {
       this.#metadata = await createWorkspaceMetadata(this, {}, true);
     }
