@@ -14,7 +14,12 @@ import type {
 export type YasumuSchemaParasableScriptToType<
     T extends YasumuSchemaParasableScript,
 > = {
-    [K in keyof T]: YasumuSchemaParsableBlockToType<T[K]>;
+    annotation: string;
+    blocks: {
+        [K in keyof T["blocks"]]: YasumuSchemaParsableBlockToType<
+            T["blocks"][K]
+        >;
+    };
 };
 
 export type YasumuSchemaParsableBlockToType<

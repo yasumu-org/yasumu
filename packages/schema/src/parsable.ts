@@ -1,5 +1,8 @@
 export interface YasumuSchemaParasableScript {
-    [K: string]: YasumuSchemaParsableBlock;
+    annotation: string;
+    blocks: {
+        [K: string]: YasumuSchemaParsableBlock;
+    };
 }
 
 export type YasumuSchemaParsableBlock =
