@@ -32,6 +32,7 @@ import { TbWorldWww } from 'react-icons/tb';
 import { SiDiscord, SiGithub, SiGraphql, SiSocketdotio } from 'react-icons/si';
 import WebSocketLogo from '../assets/WebSocketLogo';
 import { YasumuSocials } from '@/lib/constants/socials';
+import SidebarLayoutStyleSelector from './layout-style-selector';
 
 const data = {
   user: {
@@ -198,6 +199,7 @@ function NavUser({
                 Settings
               </DropdownMenuItem>
               <SidebarThemeSelector />
+              <SidebarLayoutStyleSelector />
               <DropdownMenuItem>
                 <Keyboard />
                 Keyboard Shortcuts

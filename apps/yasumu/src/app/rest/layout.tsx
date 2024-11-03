@@ -1,6 +1,5 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
 import LayoutGroup from '@/components/layout-group';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import {
   DeleteMethodIcon,
   GetMethodIcon,
@@ -8,6 +7,8 @@ import {
   PostMethodIcon,
   PutMethodIcon,
 } from '@/components/assets/HttpMethods';
+import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
+
 const restData = [
   {
     name: 'Account',
@@ -115,21 +116,16 @@ const restData = [
 export default function RestLayout({ children }: React.PropsWithChildren) {
   return (
     <LayoutGroup>
-      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-rest-layout">
-        <ResizablePanel defaultSize={17}>
-          <FileTreeSidebar fileTree={restData} className="font-sans w-full" collapsible="none" />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel>
-          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-rest-layout-2">
-            <ResizablePanel>{children}</ResizablePanel>
-            <ResizableHandle />
-            <ResizablePanel>
-              <div className="flex items-center justify-center h-full">output</div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      <ResizableApplicationLayout
+        id="yasumu-rest-layout"
+        left={<FileTreeSidebar fileTree={restData} className="font-sans w-full" collapsible="none" />}
+        right={children}
+        bottom={
+          <div className="flex items-center justify-center font-mono font-bold text-lg text-blue-500 h-full">
+            Output
+          </div>
+        }
+      />
     </LayoutGroup>
   );
 }

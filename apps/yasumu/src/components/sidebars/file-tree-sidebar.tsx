@@ -14,6 +14,7 @@ import {
   SidebarMenuSub,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import { MdFolder } from 'react-icons/md';
 
 export interface FileTree {
   name: string;
@@ -75,7 +76,7 @@ function Tree({ item }: { item: FileTree }) {
         <CollapsibleTrigger asChild>
           <SidebarMenuButton className="text-xs">
             <ChevronRight className="transition-transform" />
-            <Folder />
+            <MdFolder />
             {name}
           </SidebarMenuButton>
         </CollapsibleTrigger>

@@ -1,7 +1,7 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
 import LayoutGroup from '@/components/layout-group';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Zap } from 'lucide-react';
+import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
 
 const sseData = [
   {
@@ -110,21 +110,16 @@ const sseData = [
 export default function RestLayout({ children }: React.PropsWithChildren) {
   return (
     <LayoutGroup>
-      <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-sse-layout">
-        <ResizablePanel defaultSize={17}>
-          <FileTreeSidebar fileTree={sseData} className="font-sans w-full" collapsible="none" />
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel>
-          <ResizablePanelGroup direction="vertical" autoSaveId="yasumu-sse-layout-2">
-            <ResizablePanel>{children}</ResizablePanel>
-            <ResizableHandle />
-            <ResizablePanel>
-              <div className="flex items-center justify-center h-full">output</div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+      <ResizableApplicationLayout
+        id="yasumu-sse-layout"
+        left={<FileTreeSidebar fileTree={sseData} className="font-sans w-full" collapsible="none" />}
+        right={children}
+        bottom={
+          <div className="flex items-center justify-center font-mono font-bold text-lg text-blue-500 h-full">
+            Output
+          </div>
+        }
+      />
     </LayoutGroup>
   );
 }
