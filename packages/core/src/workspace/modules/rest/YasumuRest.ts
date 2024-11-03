@@ -2,6 +2,8 @@ import { HttpMethod } from '@/common/index.js';
 import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
 import { YasumuRestEntity } from './YasumuRestEntity.js';
+import { RestEntitySchema } from '@/workspace/schema/RestEntitySchema.js';
+import { YasumuScriptActions } from '@yasumu/schema';
 
 export interface CreateRestEntityParams {
   /**
@@ -20,6 +22,7 @@ export interface CreateRestEntityParams {
 
 export class YasumuRest extends YasumuBaseModule<(typeof WorkspaceModuleType)['Rest']> {
   public override type = WorkspaceModuleType.Rest;
+  public readonly schema = new YasumuScriptActions(RestEntitySchema);
 
   /**
    * Open a REST entity by its id.
@@ -43,9 +46,13 @@ export class YasumuRest extends YasumuBaseModule<(typeof WorkspaceModuleType)['R
    */
   public async create(params: Partial<CreateRestEntityParams> = {}): Promise<YasumuRestEntity> {
     const entity = new YasumuRestEntity(this, {
-      name: params.name || 'Untitled request',
-      method: params.method || HttpMethod.Get,
-      path: params.path || '/',
+      blocks: {
+        Metadata: {
+          name: params.name || 'Untitled request',
+          method: params.method || HttpMethod.Get,
+          path: params.path || '/',
+        },
+      },
     });
 
     await entity.save();

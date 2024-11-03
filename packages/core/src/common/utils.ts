@@ -13,3 +13,19 @@ export function generateId() {
     });
   }
 }
+
+/**
+ * Deep merge two objects
+ * @param target The target object
+ * @param source The source object
+ */
+export const deepMerge = (target: any, source: any) => {
+  for (const key in source) {
+    if (source[key] instanceof Object) {
+      if (!target[key]) Object.assign(target, { [key]: {} });
+      deepMerge(target[key], source[key]);
+    } else {
+      Object.assign(target, { [key]: source[key] });
+    }
+  }
+};

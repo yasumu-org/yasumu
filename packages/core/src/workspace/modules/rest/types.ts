@@ -1,84 +1,91 @@
 import type { HttpMethod } from '@/common/index.js';
 import type { WorkspaceModuleType } from '../common/constants.js';
 
-export interface YasumuRawRestEntity extends RestIndex {
+export interface YasumuRawRestEntity {
   /**
    * The type of the entity.
    */
-  $$typeof: (typeof WorkspaceModuleType)['Rest'];
+  annotation: (typeof WorkspaceModuleType)['Rest'];
 
   /**
-   * The time when this entity was created.
+   * The blocks of the entity.
    */
-  createdAt: number;
+  blocks: {
+    /**
+     * The metadata of this entity.
+     */
+    Metadata: RestIndex & {
+      /**
+       * The time when this entity was created.
+       */
+      createdAt: number;
+    };
 
-  /**
-   * The request object.
-   */
-  request: {
     /**
-     * The url of the request.
+     * The request object.
      */
-    url: string;
+    Request: {
+      /**
+       * The url of the request.
+       */
+      url: string;
+      /**
+       * The headers of the request.
+       */
+      headers: Array<{ key: string; value: string }>;
+    };
     /**
-     * The headers of the request.
+     * The response object.
      */
-    headers: Array<{ key: string; value: string }>;
-  };
-  /**
-   * The response object.
-   */
-  response: {
-    /**
-     * The status code of the response.
-     */
-    status: number | null;
-    /**
-     * The time taken to complete the request.
-     */
-    time: number | null;
-    /**
-     * The response size.
-     */
-    size: number | null;
-    /**
-     * The headers of the response.
-     */
-    headers: Array<{ key: string; value: string }>;
-    /**
-     * The body of the response.
-     */
-    body: string | null;
-  };
-  /**
-   * The scripts of the entity.
-   */
-  scripts: {
+    Response: {
+      /**
+       * The status code of the response.
+       */
+      status: number | null;
+      /**
+       * The time taken to complete the request.
+       */
+      time: number | null;
+      /**
+       * The response size.
+       */
+      size: number | null;
+      /**
+       * The headers of the response.
+       */
+      headers: Array<{ key: string; value: string }>;
+      /**
+       * The body of the response.
+       */
+      body: string | null;
+    };
     /**
      * The pre-request script.
      */
-    preRequest: YasumuEntityScript;
+    BeforeRequest: YasumuEntityScript;
     /**
      * The post-response script.
      */
-    postResponse: YasumuEntityScript;
+    AfterResponse: YasumuEntityScript;
     /**
      * The test script.
      */
-    test: YasumuEntityScript;
+    Test: YasumuEntityScript;
   };
 }
 
-export interface YasumuEntityScript {
-  /**
-   * The script file name.
-   */
-  name: string;
-  /**
-   * The script content.
-   */
-  content: string;
-}
+export type YasumuEntityScript = string;
+
+// export interface YasumuEntityScript {
+//   /**
+//    * The script file name.
+//    */
+//   name: string;
+//   /**
+//    * The script content.
+//    */
+//   content: string;
+// }
 
 export interface RestIndex {
   /**

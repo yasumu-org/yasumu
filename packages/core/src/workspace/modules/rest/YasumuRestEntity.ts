@@ -1,8 +1,15 @@
-import { generateId } from '@/common/utils.js';
+import { deepMerge, generateId } from '@/common/utils.js';
 import { Executable, type ExecutionOptions, type ExecutionResult } from '../common/Executable.js';
 import type { RestIndex, YasumuRawRestEntity } from './types.js';
 import type { YasumuRest } from './YasumuRest.js';
 import { HttpMethod } from '@/common/index.js';
+import type { YasumuSchemaParasableScriptToType } from '@yasumu/schema';
+import type { RestEntitySchema } from '@/workspace/schema/RestEntitySchema.js';
+import { WorkspaceModuleType } from '../common/constants.js';
+
+export type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>;
+};
 
 export class YasumuRestEntity extends Executable {
   public data!: YasumuRawRestEntity;
@@ -13,34 +20,40 @@ export class YasumuRestEntity extends Executable {
    */
   public constructor(
     public readonly rest: YasumuRest,
-    data?: Partial<YasumuRawRestEntity>,
+    data?: DeepPartial<YasumuRawRestEntity>,
   ) {
     super();
     this.#reformat(data);
   }
 
-  #reformat(data?: Partial<YasumuRawRestEntity>) {
+  #reformat(data?: DeepPartial<YasumuRawRestEntity>) {
     if (!data || typeof data !== 'object') {
-      data = {} as YasumuRawRestEntity;
+      data = {
+        blocks: {},
+      } as YasumuRawRestEntity;
     }
 
-    data.$$typeof = this.rest.type;
-    data.createdAt ??= Date.now();
-    data.id ??= generateId();
-    data.method ??= HttpMethod.Get;
-    data.name ??= 'Untitled request';
-    data.path ??= '/';
-    data.request = {
-      headers: data.request?.headers ?? [],
-      url: data.request?.url ?? '',
+    data.annotation = this.rest.type;
+    data.blocks!.Metadata ??= {} as RestIndex;
+    data.blocks!.Metadata.createdAt ??= Date.now();
+    data.blocks!.Metadata.id ??= generateId();
+    data.blocks!.Metadata.method ??= HttpMethod.Get;
+    data.blocks!.Metadata.name ??= 'Untitled request';
+    data.blocks!.Metadata.path ??= '/';
+    data.blocks!.Request = {
+      headers: data.blocks!.Request?.headers ?? [],
+      url: data.blocks!.Request?.url ?? '',
     };
-    data.response = {
-      headers: data.response?.headers ?? [],
-      status: data.response?.status ?? null,
-      body: data.response?.body ?? null,
-      size: data.response?.size ?? null,
-      time: data.response?.time ?? null,
+    data.blocks!.Response = {
+      headers: data.blocks!.Response?.headers ?? [],
+      status: data.blocks!.Response?.status ?? null,
+      body: data.blocks!.Response?.body ?? null,
+      size: data.blocks!.Response?.size ?? null,
+      time: data.blocks!.Response?.time ?? null,
     };
+    data.blocks!.AfterResponse ??= '';
+    data.blocks!.BeforeRequest ??= '';
+    data.blocks!.Test ??= '';
 
     this.data = data as YasumuRawRestEntity;
   }
@@ -49,49 +62,49 @@ export class YasumuRestEntity extends Executable {
    * The creation date of this entity
    */
   public get createdAt() {
-    return new Date(this.data.createdAt);
+    return new Date(this.data.blocks.Metadata.createdAt);
   }
 
   /**
    * The creation timestamp of this entity
    */
   public get createdTimestamp() {
-    return this.data.createdAt;
+    return this.data.blocks.Metadata.createdAt;
   }
 
   /**
    * The http method of this entity
    */
   public get method() {
-    return (this.data.method ??= HttpMethod.Get);
+    return (this.data.blocks.Metadata.method ??= HttpMethod.Get);
   }
 
   /**
    * The unique id of this entity
    */
   public get id() {
-    return this.data.id;
+    return this.data.blocks.Metadata.id;
   }
 
   /**
    * The name of this entity
    */
   public get name() {
-    return this.data.name;
+    return this.data.blocks.Metadata.name;
   }
 
   /**
    * The file name of this entity
    */
   public get filename() {
-    return `${this.name}--${this.createdTimestamp}.json`;
+    return `${this.name}--${this.createdTimestamp}.ysl`;
   }
 
   /**
    * The path of this entity
    */
   public get path() {
-    return this.data.path;
+    return this.data.blocks.Metadata.path;
   }
 
   /**
@@ -114,13 +127,13 @@ export class YasumuRestEntity extends Executable {
    */
   public async setPath(path: string) {
     const normalizedPath = await this.rest.workspace.yasumu.path.normalize(path);
-    const normalizedOldPath = await this.rest.workspace.yasumu.path.normalize(this.data.path);
+    const normalizedOldPath = await this.rest.workspace.yasumu.path.normalize(this.data.blocks.Metadata.path);
     const oldPath = this.fullPath;
     const oldIndexPath = this.basePath;
 
     if (normalizedPath === normalizedOldPath) return;
 
-    this.data.path = path;
+    this.data.blocks.Metadata.path = path;
 
     await this.save();
 
@@ -132,12 +145,12 @@ export class YasumuRestEntity extends Executable {
    * @param name The new name
    */
   public async rename(name: string) {
-    const oldName = this.data.name;
+    const oldName = this.data.blocks.Metadata.name;
     const oldPath = this.fullPath;
 
     if (oldName === name) return;
 
-    this.data.name = name;
+    this.data.blocks.Metadata.name = name;
 
     await this.save();
 
@@ -153,9 +166,15 @@ export class YasumuRestEntity extends Executable {
   public async copy(path: string) {
     const entity = new YasumuRestEntity(this.rest, {
       ...this.data,
-      id: generateId(),
-      createdAt: Date.now(),
-      path,
+      blocks: {
+        ...this.data.blocks,
+        Metadata: {
+          ...this.data.blocks.Metadata,
+          id: generateId(),
+          path,
+          createdAt: Date.now(),
+        },
+      },
     });
 
     await entity.save();
@@ -176,7 +195,7 @@ export class YasumuRestEntity extends Executable {
    * @param method The method to set
    */
   public async setMethod(method: HttpMethod) {
-    this.data.method = method;
+    this.data.blocks.Metadata.method = method;
     return this.save();
   }
 
@@ -227,7 +246,7 @@ export class YasumuRestEntity extends Executable {
     const metadata = this.rest.workspace.getMetadata();
     const data = metadata.getRawData();
 
-    delete data.rest[this.id];
+    delete data.blocks[WorkspaceModuleType.Rest].entities[this.id];
 
     await metadata.save();
 
@@ -247,8 +266,12 @@ export class YasumuRestEntity extends Executable {
     const metadata = this.rest.workspace.getMetadata();
 
     metadata.update({
-      rest: {
-        [this.id]: this.createRootIndexData(),
+      blocks: {
+        [WorkspaceModuleType.Rest]: {
+          entities: {
+            [this.id]: this.createRootIndexData(),
+          },
+        },
       },
     });
 
@@ -283,7 +306,9 @@ export class YasumuRestEntity extends Executable {
    * @returns serialized data
    */
   public async serialize() {
-    return JSON.stringify(this);
+    return this.rest.schema.serialize(
+      this.data as unknown as YasumuSchemaParasableScriptToType<typeof RestEntitySchema>,
+    );
   }
 
   /**

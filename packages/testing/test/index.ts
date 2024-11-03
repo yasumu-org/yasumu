@@ -7,18 +7,18 @@ const workspace = await Yasumu.openWorkspace({
   path: dir,
 });
 
-const target = Object.keys(workspace.getMetadata().getRawData().rest)[0];
+const target = Object.keys(workspace.getMetadata().getRawData().blocks.Rest.entities)[0];
 
 let entity: YasumuRestEntity;
 
 if (!target) entity = await workspace.rest.create();
 else entity = await workspace.rest.open(target);
 
-await entity.delete();
+// await entity.delete();
 
 // console.log(entity.toJSON());
 
-// await entity.setPath('/');
+// await entity.setPath('/updated-path');
 // await entity.rename('New Name');
 
 // console.log(entity.toJSON());

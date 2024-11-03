@@ -10,5 +10,6 @@ export function createYasumu(options: YasumuBootstrapOptions): Yasumu {
 }
 
 export * from './Yasumu.js';
+export * from './YasumuUtilities.js';
 export * from './workspace/index.js';
 export * from './common/index.js';

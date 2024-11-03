@@ -12,7 +12,8 @@
     ],
     "scripts": {
         "build": "rimraf dist && tsc",
-        "example": "tsx example/example.ts"
+        "example": "tsx example/example.ts",
+        "example2": "tsx example/workspace.ts"
     },
     "repository": {
         "type": "git",

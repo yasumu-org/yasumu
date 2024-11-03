@@ -3,9 +3,17 @@ import { WorkspaceModuleType } from './constants.js';
 import { IndexNotFoundError } from '@/common/errors/IndexNotFoundError.js';
 import { EntityNotFoundError } from '@/common/errors/EntityNotFoundError.js';
 import type { YasumuEntityDataMap, YasumuEntityMap } from './types.js';
+import type { YasumuSchemaParasableScript, YasumuScriptActions } from '@yasumu/schema';
 
 export abstract class YasumuBaseModule<T extends WorkspaceModuleType = WorkspaceModuleType> {
+  /**
+   * The type of this module.
+   */
   public abstract readonly type: T;
+  /**
+   * The schema for the entities in this module.
+   */
+  public abstract readonly schema: YasumuScriptActions<YasumuSchemaParasableScript>;
 
   /**
    * The base module for Yasumu.
@@ -66,14 +74,14 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
     const location = await this.findEntityPath(id);
     if (!location) {
       const metadata = this.workspace.getMetadata();
-      delete this.getRootIndex()[id];
+      delete this.getRootIndex().entities[id];
       await metadata.save();
       throw new EntityNotFoundError(id, this.type);
     }
 
     const entity = await this.workspace.yasumu.fs.readTextFile(location);
 
-    return JSON.parse(entity);
+    return this.schema.parse(entity) as any;
   }
 
   public async findEntityPath(id: string) {
@@ -90,7 +98,7 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
 
   public getRootIndex() {
     const metadata = this.workspace.getMetadata().getRawData();
-    const data = metadata[this.type];
+    const data = metadata.blocks[this.type];
 
     if (!data) throw new IndexNotFoundError(this.type);
 
@@ -98,7 +106,7 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
   }
 
   public findEntity(id: string) {
-    return this.getRootIndex()[id] ?? null;
+    return this.getRootIndex().entities[id] ?? null;
   }
 
   /**
