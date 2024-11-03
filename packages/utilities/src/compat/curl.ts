@@ -1,3 +1,5 @@
+import { HttpMethod } from '@yasumu/core';
+
 export interface KeyValue<K, V> {
   key: K;
   value: V;
@@ -18,7 +20,7 @@ export interface CurlParsedResult {
 export function parseCurl(src: string): CurlParsedResult {
   const result: CurlParsedResult = {
     url: '',
-    method: 'GET',
+    method: HttpMethod.Get,
     headers: [],
   };
 

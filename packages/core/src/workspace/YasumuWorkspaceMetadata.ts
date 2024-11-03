@@ -1,6 +1,7 @@
 import { generateId } from '@/common/utils.js';
 import type { YasumuWorkspace } from './YasumuWorkspace.js';
 import type { RestIndex } from './modules/index.js';
+import { WorkspaceModuleType } from './modules/common/constants.js';
 
 export type RootIndex<T> = Record<string, T>;
 
@@ -24,27 +25,27 @@ export interface YasumuRawWorkspaceMetadata {
   /**
    * The associated REST entities of this workspace.
    */
-  rest: RootIndex<RestIndex>;
+  [WorkspaceModuleType.Rest]: RootIndex<RestIndex>;
   /**
    * The associated GraphQL entities of this workspace.
    */
-  graphql: RootIndex<unknown>;
+  [WorkspaceModuleType.GraphQL]: RootIndex<unknown>;
   /**
    * The associated SMTP entities of this workspace.
    */
-  smtp: RootIndex<unknown>;
+  [WorkspaceModuleType.SMTP]: RootIndex<unknown>;
   /**
    * The associated WebSocket entities of this workspace.
    */
-  websocket: RootIndex<unknown>;
+  [WorkspaceModuleType.Websocket]: RootIndex<unknown>;
   /**
    * The associated Socket.IO entities of this workspace.
    */
-  socketio: RootIndex<unknown>;
+  [WorkspaceModuleType.SocketIO]: RootIndex<unknown>;
   /**
    * The associated SSE entities of this workspace.
    */
-  sse: RootIndex<unknown>;
+  [WorkspaceModuleType.SSE]: RootIndex<unknown>;
 }
 
 const deepMerge = (target: any, source: any) => {
@@ -85,12 +86,12 @@ export class YasumuWorkspaceMetadata {
     this.data.version ??= this.workspace.yasumu.apiVersion;
     this.data.name ??= 'Untitled Workspace';
     this.data.id ??= generateId();
-    this.data.rest ??= {};
-    this.data.graphql ??= {};
-    this.data.smtp ??= {};
-    this.data.websocket ??= {};
-    this.data.socketio ??= {};
-    this.data.sse ??= {};
+    this.data[WorkspaceModuleType.Rest] ??= {};
+    this.data[WorkspaceModuleType.GraphQL] ??= {};
+    this.data[WorkspaceModuleType.SMTP] ??= {};
+    this.data[WorkspaceModuleType.SSE] ??= {};
+    this.data[WorkspaceModuleType.SocketIO] ??= {};
+    this.data[WorkspaceModuleType.Websocket] ??= {};
   }
 
   /**

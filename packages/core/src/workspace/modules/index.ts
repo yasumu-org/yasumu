@@ -4,3 +4,4 @@ export * from './smtp/index.js';
 export * from './socketio/index.js';
 export * from './websocket/index.js';
 export * from './common/index.js';
+export * from './sse/index.js';

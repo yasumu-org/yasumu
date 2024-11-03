@@ -2,6 +2,7 @@ import { generateId } from '@/common/utils.js';
 import { Executable, type ExecutionOptions, type ExecutionResult } from '../common/Executable.js';
 import type { RestIndex, YasumuRawRestEntity } from './types.js';
 import type { YasumuRest } from './YasumuRest.js';
+import { HttpMethod } from '@/common/constants.js';
 
 export class YasumuRestEntity extends Executable {
   public data!: YasumuRawRestEntity;
@@ -26,7 +27,7 @@ export class YasumuRestEntity extends Executable {
     data.$$typeof = this.rest.type;
     data.createdAt ??= Date.now();
     data.id ??= generateId();
-    data.method ??= 'GET';
+    data.method ??= HttpMethod.Get;
     data.name ??= 'Untitled request';
     data.path ??= '/';
     data.request = {
@@ -62,7 +63,7 @@ export class YasumuRestEntity extends Executable {
    * The http method of this entity
    */
   public get method() {
-    return (this.data.method ??= 'GET');
+    return (this.data.method ??= HttpMethod.Get);
   }
 
   /**
@@ -149,7 +150,7 @@ export class YasumuRestEntity extends Executable {
    * Update the http method of this entity
    * @param method The method to set
    */
-  public async setMethod(method: string) {
+  public async setMethod(method: HttpMethod) {
     this.data.method = method;
     return this.save();
   }
