@@ -1,1 +1,1 @@
-export const INDEX_FILE_NAME = 'index.json';
+export const INDEX_FILE_NAME = 'index.ysi';
