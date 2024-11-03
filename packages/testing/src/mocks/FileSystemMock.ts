@@ -48,7 +48,7 @@ export class FileSystemMock implements FileSystemCommon {
 
   public async readTextFile(path: FilePath): Promise<string> {
     const data = await fs.promises.readFile(path, { encoding: 'utf8' });
-    return data as string;
+    return data;
   }
 
   public async remove(path: FilePath, options?: RemoveOptions): Promise<void> {

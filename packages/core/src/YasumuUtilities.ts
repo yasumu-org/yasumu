@@ -10,6 +10,17 @@ export class YasumuUtilities {
    */
   public joinPathSync(...paths: string[]): string {
     const sep = this.yasumu.path.sep();
-    return paths.join(sep);
+    const normalized = paths.flatMap((p, i) => {
+      if (!p || typeof p !== 'string') return;
+      if (!p.includes(sep)) return p;
+      if (i === 0) return p;
+      return p.split(sep);
+    });
+
+    return normalized
+      .filter((p) => {
+        return p && typeof p === 'string' && p.length > 0 && p !== sep;
+      })
+      .join(sep);
   }
 }

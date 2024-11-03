@@ -101,12 +101,21 @@ export class YasumuRestEntity extends Executable {
   }
 
   /**
+   * The base path of this entity
+   */
+  public get basePath() {
+    return this.rest.workspace.yasumu.utils.joinPathSync(this.rest.getLocation(), this.path);
+  }
+
+  /**
    * Update the path of this entity
    * @param path The new path
    */
   public async setPath(path: string) {
     const normalizedPath = await this.rest.workspace.yasumu.path.normalize(path);
     const normalizedOldPath = await this.rest.workspace.yasumu.path.normalize(this.data.path);
+    const oldPath = this.fullPath;
+    const oldIndexPath = this.basePath;
 
     if (normalizedPath === normalizedOldPath) return;
 
@@ -114,7 +123,7 @@ export class YasumuRestEntity extends Executable {
 
     await this.save();
 
-    return this.#handleRename(normalizedOldPath);
+    return this.#handleRename(oldPath, oldIndexPath);
   }
 
   /**
@@ -145,8 +154,14 @@ export class YasumuRestEntity extends Executable {
     return this.save();
   }
 
-  async #handleRename(oldPath: string) {
-    await this.rest.workspace.yasumu.fs.remove(oldPath);
+  async #handleRename(oldPath: string, indexPath?: string) {
+    await this.rest.workspace.yasumu.fs.remove(oldPath).catch(Object);
+    if (indexPath) {
+      await this.rest.workspace.indexer.deleteIndex({
+        id: this.id,
+        location: indexPath,
+      });
+    }
     // if we somehow accidentally removed the current file
     await this.save();
   }
@@ -156,8 +171,22 @@ export class YasumuRestEntity extends Executable {
    */
   public async save() {
     const serialized = await this.serialize();
+    await this.#ensurePath();
     await this.rest.workspace.yasumu.fs.writeTextFile(this.fullPath, serialized);
     return this.updateDependencies();
+  }
+
+  /**
+   * Delete this entity
+   */
+  public async delete() {
+    await this.rest.workspace.yasumu.fs.remove(this.fullPath);
+    return this.deleteDependencies();
+  }
+
+  async #ensurePath() {
+    const exists = await this.rest.workspace.yasumu.fs.exists(this.basePath);
+    if (!exists) await this.rest.workspace.yasumu.fs.mkdir(this.basePath, { recursive: true });
   }
 
   /**
@@ -166,7 +195,7 @@ export class YasumuRestEntity extends Executable {
   public async deleteDependencies() {
     await this.rest.workspace.indexer.deleteIndex({
       id: this.id,
-      location: this.path,
+      location: this.basePath,
     });
 
     const metadata = this.rest.workspace.getMetadata();
@@ -185,7 +214,8 @@ export class YasumuRestEntity extends Executable {
   public async updateDependencies() {
     await this.rest.workspace.indexer.createIndex({
       id: this.id,
-      location: this.path,
+      location: this.basePath,
+      name: this.filename,
     });
 
     const metadata = this.rest.workspace.getMetadata();

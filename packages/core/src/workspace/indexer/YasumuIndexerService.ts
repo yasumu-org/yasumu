@@ -4,6 +4,7 @@ import { INDEX_FILE_NAME } from './constants.js';
 
 export interface IndexParams {
   location: string;
+  name: string;
   id: string;
 }
 
@@ -19,7 +20,7 @@ export class YasumuIndexerService {
   public async createIndex(options: IndexParams) {
     const index = await this.getIndexFile(options.location);
 
-    index[options.id] = options.location;
+    index[options.id] = options.name;
 
     return this.saveIndex(options.location, index);
   }
@@ -28,7 +29,7 @@ export class YasumuIndexerService {
    * Delete an index for a location.
    * @param options The options for deleting the index.
    */
-  public async deleteIndex(options: IndexParams) {
+  public async deleteIndex(options: Omit<IndexParams, 'name'>) {
     const index = await this.getIndexFile(options.location);
 
     delete index[options.id];
@@ -45,7 +46,11 @@ export class YasumuIndexerService {
   public async findIndex(location: string, id: string): Promise<string | null> {
     const index = await this.getIndexFile(location);
 
-    return index[id] ?? null;
+    const value = index[id];
+
+    if (!value) return null;
+
+    return this.workspace.yasumu.utils.joinPathSync(location, value);
   }
 
   /**
@@ -87,6 +92,11 @@ export class YasumuIndexerService {
   public async getIndexFile(location: string): Promise<Index> {
     const targetLocation = await this.resolveIndexPath(location);
     const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, INDEX_FILE_NAME);
+    const exists = await this.workspace.yasumu.fs.exists(indexPath);
+    if (!exists) {
+      await this.workspace.yasumu.fs.writeTextFile(indexPath, '{}');
+      return {};
+    }
     const json = await this.workspace.yasumu.fs.readTextFile(indexPath);
 
     return JSON.parse(json);

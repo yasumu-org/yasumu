@@ -1,30 +1,24 @@
+import { YasumuRestEntity } from '@yasumu/core';
 import { Yasumu } from '@yasumu/testing';
 
-const dir = import.meta.dirname + '/workspace';
+const dir = import.meta.dirname + '/sample-workspace';
 
 const workspace = await Yasumu.openWorkspace({
   path: dir,
 });
 
-const entity = await workspace.rest.create({
-  method: 'GET',
-  name: 'Get users',
-  url: 'https://example.com/users',
-});
+const target = Object.keys(workspace.getMetadata().getRawData().rest)[0];
 
-const result = await entity.execute();
+let entity: YasumuRestEntity;
 
-await workspace.rest.get('id');
+if (!target) entity = await workspace.rest.create();
+else entity = await workspace.rest.open(target);
 
-// const metadata = workspace.getMetadata();
+await entity.delete();
 
-// console.log(metadata.toJSON());
+// console.log(entity.toJSON());
 
-/*
-{
-  createdAt: '2024-10-31T06:48:39.100Z',
-  version: '0.0',
-  name: 'Untitled Workspace',
-  id: 'f5c15f16-a718-4101-a5c3-8ef53ad843b4'
-}
-*/
+// await entity.setPath('/');
+// await entity.rename('New Name');
+
+// console.log(entity.toJSON());

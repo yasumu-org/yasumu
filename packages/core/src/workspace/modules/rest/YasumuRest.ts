@@ -46,7 +46,13 @@ export class YasumuRest extends YasumuBaseModule {
 
   public async loadEntity(id: string): Promise<YasumuRawRestEntity> {
     const location = await this.findEntityPath(id);
-    if (!location) throw new EntityNotFoundError(id, this.type);
+    if (!location) {
+      const metadata = this.workspace.getMetadata();
+      const data = metadata.getRawData();
+      delete data.rest[id];
+      await metadata.save();
+      throw new EntityNotFoundError(id, this.type);
+    }
 
     const entity = await this.workspace.yasumu.fs.readTextFile(location);
 

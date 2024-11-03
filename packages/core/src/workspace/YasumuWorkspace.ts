@@ -129,6 +129,16 @@ export class YasumuWorkspace {
   public async loadMetadata(): Promise<YasumuWorkspaceMetadata> {
     const { path, create = true } = this.options;
 
+    const workspaceDirExists = await this.yasumu.fs.exists(path);
+
+    if (!workspaceDirExists && !create) {
+      throw new WorkspaceNotFoundError(path);
+    }
+
+    if (!workspaceDirExists) {
+      await this.yasumu.fs.mkdir(path, { recursive: true });
+    }
+
     this.#metadataPath = await this.yasumu.path.join(path, YasumuFileNamesMap.WorkspaceMetadata);
 
     const exists = await this.yasumu.fs.exists(this.#metadataPath);
@@ -137,7 +147,14 @@ export class YasumuWorkspace {
       throw new WorkspaceNotFoundError(path);
     }
 
-    this.#metadata = await createWorkspaceMetadata(this, {}, !exists);
+    this.#path = path;
+
+    if (exists) {
+      const metadata = await this.yasumu.fs.readTextFile(this.#metadataPath);
+      this.#metadata = await createWorkspaceMetadata(this, JSON.parse(metadata), false);
+    } else {
+      this.#metadata = await createWorkspaceMetadata(this, {}, true);
+    }
 
     return this.#metadata;
   }
