@@ -3,6 +3,7 @@ import { YasumuSchemaUtils } from "./utils.js";
 const YasumuSchemaTokenType = [
     "ILLEGAL",
     "EOF",
+    "ANNOTATION",
     "IDENTIFIER",
     "TRUE",
     "FALSE",

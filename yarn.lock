@@ -2386,7 +2386,9 @@ __metadata:
   resolution: "@yasumu/schema@workspace:packages/schema"
   dependencies:
     "@types/node": "npm:^22.4.1"
+    "@yasumu/tsconfig": "workspace:^"
     rimraf: "npm:^6.0.1"
+    tsx: "npm:^4.19.2"
     typescript: "npm:^5.5.4"
   languageName: unknown
   linkType: soft
@@ -7750,6 +7752,22 @@ __metadata:
   bin:
     tsx: dist/cli.mjs
   checksum: 10c0/d14463a78067c6db84c677b79b14861de6d7f6fb0ffa5727cc500c4552459e936395a3854ad0112af0fd7b263bcedd62ce3929b036188eb10cd9902a607ffe34
+  languageName: node
+  linkType: hard
+
+"tsx@npm:^4.19.2":
+  version: 4.19.2
+  resolution: "tsx@npm:4.19.2"
+  dependencies:
+    esbuild: "npm:~0.23.0"
+    fsevents: "npm:~2.3.3"
+    get-tsconfig: "npm:^4.7.5"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    tsx: dist/cli.mjs
+  checksum: 10c0/63164b889b1d170403e4d8753a6755dec371f220f5ce29a8e88f1f4d6085a784a12d8dc2ee669116611f2c72757ac9beaa3eea5c452796f541bdd2dc11753721
   languageName: node
   linkType: hard
 

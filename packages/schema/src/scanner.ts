@@ -34,6 +34,9 @@ export class YasumuSchemaScanner {
                 },
             };
         }
+        if (char === "@") {
+            return this.readAnnotation(start);
+        }
         if (char === '"' || char === "'") {
             return this.readString(char, start);
         }
@@ -182,6 +185,21 @@ export class YasumuSchemaScanner {
                 value in YasumuSchemaScanner._keywords
                     ? YasumuSchemaScanner._keywords[value]!
                     : YasumuSchemaTokenTypes.IDENTIFIER,
+            value: value,
+            span: {
+                start,
+                end: this.lexer.getCurrentSpan(),
+            },
+        };
+    }
+
+    readAnnotation(start: YasumuSchemaTokenSpanPosition): YasumuSchemaToken {
+        let value = "";
+        while (YasumuSchemaUtils.isAlphaNumericChar(this.lexer.peek())) {
+            value += this.lexer.advance();
+        }
+        return {
+            type: YasumuSchemaTokenTypes.ANNOTATION,
             value: value,
             span: {
                 start,

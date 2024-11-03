@@ -49,10 +49,10 @@ export class YasumuSchemaSerializer {
         script: T,
         value: YasumuSchemaParasableScriptToType<T>,
     ) {
-        let output = "";
-        for (const x of Object.keys(script)) {
-            const xNode = script[x]!;
-            const xValue = value[x]!;
+        let output = `@${script.annotation}\n\n`;
+        for (const x of Object.keys(script.blocks)) {
+            const xNode = script.blocks[x]!;
+            const xValue = value.blocks[x]!;
             if (!xNode.required && (xValue === undefined || xValue === null)) {
                 continue;
             }

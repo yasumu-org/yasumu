@@ -11,8 +11,8 @@
         "LICENSE"
     ],
     "scripts": {
-        "build": "rimraf ./dist && tsc",
-        "example": "node ./example/example.js"
+        "build": "rimraf dist && tsc",
+        "example": "tsx example/example.ts"
     },
     "repository": {
         "type": "git",
@@ -29,7 +29,9 @@
     "homepage": "https://github.com/yasumu-org/yasumu#readme",
     "devDependencies": {
         "@types/node": "^22.4.1",
+        "@yasumu/tsconfig": "workspace:^",
         "rimraf": "^6.0.1",
+        "tsx": "^4.19.2",
         "typescript": "^5.5.4"
     }
 }
