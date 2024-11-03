@@ -1,6 +1,7 @@
 import type {
   Callback,
   DirEntry,
+  FileInfo,
   FilePath,
   FileSystemCommon,
   MkdirOptions,
@@ -13,6 +14,17 @@ import fs from 'node:fs';
 import type { IDirent } from 'memfs/lib/node/types/misc.js';
 
 export class FileSystemMock implements FileSystemCommon {
+  public async lstat(path: FilePath): Promise<FileInfo> {
+    const stats = await fs.promises.stat(path);
+
+    return {
+      isDirectory: stats.isDirectory(),
+      isFile: stats.isFile(),
+      isSymlink: stats.isSymbolicLink(),
+      size: stats.size,
+    };
+  }
+
   public async copyFile(fromPath: FilePath, toPath: FilePath): Promise<void> {
     return fs.promises.copyFile(fromPath, toPath);
   }

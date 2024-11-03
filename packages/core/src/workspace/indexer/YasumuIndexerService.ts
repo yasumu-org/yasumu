@@ -62,20 +62,11 @@ export class YasumuIndexerService {
     const path = this.workspace.yasumu.path;
     let targetLocation = location;
 
-    const [isDir, isFile] = await Promise.all([
-      this.workspace.yasumu.fs.readDir(location).then(
-        () => true,
-        () => false,
-      ),
-      this.workspace.yasumu.fs.readFile(location).then(
-        () => true,
-        () => false,
-      ),
-    ]);
+    const exists = await this.workspace.yasumu.fs.exists(location);
 
-    if (!isDir && !isFile) {
-      throw new InvalidLocationError(location);
-    }
+    if (!exists) throw new InvalidLocationError(location);
+
+    const { isFile } = await this.workspace.yasumu.fs.lstat(location);
 
     if (isFile) {
       targetLocation = await path.dirname(location);

@@ -28,10 +28,18 @@ export interface WriteFileOptions {
   createNew?: boolean;
 }
 
+export interface FileInfo {
+  isDirectory: boolean;
+  isFile: boolean;
+  isSymlink: boolean;
+  size: number;
+}
+
 export interface FileSystemCommon {
   copyFile(fromPath: FilePath, toPath: FilePath): Promise<void>;
   exists(path: FilePath): Promise<boolean>;
   mkdir(path: FilePath, options?: MkdirOptions): Promise<void>;
+  lstat(path: FilePath): Promise<FileInfo>;
   readDir(path: FilePath): Promise<DirEntry[]>;
   readFile(path: FilePath): Promise<Uint8Array>;
   readTextFile(path: FilePath): Promise<string>;
