@@ -85,9 +85,8 @@ export class YasumuIndexerService {
    * @returns The index file.
    */
   public async getIndexFile(location: string): Promise<Index> {
-    const path = this.workspace.yasumu.path;
     const targetLocation = await this.resolveIndexPath(location);
-    const indexPath = await path.join(targetLocation, INDEX_FILE_NAME);
+    const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, INDEX_FILE_NAME);
     const json = await this.workspace.yasumu.fs.readTextFile(indexPath);
 
     return JSON.parse(json);
@@ -99,9 +98,8 @@ export class YasumuIndexerService {
    * @param index The index to save.
    */
   public async saveIndex(location: string, index: Index): Promise<void> {
-    const path = this.workspace.yasumu.path;
     const targetLocation = await this.resolveIndexPath(location);
-    const indexPath = await path.join(targetLocation, INDEX_FILE_NAME);
+    const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, INDEX_FILE_NAME);
 
     return this.workspace.yasumu.fs.writeTextFile(indexPath, JSON.stringify(index));
   }

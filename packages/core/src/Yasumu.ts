@@ -13,6 +13,7 @@ import type {
 } from '@yasumu/common';
 import { AdapterType } from '@yasumu/common';
 import { YASUMU_API_VERSION } from './common/constants.js';
+import { YasumuUtilities } from './YasumuUtilities.js';
 
 export type YasumuCommon = {
   [K in AdapterType]: AdapterCommonMap[K];
@@ -68,6 +69,11 @@ export class Yasumu implements YasumuCommon {
   #workspace: YasumuWorkspace | null = null;
 
   /**
+   * The common utilities for the workspace modules.
+   */
+  public readonly utils: YasumuUtilities;
+
+  /**
    * Create a new Yasumu instance. This is the main entry point for the application.
    * @param options The options to bootstrap the application with.
    */
@@ -81,6 +87,7 @@ export class Yasumu implements YasumuCommon {
     this.process = options.adapters[AdapterType.Process];
     this.shell = options.adapters[AdapterType.Shell];
     this.store = options.adapters[AdapterType.Store];
+    this.utils = new YasumuUtilities(this);
   }
 
   /**

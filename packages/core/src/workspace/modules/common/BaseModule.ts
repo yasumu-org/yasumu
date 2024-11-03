@@ -13,7 +13,7 @@ export abstract class YasumuBaseModule {
   /**
    * Get the location of this module.
    */
-  public async getLocation(): Promise<string> {
+  public getLocation(): string {
     return this.workspace.resolvePath(this.type);
   }
 }

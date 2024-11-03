@@ -146,22 +146,22 @@ export class YasumuWorkspace {
    * Resolves a module path relative to this workspace.
    * @param type The type of module to resolve.
    */
-  public async resolvePath(type: WorkspaceModuleType) {
+  public resolvePath(type: WorkspaceModuleType) {
     const workspacePath = this.path;
 
     switch (type) {
       case WorkspaceModuleType.Rest:
-        return this.yasumu.path.join(workspacePath, 'rest');
+        return this.yasumu.utils.joinPathSync(workspacePath, 'rest');
       case WorkspaceModuleType.GraphQL:
-        return this.yasumu.path.join(workspacePath, 'graphql');
+        return this.yasumu.utils.joinPathSync(workspacePath, 'graphql');
       case WorkspaceModuleType.SMTP:
-        return this.yasumu.path.join(workspacePath, 'smtp');
+        return this.yasumu.utils.joinPathSync(workspacePath, 'smtp');
       case WorkspaceModuleType.Websocket:
-        return this.yasumu.path.join(workspacePath, 'websocket');
+        return this.yasumu.utils.joinPathSync(workspacePath, 'websocket');
       case WorkspaceModuleType.SocketIO:
-        return this.yasumu.path.join(workspacePath, 'socketio');
+        return this.yasumu.utils.joinPathSync(workspacePath, 'socketio');
       case WorkspaceModuleType.SSE:
-        return this.yasumu.path.join(workspacePath, 'sse');
+        return this.yasumu.utils.joinPathSync(workspacePath, 'sse');
       default:
         throw new TypeError(`Unknown module type: ${type}`);
     }

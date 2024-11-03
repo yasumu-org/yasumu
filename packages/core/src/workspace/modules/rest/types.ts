@@ -7,6 +7,11 @@ export interface YasumuRawRestEntity extends RestIndex {
   $$typeof: (typeof WorkspaceModuleType)['Rest'];
 
   /**
+   * The time when this entity was created.
+   */
+  createdAt: number;
+
+  /**
    * The request object.
    */
   request: {
@@ -42,7 +47,7 @@ export interface YasumuRawRestEntity extends RestIndex {
     /**
      * The body of the response.
      */
-    body: string;
+    body: string | null;
   };
   /**
    * The scripts of the entity.
