@@ -1,5 +1,5 @@
 import type {
-    YasumuSchemaParasableScript,
+    YasumuSchemaParsableScript,
     YasumuSchemaParsable,
     YasumuSchemaParsableList,
     YasumuSchemaParsableObject,
@@ -25,9 +25,9 @@ export class YasumuSchemaParser {
         this.advance();
     }
 
-    parse<T extends YasumuSchemaParasableScript>(script: T) {
+    parse<T extends YasumuSchemaParsableScript>(script: T) {
         const blocks: Record<string, any> = {};
-        const keys = new Set(Object.keys(script.blocks));
+        const keys = new Set(Object.keys(script.schema));
         const annotation = this.parseAnnotation(script);
         while (!this.isEOF()) {
             const [key, value] = this.parseBlock(script);
@@ -35,7 +35,7 @@ export class YasumuSchemaParser {
             keys.delete(key);
         }
         for (const x of keys) {
-            if (script.blocks[x]!.required && !(x in blocks)) {
+            if (script.schema[x]!.required && !(x in blocks)) {
                 throw new YasumuSchemaParserError(
                     `Missing required block '${x}'`,
                 );
@@ -45,7 +45,7 @@ export class YasumuSchemaParser {
         return { annotation, blocks } as YasumuSchemaParasableScriptToType<T>;
     }
 
-    parseAnnotation(script: YasumuSchemaParasableScript) {
+    parseAnnotation(script: YasumuSchemaParsableScript) {
         const annotation = this.consume(YasumuSchemaTokenTypes.ANNOTATION);
         if (annotation.value !== script.annotation) {
             const { line, column } = annotation.span.start;
@@ -56,9 +56,9 @@ export class YasumuSchemaParser {
         return annotation.value;
     }
 
-    parseBlock(script: YasumuSchemaParasableScript) {
+    parseBlock(script: YasumuSchemaParsableScript) {
         const identifier = this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
-        const node = script.blocks[identifier.value]!;
+        const node = script.schema[identifier.value]!;
         if (!node) {
             const { line, column } = identifier.span.start;
             throw new YasumuSchemaParserError(

@@ -1,9 +1,9 @@
 import { WorkspaceModuleType } from "@yasumu/core";
-import { YasumuSchemaParasableScript, YasumuScriptActions } from "../src";
+import { YasumuSchemaParsableScript, YasumuScriptActions } from "../src";
 
 const WorkspaceSchema = {
     annotation: "workspace",
-    blocks: {
+    schema: {
         Metadata: {
             type: "object",
             schema: {
@@ -281,7 +281,7 @@ const WorkspaceSchema = {
             },
         },
     },
-} as const satisfies YasumuSchemaParasableScript;
+} as const satisfies YasumuSchemaParsableScript;
 
 const script = `
 @workspace

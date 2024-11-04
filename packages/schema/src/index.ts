@@ -1,4 +1,5 @@
 export * from "./lexer.js";
+export * from "./parsable-factories.js";
 export * from "./parsable-typings.js";
 export * from "./parsable.js";
 export * from "./parser.js";

@@ -1,11 +1,11 @@
 import { YasumuSchemaLexer } from "./lexer.js";
-import type { YasumuSchemaParasableScript } from "./parsable.js";
+import type { YasumuSchemaParsableScript } from "./parsable.js";
 import type { YasumuSchemaParasableScriptToType } from "./parsable-typings.js";
 import { YasumuSchemaParser } from "./parser.js";
 import { YasumuSchemaScanner } from "./scanner.js";
 import { YasumuSchemaSerializer } from "./serializer.js";
 
-export class YasumuScriptActions<T extends YasumuSchemaParasableScript> {
+export class YasumuScriptActions<T extends YasumuSchemaParsableScript> {
     constructor(public readonly script: T) {}
 
     parse(content: string) {

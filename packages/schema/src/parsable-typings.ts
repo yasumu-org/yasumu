@@ -1,5 +1,5 @@
 import type {
-    YasumuSchemaParasableScript,
+    YasumuSchemaParsableScript,
     YasumuSchemaParsable,
     YasumuSchemaParsableBlock,
     YasumuSchemaParsableCodeBlock,
@@ -11,12 +11,12 @@ import type {
 } from "./parsable.js";
 
 export type YasumuSchemaParasableScriptToType<
-    T extends YasumuSchemaParasableScript,
+    T extends YasumuSchemaParsableScript,
 > = {
     annotation: string;
     blocks: {
-        [K in keyof T["blocks"]]: YasumuSchemaParsableBlockToType<
-            T["blocks"][K]
+        [K in keyof T["schema"]]: YasumuSchemaParsableBlockToType<
+            T["schema"][K]
         >;
     };
 };

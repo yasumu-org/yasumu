@@ -1,5 +1,5 @@
 import type {
-    YasumuSchemaParasableScript,
+    YasumuSchemaParsableScript,
     YasumuSchemaParsable,
     YasumuSchemaParsableBlock,
     YasumuSchemaParsableCodeBlock,
@@ -29,7 +29,7 @@ export class YasumuSchemaSerializer {
     depth = 0;
     keyPath: string[] = [];
 
-    serialize<T extends YasumuSchemaParasableScript>(
+    serialize<T extends YasumuSchemaParsableScript>(
         script: T,
         value: YasumuSchemaParasableScriptToType<T>,
     ) {
@@ -44,13 +44,13 @@ export class YasumuSchemaSerializer {
         }
     }
 
-    _serialize<T extends YasumuSchemaParasableScript>(
+    _serialize<T extends YasumuSchemaParsableScript>(
         script: T,
         value: YasumuSchemaParasableScriptToType<T>,
     ) {
         let output = `@${script.annotation}\n\n`;
-        for (const x of Object.keys(script.blocks)) {
-            const xNode = script.blocks[x]!;
+        for (const x of Object.keys(script.schema)) {
+            const xNode = script.schema[x]!;
             const xValue = value.blocks[x]!;
             if (!xNode.required && (xValue === undefined || xValue === null)) {
                 continue;

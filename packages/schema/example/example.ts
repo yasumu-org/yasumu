@@ -1,4 +1,4 @@
-import { YasumuSchemaParasableScript, YasumuScriptActions } from "../src";
+import { t, YasumuScriptActions } from "../src";
 
 const script = `
 @Example
@@ -19,91 +19,26 @@ Test {
 }
 `;
 
-export const YasumuExampleScript = {
-    annotation: "Example",
-    blocks: {
-        Metadata: {
-            type: "object",
-            schema: {
-                name: {
-                    schema: {
-                        type: "string",
-                    },
-                    required: false,
-                },
-                method: {
-                    schema: {
-                        type: "string",
-                    },
-                    required: true,
-                },
-            },
-            required: true,
-        },
-        Request: {
-            type: "object",
-            schema: {
-                url: {
-                    schema: {
-                        type: "string",
-                    },
-                    required: true,
-                },
-                params: {
-                    schema: {
-                        type: "record",
-                        schema: {
-                            type: "string",
-                        },
-                    },
-                    required: false,
-                },
-                headers: {
-                    schema: {
-                        type: "record",
-                        schema: {
-                            type: "string",
-                        },
-                    },
-                    required: false,
-                },
-                body: {
-                    schema: {
-                        type: "object",
-                        schema: {
-                            type: {
-                                schema: {
-                                    type: "string",
-                                },
-                                required: true,
-                            },
-                            data: {
-                                schema: {
-                                    type: "string",
-                                },
-                                required: true,
-                            },
-                        },
-                    },
-                    required: false,
-                },
-            },
-            required: true,
-        },
-        BeforeRequest: {
-            type: "code",
-            required: false,
-        },
-        AfterRequest: {
-            type: "code",
-            required: false,
-        },
-        Test: {
-            type: "code",
-            required: false,
-        },
-    },
-} as const satisfies YasumuSchemaParasableScript;
+export const YasumuExampleScript = t.script("Example", {
+    Metadata: t.objectBlock({
+        name: t.optionalObjectValue(t.string()),
+        method: t.optionalObjectValue(t.string()),
+    }),
+    Request: t.objectBlock({
+        url: t.objectValue(t.string()),
+        params: t.optionalObjectValue(t.record(t.string())),
+        headers: t.optionalObjectValue(t.record(t.string())),
+        body: t.optionalObjectValue(
+            t.object({
+                type: t.optionalObjectValue(t.string()),
+                data: t.optionalObjectValue(t.string()),
+            }),
+        ),
+    }),
+    BeforeRequest: t.optionalCodeBlock(),
+    AfterRequest: t.optionalCodeBlock(),
+    Test: t.optionalCodeBlock(),
+});
 
 const start = () => {
     const actions = new YasumuScriptActions(YasumuExampleScript);
