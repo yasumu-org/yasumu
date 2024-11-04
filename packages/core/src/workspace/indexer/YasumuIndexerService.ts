@@ -102,6 +102,6 @@ export class YasumuIndexerService {
     const targetLocation = await this.resolveIndexPath(location);
     const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, YasumuFileNamesMap.IndexFileName);
 
-    return this.workspace.yasumu.fs.writeTextFile(indexPath, JSON.stringify(index));
+    return this.workspace.yasumu.fs.writeTextFile(indexPath, JSON.stringify(index, null, 2));
   }
 }

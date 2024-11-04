@@ -4,11 +4,12 @@ import type { DeepPartial, RestIndex } from './modules/index.js';
 import { WorkspaceModuleType } from './modules/common/constants.js';
 import { YasumuScriptActions } from '@yasumu/schema';
 import { WorkspaceSchema } from './schema/WorkspaceSchema.js';
+import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
 
 export type RootIndex<T> = { entities: Record<string, T> };
 
 export interface YasumuRawWorkspaceMetadata {
-  annotation: 'workspace';
+  annotation: typeof YASUMU_WORKSPACE_ANNOTATION;
   blocks: {
     Metadata: {
       /**
@@ -22,7 +23,7 @@ export interface YasumuRawWorkspaceMetadata {
       /**
        * The date the workspace was created.
        */
-      createdAt: string;
+      createdAt: number;
       /**
        * The version of the workspace.
        */
@@ -83,11 +84,11 @@ export class YasumuWorkspaceMetadata {
    * @param save Whether to save the metadata.
    */
   #reformat() {
-    this.data.annotation = 'workspace';
+    this.data.annotation = YASUMU_WORKSPACE_ANNOTATION;
     this.data.blocks ??= {
       Metadata: {},
     } as typeof this.data.blocks;
-    this.data.blocks.Metadata.createdAt ??= new Date().toISOString();
+    this.data.blocks.Metadata.createdAt ??= Date.now();
     this.data.blocks.Metadata.version ??= this.workspace.yasumu.apiVersion;
     this.data.blocks.Metadata.name ??= 'Untitled Workspace';
     this.data.blocks.Metadata.id ??= generateId();
@@ -202,7 +203,7 @@ export class YasumuWorkspaceMetadata {
    */
   public static serialize(data: YasumuRawWorkspaceMetadata): string {
     // return this.schema.serialize(data as any);
-    return JSON.stringify(data);
+    return JSON.stringify(data, null, 2);
   }
 
   /**

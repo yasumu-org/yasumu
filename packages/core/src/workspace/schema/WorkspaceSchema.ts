@@ -1,8 +1,9 @@
 import type { YasumuSchemaParasableScript } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
+import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
 
 export const WorkspaceSchema = {
-  annotation: 'workspace',
+  annotation: YASUMU_WORKSPACE_ANNOTATION,
   blocks: {
     Metadata: {
       type: 'object',

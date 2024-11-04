@@ -219,7 +219,7 @@ export class YasumuSchemaSerializer {
     indent() {
         let output = "";
         for (let i = 0; i < this.depth; i++) {
-            output += TAB_SPACE;
+            output += INDENTATION_SPACE;
         }
         return output;
     }
@@ -246,7 +246,7 @@ export class YasumuSchemaSerializer {
     }
 }
 
-const TAB_SPACE = "    ";
+const INDENTATION_SPACE = " ".repeat(2);
 
 export class YasumuSchemaUnexpectedSerializerError extends Error {
     constructor() {

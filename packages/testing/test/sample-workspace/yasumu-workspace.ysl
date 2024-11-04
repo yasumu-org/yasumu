@@ -1,0 +1,36 @@
+{
+  "annotation": "Workspace",
+  "blocks": {
+    "Metadata": {
+      "createdAt": 1730691953693,
+      "version": "0.0",
+      "name": "Untitled Workspace",
+      "id": "6015f476-65d2-4db3-ab74-4acd2dcc75b9"
+    },
+    "Rest": {
+      "entities": {
+        "52b31739-ec96-47eb-b684-c321d24c9743": {
+          "id": "52b31739-ec96-47eb-b684-c321d24c9743",
+          "method": "GET",
+          "name": "Untitled request",
+          "path": "/"
+        }
+      }
+    },
+    "GraphQL": {
+      "entities": {}
+    },
+    "SMTP": {
+      "entities": {}
+    },
+    "SSE": {
+      "entities": {}
+    },
+    "SocketIO": {
+      "entities": {}
+    },
+    "WebSocket": {
+      "entities": {}
+    }
+  }
+}

@@ -1,1 +1,2 @@
 *.js linguist-language=TypeScript
+*.ysi linguist-language=JSON
