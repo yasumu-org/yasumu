@@ -1,43 +1,51 @@
-{
-  "annotation": "Workspace",
-  "blocks": {
-    "Metadata": {
-      "createdAt": 1730698544023,
-      "version": "0.0",
-      "name": "Untitled Workspace",
-      "id": "929d51bc-f8a5-4749-8bf8-da740e7b6373"
-    },
-    "Rest": {
-      "entities": {
-        "5c86fb8b-1610-4afd-a917-c9a025e8fb31": {
-          "id": "5c86fb8b-1610-4afd-a917-c9a025e8fb31",
-          "method": "GET",
-          "name": "Get todo by id",
-          "path": "/"
-        }
-      }
-    },
-    "GraphQL": {
-      "entities": {
-        "17f0a342-6200-4bfd-ba0f-a7dd7da55439": {
-          "id": "17f0a342-6200-4bfd-ba0f-a7dd7da55439",
-          "name": "GraphQL Demo",
-          "path": "/",
-          "method": "POST"
-        }
-      }
-    },
-    "SMTP": {
-      "entities": {}
-    },
-    "SSE": {
-      "entities": {}
-    },
-    "SocketIO": {
-      "entities": {}
-    },
-    "WebSocket": {
-      "entities": {}
+@Workspace
+
+Metadata {
+  name: "Untitled Workspace"
+  id: "929d51bc-f8a5-4749-8bf8-da740e7b6373"
+  createdAt: 1730698544023
+  version: "0.0"
+}
+
+Rest {
+  entities: {
+    5c86fb8b-1610-4afd-a917-c9a025e8fb31: {
+      name: "Get todo by id"
+      id: "5c86fb8b-1610-4afd-a917-c9a025e8fb31"
+      method: "GET"
+      path: "/"
     }
   }
 }
+
+GraphQL {
+  entities: {
+    17f0a342-6200-4bfd-ba0f-a7dd7da55439: {
+      name: "GraphQL Demo"
+      id: "17f0a342-6200-4bfd-ba0f-a7dd7da55439"
+      method: "POST"
+      path: "/"
+    }
+  }
+}
+
+SMTP {
+  entities: {
+  }
+}
+
+SSE {
+  entities: {
+  }
+}
+
+SocketIO {
+  entities: {
+  }
+}
+
+WebSocket {
+  entities: {
+  }
+}
+
