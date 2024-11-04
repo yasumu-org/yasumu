@@ -33,6 +33,8 @@ import { SiDiscord, SiGithub, SiGraphql, SiSocketdotio } from 'react-icons/si';
 import WebSocketLogo from '../assets/WebSocketLogo';
 import { YasumuSocials } from '@/lib/constants/socials';
 import SidebarLayoutStyleSelector from './layout-style-selector';
+import { useEffect, useState } from 'react';
+import { Yasumu } from '@/lib/yasumu';
 
 const data = {
   user: {
@@ -186,10 +188,7 @@ function NavUser({
                     <YasumuLogo className="size-4 dark:invert-0 invert" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Yasumu</span>
-                  <span className="truncate text-xs">v0.0.1</span>
-                </div>
+                <AppInfo />
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -233,5 +232,30 @@ function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
+  );
+}
+
+function AppInfo() {
+  const [info, setInfo] = useState({
+    name: 'Yasumu',
+    version: '0.0.0',
+  });
+
+  useEffect(() => {
+    (async () => {
+      const [name, version] = await Promise.all([Yasumu.app.getName(), Yasumu.app.getVersion()]);
+
+      setInfo({
+        name,
+        version,
+      });
+    })().catch(console.error);
+  }, []);
+
+  return (
+    <div className="grid flex-1 text-left text-sm leading-tight">
+      <span className="truncate font-semibold">{info.name}</span>
+      <span className="truncate text-xs">v{info.version}</span>
+    </div>
   );
 }

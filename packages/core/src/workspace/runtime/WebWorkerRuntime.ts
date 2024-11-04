@@ -102,14 +102,14 @@ export class WebWorkerRuntime extends BaseScriptRuntime {
   }
 
   public initialize(data: YasumuRuntimeData): Promise<void> {
-    const workerBlob = new Blob([WEB_WORKER_BOOTSTRAP], { type: 'application/javascript' });
-    const workerURL = URL.createObjectURL(workerBlob);
+    // const workerBlob = new Blob([WEB_WORKER_BOOTSTRAP], { type: 'application/javascript' });
+    // const workerURL = URL.createObjectURL(workerBlob);
 
-    if (this.worker) {
-      this.worker.terminate();
-      this.worker = null;
-    }
-    this.worker = new Worker(workerURL, { type: 'module', name: 'YasumuJavaScriptRuntime' });
+    // if (this.worker) {
+    //   this.worker.terminate();
+    //   this.worker = null;
+    // }
+    // this.worker = new Worker(workerURL, { type: 'module', name: 'YasumuJavaScriptRuntime' });
     return Promise.resolve();
   }
 

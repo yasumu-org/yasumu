@@ -5,6 +5,7 @@ import { JetBrains_Mono, Poppins } from 'next/font/google';
 import { AppSidebar } from '@/components/sidebars/app-sidebar';
 import LayoutGroup from '@/components/layout-group';
 import ThemeProvider from '@/providers/ThemeProvider';
+import WorkspaceProvider from '@/providers/WorkspaceProvider';
 
 export const metadata: Metadata = {
   title: 'Yasumu',
@@ -33,12 +34,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}>
       <body>
         <ThemeProvider>
-          <SidebarProvider>
-            <LayoutGroup>
-              <AppSidebar />
-              {children}
-            </LayoutGroup>
-          </SidebarProvider>
+          <WorkspaceProvider>
+            <SidebarProvider>
+              <LayoutGroup>
+                <AppSidebar />
+                {children}
+              </LayoutGroup>
+            </SidebarProvider>
+          </WorkspaceProvider>
         </ThemeProvider>
       </body>
     </html>
