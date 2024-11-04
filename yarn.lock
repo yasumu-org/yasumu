@@ -2499,6 +2499,7 @@ __metadata:
   resolution: "@yasumu/utilities@workspace:packages/utilities"
   dependencies:
     "@yasumu/common": "workspace:^"
+    "@yasumu/core": "workspace:^"
     "@yasumu/schema": "workspace:^"
     "@yasumu/tsconfig": "workspace:^"
     rimraf: "npm:^6.0.1"

@@ -150,8 +150,8 @@ export class YasumuSchemaSerializer {
         let output = "{\n";
         this.incrementIndent();
         for (const x of Object.keys(node)) {
-            const xNode = node?.[x]!;
-            const xValue = value?.[x];
+            const xNode = node[x]!;
+            const xValue = value[x];
             if (!xNode.required && (xValue === undefined || xValue === null)) {
                 continue;
             }
@@ -175,7 +175,7 @@ export class YasumuSchemaSerializer {
     ) {
         let output = "{\n";
         this.incrementIndent();
-        for (const x of Object.keys(node.schema)) {
+        for (const x of Object.keys(value)) {
             this.keyPath.push(x);
             output += this.indent() + x + ": ";
             output += this.serializeNode(node.schema as T["schema"], value[x]!);

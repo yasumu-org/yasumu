@@ -194,16 +194,14 @@ export class YasumuWorkspaceMetadata {
    * Deserializes a string to workspace metadata.
    */
   public static deserialize(data: string): YasumuRawWorkspaceMetadata {
-    // return this.schema.parse(data) as any;
-    return JSON.parse(data);
+    return this.schema.parse(data) as any;
   }
 
   /**
    * Serializes this workspace's metadata to a string.
    */
   public static serialize(data: YasumuRawWorkspaceMetadata): string {
-    // return this.schema.serialize(data as any);
-    return JSON.stringify(data, null, 2);
+    return this.schema.serialize(data as any);
   }
 
   /**
