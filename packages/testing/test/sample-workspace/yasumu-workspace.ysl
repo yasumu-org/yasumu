@@ -18,7 +18,14 @@
       }
     },
     "GraphQL": {
-      "entities": {}
+      "entities": {
+        "17f0a342-6200-4bfd-ba0f-a7dd7da55439": {
+          "id": "17f0a342-6200-4bfd-ba0f-a7dd7da55439",
+          "name": "GraphQL Demo",
+          "path": "/",
+          "method": "POST"
+        }
+      }
     },
     "SMTP": {
       "entities": {}

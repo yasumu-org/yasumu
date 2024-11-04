@@ -2452,6 +2452,7 @@ __metadata:
     "@yasumu/schema": "workspace:^"
     "@yasumu/tsconfig": "workspace:^"
     "@yasumu/utilities": "workspace:^"
+    graphql: "npm:^16.9.0"
     rimraf: "npm:^6.0.1"
     tsc-alias: "npm:^1.8.10"
     tsx: "npm:^4.17.0"
@@ -4717,6 +4718,13 @@ __metadata:
   version: 1.4.0
   resolution: "graphemer@npm:1.4.0"
   checksum: 10c0/e951259d8cd2e0d196c72ec711add7115d42eb9a8146c8eeda5b8d3ac91e5dd816b9cd68920726d9fd4490368e7ed86e9c423f40db87e2d8dfafa00fa17c3a31
+  languageName: node
+  linkType: hard
+
+"graphql@npm:^16.9.0":
+  version: 16.9.0
+  resolution: "graphql@npm:16.9.0"
+  checksum: 10c0/a8850f077ff767377237d1f8b1da2ec70aeb7623cdf1dfc9e1c7ae93accc0c8149c85abe68923be9871a2934b1bce5a2496f846d4d56e1cfb03eaaa7ddba9b6a
   languageName: node
   linkType: hard
 

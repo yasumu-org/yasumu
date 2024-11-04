@@ -1,9 +1,10 @@
 import type { YasumuWorkspace } from '@/workspace/YasumuWorkspace.js';
-import { WorkspaceModuleType } from './constants.js';
+import { WorkspaceModuleType, type YasumuEntityMap } from './constants.js';
 import { IndexNotFoundError } from '@/common/errors/IndexNotFoundError.js';
 import { EntityNotFoundError } from '@/common/errors/EntityNotFoundError.js';
-import type { YasumuEntityDataMap, YasumuEntityMap } from './types.js';
+import type { YasumuEntityDataMap } from './types.js';
 import type { YasumuSchemaParasableScript, YasumuScriptActions } from '@yasumu/schema';
+import type { BaseEntity } from './BaseEntity.js';
 
 export abstract class YasumuBaseModule<T extends WorkspaceModuleType = WorkspaceModuleType> {
   /**
@@ -113,7 +114,7 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
    * Called by the entity when it changes.
    * @param entity The entity that changed.
    */
-  public notifyChange(entity: YasumuEntityMap[T]) {
+  public notifyChange(entity: YasumuEntityMap[T] | BaseEntity) {
     // TODO: notify subscribers about the change
   }
 
@@ -121,7 +122,7 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
    * Called by the entity when it is deleted.
    * @param entity The entity that was deleted.
    */
-  public notifyDeleted(entity: YasumuEntityMap[T]) {
+  public notifyDeleted(entity: YasumuEntityMap[T] | BaseEntity) {
     // TODO: notify subscribers about the deletion
   }
 }

@@ -1,13 +1,19 @@
-import type { HttpMethod } from '@/common/index.js';
+import type { GraphqlHttpMethod } from '@yasumu/common';
 import type { WorkspaceModuleType } from '../common/constants.js';
 import type { CommonEntityMetadata, YasumuEntityScript } from '../common/types.js';
 
-export interface YasumuRawRestEntity {
+export interface GraphqlIndex extends CommonEntityMetadata {
+  /**
+   * An http method of this graphql entity
+   */
+  method: GraphqlHttpMethod;
+}
+
+export interface YasumuRawGraphqlEntity {
   /**
    * The type of the entity.
    */
-  annotation: (typeof WorkspaceModuleType)['Rest'];
-
+  annotation: (typeof WorkspaceModuleType)['GraphQL'];
   /**
    * The blocks of the entity.
    */
@@ -15,13 +21,12 @@ export interface YasumuRawRestEntity {
     /**
      * The metadata of this entity.
      */
-    Metadata: RestIndex & {
+    Metadata: GraphqlIndex & {
       /**
        * The time when this entity was created.
        */
       createdAt: number;
     };
-
     /**
      * The request object.
      */
@@ -34,6 +39,10 @@ export interface YasumuRawRestEntity {
        * The headers of the request.
        */
       headers: Array<{ key: string; value: string }>;
+      /**
+       * The body of the request.
+       */
+      body: string | FormData | null;
     };
     /**
      * The response object.
@@ -41,10 +50,6 @@ export interface YasumuRawRestEntity {
     Response: {
       /**
        * The status code of the response.
-       */
-      status: number | null;
-      /**
-       * The time taken to complete the request.
        */
       time: number | null;
       /**
@@ -73,11 +78,4 @@ export interface YasumuRawRestEntity {
      */
     Test: YasumuEntityScript;
   };
-}
-
-export interface RestIndex extends CommonEntityMetadata {
-  /**
-   * The method of the REST entity.
-   */
-  method: HttpMethod;
 }

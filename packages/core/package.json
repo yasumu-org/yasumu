@@ -42,6 +42,7 @@
   "dependencies": {
     "@yasumu/common": "workspace:^",
     "@yasumu/schema": "workspace:^",
-    "@yasumu/utilities": "workspace:^"
+    "@yasumu/utilities": "workspace:^",
+    "graphql": "^16.9.0"
   }
 }
