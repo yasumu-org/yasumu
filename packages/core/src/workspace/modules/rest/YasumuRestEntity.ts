@@ -201,12 +201,14 @@ export class YasumuRestEntity extends Executable {
 
   async #handleRename(oldPath: string, indexPath?: string) {
     await this.rest.workspace.yasumu.fs.remove(oldPath).catch(Object);
+
     if (indexPath) {
       await this.rest.workspace.indexer.deleteIndex({
         id: this.id,
         location: indexPath,
       });
     }
+
     // if we somehow accidentally removed the current file
     await this.save();
   }

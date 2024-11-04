@@ -18,6 +18,10 @@ export interface CreateRestEntityParams {
    * The http method
    */
   method: HttpMethod;
+  /**
+   * The request url
+   */
+  url: string;
 }
 
 export class YasumuRest extends YasumuBaseModule<(typeof WorkspaceModuleType)['Rest']> {
@@ -51,6 +55,9 @@ export class YasumuRest extends YasumuBaseModule<(typeof WorkspaceModuleType)['R
           name: params.name || 'Untitled request',
           method: params.method || HttpMethod.Get,
           path: params.path || '/',
+        },
+        Request: {
+          url: params.url || '',
         },
       },
     });

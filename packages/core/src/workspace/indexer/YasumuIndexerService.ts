@@ -1,6 +1,6 @@
 import { InvalidLocationError } from '@/common/errors/InvalidLocationError.js';
 import type { YasumuWorkspace } from '../YasumuWorkspace.js';
-import { INDEX_FILE_NAME } from './constants.js';
+import { YasumuFileNamesMap } from '@/common/constants.js';
 
 export interface IndexParams {
   location: string;
@@ -82,7 +82,7 @@ export class YasumuIndexerService {
    */
   public async getIndexFile(location: string): Promise<Index> {
     const targetLocation = await this.resolveIndexPath(location);
-    const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, INDEX_FILE_NAME);
+    const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, YasumuFileNamesMap.IndexFileName);
     const exists = await this.workspace.yasumu.fs.exists(indexPath);
     if (!exists) {
       await this.workspace.yasumu.fs.writeTextFile(indexPath, '{}');
@@ -100,7 +100,7 @@ export class YasumuIndexerService {
    */
   public async saveIndex(location: string, index: Index): Promise<void> {
     const targetLocation = await this.resolveIndexPath(location);
-    const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, INDEX_FILE_NAME);
+    const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, YasumuFileNamesMap.IndexFileName);
 
     return this.workspace.yasumu.fs.writeTextFile(indexPath, JSON.stringify(index));
   }
