@@ -11,7 +11,7 @@ Metadata {
 Request {
   url: "https://readonlydemo.vendure.io/shop-api"
   headers: [
-{
+    {
       key: "Content-Type"
       value: "application/json"
     },
