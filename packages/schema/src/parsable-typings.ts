@@ -4,7 +4,6 @@ import type {
     YasumuSchemaParsableBlock,
     YasumuSchemaParsableCodeBlock,
     YasumuSchemaParsableConstant,
-    YasumuSchemaParsableKeyPairs,
     YasumuSchemaParsableList,
     YasumuSchemaParsableObject,
     YasumuSchemaParsableObjectBlock,
@@ -51,17 +50,13 @@ export type YasumuSchemaParsableToType<T extends YasumuSchemaParsable> =
               ? YasumuSchemaParsableConstantToType<T>
               : never;
 
-export type YasumuSchemaParsableKeyPairsToType<
-    T extends YasumuSchemaParsableKeyPairs,
-> = {
-    [K in keyof T]: T[K] extends { required: true }
-        ? YasumuSchemaParsableToType<T[K]["schema"]>
-        : YasumuSchemaParsableToType<T[K]["schema"]> | null;
-};
-
 export type YasumuSchemaParsableObjectToType<
     T extends YasumuSchemaParsableObject,
-> = YasumuSchemaParsableKeyPairsToType<T["schema"]>;
+> = {
+    [K in keyof T["schema"]]: T["schema"][K] extends { required: true }
+        ? YasumuSchemaParsableToType<T["schema"][K]["schema"]>
+        : YasumuSchemaParsableToType<T["schema"][K]["schema"]> | null;
+};
 
 export type YasumuSchemaParsableRecordToType<
     T extends YasumuSchemaParsableRecord,

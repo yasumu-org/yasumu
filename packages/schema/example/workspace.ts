@@ -295,7 +295,7 @@ Metadata {
 
 Rest {
     entities: {
-        "5b29b86c-f11e-4c8a-8cd3-bca92cb38297": {
+        \`5b29b86c-f11e-4c8a-8cd3-bca92cb38297\`: {
             name: "My Entity"
             id: "5b29b86c-f11e-4c8a-8cd3-bca92cb38297"
             method: "GET"

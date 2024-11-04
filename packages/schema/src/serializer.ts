@@ -4,7 +4,6 @@ import type {
     YasumuSchemaParsableBlock,
     YasumuSchemaParsableCodeBlock,
     YasumuSchemaParsableConstant,
-    YasumuSchemaParsableKeyPairs,
     YasumuSchemaParsableList,
     YasumuSchemaParsableObject,
     YasumuSchemaParsableObjectBlock,
@@ -15,13 +14,13 @@ import type {
     YasumuSchemaParsableBlockToType,
     YasumuSchemaParsableCodeBlockToType,
     YasumuSchemaParsableConstantToType,
-    YasumuSchemaParsableKeyPairsToType,
     YasumuSchemaParsableListToType,
     YasumuSchemaParsableObjectBlockToType,
     YasumuSchemaParsableObjectToType,
     YasumuSchemaParsableRecordToType,
     YasumuSchemaParsableToType,
 } from "./parsable-typings.js";
+import { YasumuSchemaUtils } from "./utils.js";
 
 /**
  * This is highly experimental. Use with caution.
@@ -140,26 +139,22 @@ export class YasumuSchemaSerializer {
         node: T,
         value: YasumuSchemaParsableObjectToType<T>,
     ) {
-        return this.serializeKeyPairs(node.schema, value);
-    }
-
-    serializeKeyPairs<T extends YasumuSchemaParsableKeyPairs>(
-        node: T,
-        value: YasumuSchemaParsableKeyPairsToType<T>,
-    ) {
         let output = "{\n";
         this.incrementIndent();
-        for (const x of Object.keys(node)) {
-            const xNode = node[x]!;
+        for (const x of Object.keys(node.schema)) {
+            const xNode = node.schema[x]!;
             const xValue = value[x];
             if (!xNode.required && (xValue === undefined || xValue === null)) {
                 continue;
             }
             this.keyPath.push(x);
-            output += this.indent() + x + ": ";
+            output += this.indent();
+            output += this.serializeIdentifier(x) + ": ";
             output += this.serializeNode(
-                xNode.schema as T[typeof x]["schema"],
-                xValue as YasumuSchemaParsableToType<T[typeof x]["schema"]>,
+                xNode.schema as T["schema"][typeof x]["schema"],
+                xValue as YasumuSchemaParsableToType<
+                    T["schema"][typeof x]["schema"]
+                >,
             );
             output += "\n";
             this.keyPath.pop();
@@ -177,7 +172,8 @@ export class YasumuSchemaSerializer {
         this.incrementIndent();
         for (const x of Object.keys(value)) {
             this.keyPath.push(x);
-            output += this.indent() + x + ": ";
+            output += this.indent();
+            output += this.serializeIdentifier(x) + ": ";
             output += this.serializeNode(node.schema as T["schema"], value[x]!);
             output += "\n";
             this.keyPath.pop();
@@ -196,6 +192,7 @@ export class YasumuSchemaSerializer {
         let i = 0;
         for (const x of value) {
             this.keyPath.push(`${i}`);
+            output += this.indent();
             output += this.serializeNode(node.schema as T["schema"], x);
             output += ",\n";
             this.keyPath.pop();
@@ -214,6 +211,13 @@ export class YasumuSchemaSerializer {
             value = null;
         }
         return JSON.stringify(value);
+    }
+
+    serializeIdentifier(value: string) {
+        if (YasumuSchemaUtils.isIdentifierString(value)) {
+            return value;
+        }
+        return `\`${value}\``;
     }
 
     indent() {

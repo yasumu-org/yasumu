@@ -25,16 +25,14 @@ export type YasumuSchemaParsable =
     | YasumuSchemaParsableList
     | YasumuSchemaParsableConstant;
 
-export interface YasumuSchemaParsableKeyPairs {
-    [K: string]: {
-        schema: YasumuSchemaParsable;
-        required: boolean;
-    };
-}
-
 export interface YasumuSchemaParsableObject {
     type: "object";
-    schema: YasumuSchemaParsableKeyPairs;
+    schema: {
+        [K: string]: {
+            schema: YasumuSchemaParsable;
+            required: boolean;
+        };
+    };
 }
 
 export interface YasumuSchemaParsableRecord {
