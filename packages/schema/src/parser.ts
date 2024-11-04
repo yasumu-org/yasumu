@@ -137,11 +137,9 @@ export class YasumuSchemaParser {
             !this.isEOF() &&
             !this.check(YasumuSchemaTokenTypes.RIGHT_CURLY_BRACKET)
         ) {
-            const x = this.consume(
-                this.check(YasumuSchemaTokenTypes.STRING)
-                    ? YasumuSchemaTokenTypes.STRING
-                    : YasumuSchemaTokenTypes.IDENTIFIER,
-            );
+            const x =
+                this.match(YasumuSchemaTokenTypes.STRING) ||
+                this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
             if (!keys.has(x.value)) {
                 const { line, column } = x.span.start;
                 throw new YasumuSchemaParserError(
@@ -177,11 +175,9 @@ export class YasumuSchemaParser {
             !this.isEOF() &&
             !this.check(YasumuSchemaTokenTypes.RIGHT_CURLY_BRACKET)
         ) {
-            const key = this.consume(
-                this.check(YasumuSchemaTokenTypes.STRING)
-                    ? YasumuSchemaTokenTypes.STRING
-                    : YasumuSchemaTokenTypes.IDENTIFIER,
-            );
+            const key =
+                this.match(YasumuSchemaTokenTypes.STRING) ||
+                this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
             this.consume(YasumuSchemaTokenTypes.COLON);
             const value = this.parseNode(node.schema);
             record[key.value] = value;
