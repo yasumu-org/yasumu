@@ -9,7 +9,7 @@ Metadata {
 }
 
 Request {
-  url: "https://echo.hoppscotch.io/graphql"
+  url: "https://readonlydemo.vendure.io/shop-api"
   headers: [
 {
       key: "Content-Type"

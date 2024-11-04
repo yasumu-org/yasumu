@@ -13,7 +13,7 @@ let graphql: YasumuGraphqlEntity;
 if (!target)
   graphql = await workspace.graphql.create({
     name: 'GraphQL Demo',
-    url: 'https://echo.hoppscotch.io/graphql',
+    url: 'https://readonlydemo.vendure.io/shop-api',
   });
 else graphql = await workspace.graphql.open(target);
 
