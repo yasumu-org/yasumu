@@ -22,5 +22,6 @@ export const Yasumu = createYasumu({
     path: new PathMock(),
     process: new ProcessMock(),
     shell: new ShellMock(),
+    fetch,
   },
 });

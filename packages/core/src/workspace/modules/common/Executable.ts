@@ -1,7 +1,11 @@
+import type { InteractiveWebRequest } from '@/workspace/network/InteractiveWebRequest.js';
+import type { InteractiveWebResponse } from '@/workspace/network/InteractiveWebResponse.js';
+
 export interface ExecutionOptions {
   preScript?: boolean;
   postScript?: boolean;
   testScript?: boolean;
+  request?: InteractiveWebRequest;
 }
 
 export const LogLevel = {
@@ -60,6 +64,7 @@ export interface ExecutionResult {
   preScript: ScriptResult;
   postScript: ScriptResult;
   test: TestResult;
+  response: InteractiveWebResponse | null;
 }
 
 /**

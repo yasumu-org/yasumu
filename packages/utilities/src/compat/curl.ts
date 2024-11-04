@@ -1,9 +1,4 @@
-import { HttpMethod } from '@yasumu/core';
-
-export interface KeyValue<K, V> {
-  key: K;
-  value: V;
-}
+import { HttpMethod, type KeyValue } from '@yasumu/core';
 
 export interface BodyType {
   text?: string;

@@ -7,6 +7,7 @@ import type {
   ProcessCommon,
   ApplicationCommon,
   EventsCommon,
+  FetchCommon,
 } from './types/index.js';
 import type { ShellCommon } from './types/shell.js';
 
@@ -19,7 +20,8 @@ export type AdapterCommon =
   | ProcessCommon
   | ApplicationCommon
   | EventsCommon
-  | ShellCommon;
+  | ShellCommon
+  | FetchCommon;
 
 export const AdapterType = {
   Path: 'path',
@@ -31,6 +33,7 @@ export const AdapterType = {
   Application: 'app',
   Events: 'events',
   Shell: 'shell',
+  Fetch: 'fetch',
 } as const;
 
 export type AdapterType = (typeof AdapterType)[keyof typeof AdapterType];
@@ -45,6 +48,7 @@ export interface AdapterCommonMap {
   [AdapterType.Application]: ApplicationCommon;
   [AdapterType.Events]: EventsCommon;
   [AdapterType.Shell]: ShellCommon;
+  [AdapterType.Fetch]: FetchCommon;
 }
 
 export type Config<YasumuAdapterType extends AdapterType> = AdapterCommonMap[YasumuAdapterType];

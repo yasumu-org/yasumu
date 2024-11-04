@@ -10,6 +10,7 @@ import type {
   ShellCommon,
   StoreCommon,
   AdapterCommonMap,
+  FetchCommon,
 } from '@yasumu/common';
 import { AdapterType } from '@yasumu/common';
 import { YASUMU_API_VERSION } from './common/constants.js';
@@ -64,6 +65,10 @@ export class Yasumu implements YasumuCommon {
    */
   public readonly store: StoreCommon;
   /**
+   * The fetch adapter to use.
+   */
+  public readonly fetch: FetchCommon;
+  /**
    * The current workspace. This is set when a workspace is opened. If no workspace is open, this returns `null`.
    */
   #workspace: YasumuWorkspace | null = null;
@@ -87,6 +92,7 @@ export class Yasumu implements YasumuCommon {
     this.process = options.adapters[AdapterType.Process];
     this.shell = options.adapters[AdapterType.Shell];
     this.store = options.adapters[AdapterType.Store];
+    this.fetch = options.adapters[AdapterType.Fetch];
     this.utils = new YasumuUtilities(this);
   }
 

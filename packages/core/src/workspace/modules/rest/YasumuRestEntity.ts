@@ -1,5 +1,5 @@
 import { deepMerge, generateId } from '@/common/utils.js';
-import { Executable, type ExecutionOptions, type ExecutionResult } from '../common/Executable.js';
+import { Executable, ScriptType, type ExecutionOptions, type ExecutionResult } from '../common/Executable.js';
 import type { RestIndex, YasumuRawRestEntity } from './types.js';
 import type { YasumuRest } from './YasumuRest.js';
 import { HttpMethod } from '@/common/index.js';
@@ -84,6 +84,20 @@ export class YasumuRestEntity extends Executable {
    */
   public get id() {
     return this.data.blocks.Metadata.id;
+  }
+
+  /**
+   * The url of this entity
+   */
+  public get url() {
+    return this.data.blocks.Request.url || '';
+  }
+
+  /**
+   * The headers of this entity
+   */
+  public get headers() {
+    return this.data.blocks.Request.headers || [];
   }
 
   /**
@@ -295,15 +309,6 @@ export class YasumuRestEntity extends Executable {
   }
 
   /**
-   * Execute this entity
-   * @param options The execution options
-   * @returns The execution result
-   */
-  public async execute(options?: ExecutionOptions): Promise<ExecutionResult> {
-    return {} as ExecutionResult;
-  }
-
-  /**
    * Serialize this entity into a string
    * @returns serialized data
    */
@@ -325,5 +330,51 @@ export class YasumuRestEntity extends Executable {
    */
   public toJSON() {
     return this.data;
+  }
+
+  /**
+   * Create an interactive web request for this entity
+   * @returns The web request
+   */
+  public createInteractiveWebRequest() {
+    const request = this.rest.workspace.webRequest.create({
+      method: this.method,
+      url: this.url,
+      headers: this.headers,
+      timeout: 60_000,
+    });
+
+    return request;
+  }
+
+  /**
+   * Execute this entity
+   * @param options The execution options
+   * @returns The execution result
+   */
+  public async execute(options: ExecutionOptions = {}): Promise<ExecutionResult> {
+    const request = options.request ?? this.createInteractiveWebRequest();
+    const response = await request.send().catch(() => null);
+
+    if (response) {
+      this.data.blocks.Response = response.toJSON();
+
+      await this.save().catch(Object);
+    }
+
+    return {
+      response,
+      postScript: {
+        type: ScriptType.PostScript,
+        output: [],
+      },
+      preScript: {
+        type: ScriptType.PreScript,
+        output: [],
+      },
+      test: {
+        tests: [],
+      },
+    };
   }
 }

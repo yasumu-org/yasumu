@@ -2,17 +2,17 @@
   "annotation": "Workspace",
   "blocks": {
     "Metadata": {
-      "createdAt": 1730691953693,
+      "createdAt": 1730698544023,
       "version": "0.0",
       "name": "Untitled Workspace",
-      "id": "6015f476-65d2-4db3-ab74-4acd2dcc75b9"
+      "id": "929d51bc-f8a5-4749-8bf8-da740e7b6373"
     },
     "Rest": {
       "entities": {
-        "52b31739-ec96-47eb-b684-c321d24c9743": {
-          "id": "52b31739-ec96-47eb-b684-c321d24c9743",
+        "5c86fb8b-1610-4afd-a917-c9a025e8fb31": {
+          "id": "5c86fb8b-1610-4afd-a917-c9a025e8fb31",
           "method": "GET",
-          "name": "Untitled request",
+          "name": "Get todo by id",
           "path": "/"
         }
       }
