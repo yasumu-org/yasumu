@@ -24,7 +24,7 @@ export default function KeyValueTable() {
             <TableCell>
               <Input placeholder="Value" />
             </TableCell>
-            <TableCell className="space-x-2">
+            <TableCell className="space-x-2 flex items-center">
               <Checkbox className="h-5 w-5" />
               <Button size="icon" variant="destructive">
                 <Trash />
