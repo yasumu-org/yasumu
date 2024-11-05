@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronsUpDown, Home, Keyboard, Lock, Logs, Mail, Settings, Zap } from 'lucide-react';
+import { ChevronsUpDown, Keyboard, Lock, Logs, Mail, Settings, Zap } from 'lucide-react';
 import { IoSync } from 'react-icons/io5';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -35,6 +35,7 @@ import { YasumuSocials } from '@/lib/constants/socials';
 import SidebarLayoutStyleSelector from './layout-style-selector';
 import { useEffect, useState } from 'react';
 import { useYasumu } from '@/providers/WorkspaceProvider';
+import { AppMenu } from './app-menu';
 
 const data = {
   user: {
@@ -43,12 +44,12 @@ const data = {
     avatar: '/Yasumu Dark.svg',
   },
   navMain: [
-    {
-      title: 'Home',
-      url: '/',
-      icon: Home,
-      isActive: true,
-    },
+    // {
+    //   title: 'Home',
+    //   url: '/',
+    //   icon: Home,
+    //   isActive: true,
+    // },
     {
       title: 'Rest API',
       url: '/rest',
@@ -104,11 +105,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[#272a37] text-sidebar-primary-foreground">
-                <YasumuLogo className="size-4" />
-              </div>
-            </SidebarMenuButton>
+            <AppMenu />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
