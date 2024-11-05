@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarHeader } from '../ui/sidebar';
 import { FolderInput, Trash } from 'lucide-react';
+import Link from 'next/link';
 
 const data = ['Local', 'Testing'];
 
@@ -27,13 +28,16 @@ export function EnvironmentSidebar(props: React.ComponentProps<typeof Sidebar>) 
 
             {data.map((env) => {
               return (
-                <a
-                  href="#"
+                <Link
                   key={env}
+                  href={{
+                    pathname: '/environment',
+                    query: { env },
+                  }}
                   className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-2 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
                   <span className="text-foreground">{env}</span>
-                </a>
+                </Link>
               );
             })}
           </SidebarGroupContent>
