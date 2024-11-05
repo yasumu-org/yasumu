@@ -10,7 +10,7 @@ import type {
     YasumuSchemaParsableRecord,
 } from "./parsable.js";
 
-export type YasumuSchemaParasableScriptToType<
+export type YasumuSchemaParsableScriptToType<
     T extends YasumuSchemaParsableScript,
 > = {
     annotation: string;

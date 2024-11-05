@@ -3,7 +3,7 @@ import { WorkspaceModuleType, type YasumuEntityMap } from './constants.js';
 import { IndexNotFoundError } from '@/common/errors/IndexNotFoundError.js';
 import { EntityNotFoundError } from '@/common/errors/EntityNotFoundError.js';
 import type { YasumuEntityDataMap } from './types.js';
-import type { YasumuSchemaParasableScript, YasumuScriptActions } from '@yasumu/schema';
+import type { YasumuSchemaParsableScript, YasumuScriptActions } from '@yasumu/schema';
 import type { BaseEntity } from './BaseEntity.js';
 
 export abstract class YasumuBaseModule<T extends WorkspaceModuleType = WorkspaceModuleType> {
@@ -14,7 +14,7 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
   /**
    * The schema for the entities in this module.
    */
-  public abstract readonly schema: YasumuScriptActions<YasumuSchemaParasableScript>;
+  public abstract readonly schema: YasumuScriptActions<YasumuSchemaParsableScript>;
 
   /**
    * The base module for Yasumu.

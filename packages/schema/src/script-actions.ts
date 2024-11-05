@@ -1,6 +1,6 @@
 import { YasumuSchemaLexer } from "./lexer.js";
 import type { YasumuSchemaParsableScript } from "./parsable.js";
-import type { YasumuSchemaParasableScriptToType } from "./parsable-typings.js";
+import type { YasumuSchemaParsableScriptToType } from "./parsable-typings.js";
 import { YasumuSchemaParser } from "./parser.js";
 import { YasumuSchemaScanner } from "./scanner.js";
 import { YasumuSchemaSerializer } from "./serializer.js";
@@ -15,7 +15,7 @@ export class YasumuScriptActions<T extends YasumuSchemaParsableScript> {
         return parser.parse(this.script);
     }
 
-    serialize(value: YasumuSchemaParasableScriptToType<T>) {
+    serialize(value: YasumuSchemaParsableScriptToType<T>) {
         const serializer = new YasumuSchemaSerializer();
         return serializer.serialize(this.script, value);
     }

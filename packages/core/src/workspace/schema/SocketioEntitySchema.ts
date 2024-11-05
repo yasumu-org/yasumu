@@ -1,38 +1,11 @@
-import type { YasumuSchemaParasableScript } from '@yasumu/schema';
+import { t } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
-export const SocketioEntitySchema = {
-  annotation: WorkspaceModuleType.SocketIO,
-  blocks: {
-    Metadata: {
-      type: 'object',
-      schema: {
-        name: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-        id: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-        createdAt: {
-          schema: {
-            type: 'number',
-          },
-          required: true,
-        },
-        path: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-      },
-      required: true,
-    },
-  },
-} as const satisfies YasumuSchemaParasableScript;
+export const SocketioEntitySchema = t.script(WorkspaceModuleType.Websocket, {
+  Metadata: t.objectBlock({
+    name: t.objectValue(t.string()),
+    id: t.objectValue(t.string()),
+    createdAt: t.objectValue(t.number()),
+    path: t.objectValue(t.string()),
+  }),
+});

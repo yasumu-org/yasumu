@@ -6,7 +6,7 @@ import type {
     YasumuSchemaParsableRecord,
 } from "./parsable.js";
 import type {
-    YasumuSchemaParasableScriptToType,
+    YasumuSchemaParsableScriptToType,
     YasumuSchemaParsableListToType,
     YasumuSchemaParsableObjectToType,
     YasumuSchemaParsableRecordToType,
@@ -42,7 +42,7 @@ export class YasumuSchemaParser {
             }
             blocks[x] ??= null;
         }
-        return { annotation, blocks } as YasumuSchemaParasableScriptToType<T>;
+        return { annotation, blocks } as YasumuSchemaParsableScriptToType<T>;
     }
 
     parseAnnotation(script: YasumuSchemaParsableScript) {

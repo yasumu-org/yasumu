@@ -2,6 +2,7 @@ import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
 import LayoutGroup from '@/components/layout-group';
 import { SiGraphql } from 'react-icons/si';
 import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
+import GraphqlOutput from './(components)/GraphqlOutput';
 
 const graphqlData = [
   {
@@ -114,11 +115,7 @@ export default function RestLayout({ children }: React.PropsWithChildren) {
         id="yasumu-graphql-layout"
         left={<FileTreeSidebar fileTree={graphqlData} className="font-sans w-full" collapsible="none" />}
         right={children}
-        bottom={
-          <div className="flex items-center justify-center font-mono font-bold text-lg text-blue-500 h-full">
-            Output
-          </div>
-        }
+        bottom={<GraphqlOutput />}
       />
     </LayoutGroup>
   );

@@ -1,132 +1,41 @@
-import type { YasumuSchemaParasableScript } from '@yasumu/schema';
+import { t } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
-export const RestEntitySchema = {
-  annotation: WorkspaceModuleType.Rest,
-  blocks: {
-    Metadata: {
-      type: 'object',
-      schema: {
-        name: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-        id: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-        createdAt: {
-          schema: {
-            type: 'number',
-          },
-          required: true,
-        },
-        path: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-        method: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-      },
-      required: true,
-    },
-    Request: {
-      type: 'object',
-      schema: {
-        url: {
-          schema: {
-            type: 'string',
-          },
-          required: true,
-        },
-        headers: {
-          schema: {
-            type: 'list',
-            schema: {
-              type: 'object',
-              schema: {
-                key: {
-                  schema: {
-                    type: 'string',
-                  },
-                  required: true,
-                },
-                value: {
-                  schema: {
-                    type: 'string',
-                  },
-                  required: true,
-                },
-              },
-            },
-          },
-          required: false,
-        },
-      },
-      required: true,
-    },
-    Response: {
-      type: 'object',
-      schema: {
-        status: {
-          schema: {
-            type: 'number',
-          },
-          required: false,
-        },
-        time: {
-          schema: {
-            type: 'number',
-          },
-          required: false,
-        },
-        size: {
-          schema: {
-            type: 'number',
-          },
-          required: false,
-        },
-        headers: {
-          schema: {
-            type: 'list',
-            schema: {
-              type: 'object',
-              schema: {
-                key: {
-                  schema: {
-                    type: 'string',
-                  },
-                  required: true,
-                },
-                value: {
-                  schema: {
-                    type: 'string',
-                  },
-                  required: true,
-                },
-              },
-            },
-          },
-          required: false,
-        },
-        body: {
-          schema: {
-            type: 'string',
-          },
-          required: false,
-        },
-      },
-      required: true,
-    },
-  },
-} as const satisfies YasumuSchemaParasableScript;
+export const RestEntitySchema = t.script(WorkspaceModuleType.Rest, {
+  Metadata: t.objectBlock({
+    name: t.objectValue(t.string()),
+    id: t.objectValue(t.string()),
+    createdAt: t.objectValue(t.number()),
+    path: t.objectValue(t.string()),
+    method: t.objectValue(t.string()),
+  }),
+  Request: t.objectBlock({
+    url: t.objectValue(t.string()),
+    headers: t.objectValue(
+      t.list(
+        t.object({
+          key: t.objectValue(t.string()),
+          value: t.objectValue(t.string()),
+        }),
+      ),
+    ),
+    body: t.optionalObjectValue(t.string()),
+  }),
+  Response: t.objectBlock({
+    status: t.optionalObjectValue(t.number()),
+    time: t.optionalObjectValue(t.number()),
+    size: t.optionalObjectValue(t.number()),
+    headers: t.optionalObjectValue(
+      t.list(
+        t.object({
+          key: t.objectValue(t.string()),
+          value: t.objectValue(t.string()),
+        }),
+      ),
+    ),
+    body: t.optionalObjectValue(t.string()),
+  }),
+  BeforeRequest: t.optionalCodeBlock(),
+  AfterResponse: t.optionalCodeBlock(),
+  Test: t.optionalCodeBlock(),
+});

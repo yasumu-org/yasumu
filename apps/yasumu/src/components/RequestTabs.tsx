@@ -3,6 +3,7 @@
 import { useHorizontalScroll } from '@/hooks/use-horizontal-scroll';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
+import EnvironmentSelector from './EnvironmentSelector';
 
 export interface RequestTab {
   name: string;
@@ -15,12 +16,13 @@ export function RequestTabs({ tabs }: { tabs: RequestTab[] }) {
   if (!tabs.length) return null;
 
   return (
-    <div className="flex items-center gap-2">
-      <div ref={ref} className="flex flex-row items-center overflow-x-auto max-w-[80vw] w-fit zw-scrollbar">
+    <div className="flex items-center gap-2 select-none max-w-[80vw]">
+      <div ref={ref} className="flex flex-row items-center w-full overflow-x-auto zw-scrollbar">
         {tabs.map((tab, id) => {
           return <RequestTab tab={tab} key={id} />;
         })}
       </div>
+      <EnvironmentSelector />
     </div>
   );
 }
