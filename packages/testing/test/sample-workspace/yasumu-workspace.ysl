@@ -34,7 +34,7 @@ SMTP {
   }
 }
 
-SSE {
+WebSocket {
   entities: {
   }
 }
@@ -44,7 +44,7 @@ SocketIO {
   }
 }
 
-WebSocket {
+SSE {
   entities: {
   }
 }

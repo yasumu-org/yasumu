@@ -34,7 +34,7 @@ import WebSocketLogo from '../assets/WebSocketLogo';
 import { YasumuSocials } from '@/lib/constants/socials';
 import SidebarLayoutStyleSelector from './layout-style-selector';
 import { useEffect, useState } from 'react';
-import { Yasumu } from '@/lib/yasumu';
+import { useYasumu } from '@/providers/WorkspaceProvider';
 
 const data = {
   user: {
@@ -85,6 +85,8 @@ const data = {
       icon: Mail,
       isActive: false,
     },
+  ],
+  navFooter: [
     {
       title: 'Environment',
       url: '/environment',
@@ -139,13 +141,35 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <SidebarMenu>
+          {data.navFooter.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <Link href={item.url}>
+                <SidebarMenuButton
+                  tooltip={{
+                    children: item.title,
+                    hidden: false,
+                  }}
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                  isActive={path === item.url}
+                  className="px-2.5 md:px-2"
+                >
+                  <item.icon />
+                  <span>{item.title}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          ))}
+          <SettingsDropdown user={data.user} />
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
 }
 
-function NavUser({
+function SettingsDropdown({
   user,
 }: {
   user: {
@@ -157,85 +181,84 @@ function NavUser({
   const { isMobile } = useSidebar();
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
-            >
+    <SidebarMenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <SidebarMenuButton
+            size="lg"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
+          >
+            <Avatar className="h-8 w-8 rounded-lg">
+              <AvatarImage alt={'Settings'} />
+              <AvatarFallback className="rounded-lg">
+                <Settings className="size-4" />
+              </AvatarFallback>
+            </Avatar>
+            <ChevronsUpDown className="ml-auto size-4" />
+          </SidebarMenuButton>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+          side={isMobile ? 'bottom' : 'right'}
+          align="end"
+          sideOffset={4}
+        >
+          <DropdownMenuLabel className="p-0 font-normal">
+            <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage alt={'Settings'} />
+                <AvatarImage alt={user.name} />
                 <AvatarFallback className="rounded-lg">
-                  <Settings className="size-4" />
+                  <YasumuLogo className="size-4 dark:invert-0 invert" />
                 </AvatarFallback>
               </Avatar>
-              <ChevronsUpDown className="ml-auto size-4" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? 'bottom' : 'right'}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage alt={user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    <YasumuLogo className="size-4 dark:invert-0 invert" />
-                  </AvatarFallback>
-                </Avatar>
-                <AppInfo />
-              </div>
-            </DropdownMenuLabel>
+              <AppInfo />
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Settings />
+              Settings
+            </DropdownMenuItem>
+            <SidebarThemeSelector />
+            <SidebarLayoutStyleSelector />
+            <DropdownMenuItem>
+              <Keyboard />
+              Keyboard Shortcuts
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Logs />
+              Changelogs
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <Link href={YasumuSocials.GitHub} target="_blank">
+              <DropdownMenuItem>
+                <SiGithub />
+                GitHub
+              </DropdownMenuItem>
+            </Link>
+            <Link href={YasumuSocials.Discord} target="_blank">
+              <DropdownMenuItem>
+                <SiDiscord />
+                Discord
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Settings />
-                Settings
-              </DropdownMenuItem>
-              <SidebarThemeSelector />
-              <SidebarLayoutStyleSelector />
-              <DropdownMenuItem>
-                <Keyboard />
-                Keyboard Shortcuts
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Logs />
-                Changelogs
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <Link href={YasumuSocials.GitHub} target="_blank">
-                <DropdownMenuItem>
-                  <SiGithub />
-                  GitHub
-                </DropdownMenuItem>
-              </Link>
-              <Link href={YasumuSocials.Discord} target="_blank">
-                <DropdownMenuItem>
-                  <SiDiscord />
-                  Discord
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <IoSync />
-                Check for Updates
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+            <DropdownMenuItem>
+              <IoSync />
+              Check for Updates
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </SidebarMenuItem>
   );
 }
 
 function AppInfo() {
+  const yasumu = useYasumu();
   const [info, setInfo] = useState({
     name: 'Yasumu',
     version: '0.0.0',
@@ -243,14 +266,14 @@ function AppInfo() {
 
   useEffect(() => {
     (async () => {
-      const [name, version] = await Promise.all([Yasumu.app.getName(), Yasumu.app.getVersion()]);
+      const [name, version] = await Promise.all([yasumu.app.getName(), yasumu.app.getVersion()]);
 
       setInfo({
         name,
         version,
       });
     })().catch(console.error);
-  }, []);
+  }, [yasumu]);
 
   return (
     <div className="grid flex-1 text-left text-sm leading-tight">

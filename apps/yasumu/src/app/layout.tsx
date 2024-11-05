@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/sidebars/app-sidebar';
 import LayoutGroup from '@/components/layout-group';
 import ThemeProvider from '@/providers/ThemeProvider';
 import WorkspaceProvider from '@/providers/WorkspaceProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'Yasumu',
@@ -42,6 +43,7 @@ export default function RootLayout({
               </LayoutGroup>
             </SidebarProvider>
           </WorkspaceProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

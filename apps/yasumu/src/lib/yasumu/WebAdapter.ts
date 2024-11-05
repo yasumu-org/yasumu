@@ -2,7 +2,7 @@
 import { CommandCommon, YasumuBootstrapOptions } from '@yasumu/core';
 import memfs from 'memfs';
 import { createVolume } from 'memfs/lib/volume-localstorage';
-import path from 'path-browserify';
+import bpath from 'path-browserify';
 
 export function WebAdapter(): YasumuBootstrapOptions {
   console.log('Loading WebAdapter');
@@ -152,7 +152,107 @@ export function WebAdapter(): YasumuBootstrapOptions {
           fs.writeFileSync(path, data, { encoding: 'utf-8' });
         },
       },
-      path: path as any,
+      path: {
+        async allLogDirs() {
+          return '';
+        },
+        async basename(path, ext) {
+          return bpath.basename(path, ext);
+        },
+        async appCacheDir() {
+          return '';
+        },
+        async appConfigDir() {
+          return '';
+        },
+        async appDataDir() {
+          return '';
+        },
+        async appLocalDataDir() {
+          return '';
+        },
+        async audioDir() {
+          return '';
+        },
+        async cacheDir() {
+          return '';
+        },
+        async configDir() {
+          return '';
+        },
+        async dataDir() {
+          return '';
+        },
+        delimiter() {
+          return ';';
+        },
+        async desktopDir() {
+          return '';
+        },
+        async dirname(path) {
+          return bpath.dirname(path);
+        },
+        async documentDir() {
+          return '';
+        },
+        async downloadDir() {
+          return '';
+        },
+        async executableDir() {
+          return '';
+        },
+        async extname(path) {
+          return bpath.extname(path);
+        },
+        async fontDir() {
+          return '';
+        },
+        async homeDir() {
+          return '';
+        },
+        async isAbsolute(path) {
+          return bpath.isAbsolute(path);
+        },
+        async join(...paths) {
+          return bpath.join(...paths);
+        },
+        async localDataDir() {
+          return '';
+        },
+        async normalize(path) {
+          return bpath.normalize(path);
+        },
+        async pictureDir() {
+          return '';
+        },
+        async publicDir() {
+          return '';
+        },
+        async resolve(...paths) {
+          return bpath.resolve(...paths);
+        },
+        async resolveResource(resourcePath) {
+          return resourcePath;
+        },
+        async resourceDir() {
+          return '';
+        },
+        async runtimeDir() {
+          return '';
+        },
+        sep() {
+          return bpath.sep;
+        },
+        async tempDir() {
+          return '';
+        },
+        async templateDir() {
+          return '';
+        },
+        async videoDir() {
+          return '';
+        },
+      },
       process: {
         async exit(code) {
           void code;

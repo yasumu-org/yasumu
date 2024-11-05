@@ -8,7 +8,7 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "yarn workspaces foreach -pt -A --exclude @yasumu/app run build",
+    "build": "yarn workspaces foreach -pt -A --exclude @yasumu/app --exclude @yasumu/website run build",
     "changelog": "git-cliff --unreleased --tag $(node -p \"require('./apps/yasumu/package.json').version\") --output ./changelogs/$(node -p \"require('./apps/yasumu/package.json').version\")_CHANGELOGS.md",
     "format": "prettier --write \"./apps/**/*.{js,ts,jsx,tsx}\" \"./packages/**/*.{js,ts,jsx,tsx}\""
   },

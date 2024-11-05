@@ -32,7 +32,7 @@ export function FileTreeSidebar({
 }) {
   return (
     <Sidebar {...props}>
-      <SidebarContent>
+      <SidebarContent className="select-none">
         <SidebarGroup>
           <SidebarGroupLabel>
             <div className="flex justify-between w-full">

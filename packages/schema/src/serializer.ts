@@ -10,7 +10,7 @@ import type {
     YasumuSchemaParsableRecord,
 } from "./parsable.js";
 import type {
-    YasumuSchemaParasableScriptToType,
+    YasumuSchemaParsableScriptToType,
     YasumuSchemaParsableBlockToType,
     YasumuSchemaParsableCodeBlockToType,
     YasumuSchemaParsableConstantToType,
@@ -31,7 +31,7 @@ export class YasumuSchemaSerializer {
 
     serialize<T extends YasumuSchemaParsableScript>(
         script: T,
-        value: YasumuSchemaParasableScriptToType<T>,
+        value: YasumuSchemaParsableScriptToType<T>,
     ) {
         try {
             return this._serialize(script, value);
@@ -46,7 +46,7 @@ export class YasumuSchemaSerializer {
 
     _serialize<T extends YasumuSchemaParsableScript>(
         script: T,
-        value: YasumuSchemaParasableScriptToType<T>,
+        value: YasumuSchemaParsableScriptToType<T>,
     ) {
         let output = `@${script.annotation}\n\n`;
         for (const x of Object.keys(script.schema)) {

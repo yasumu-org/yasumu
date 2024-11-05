@@ -6,13 +6,12 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '../ui/dropdown-menu';
-import { useStore } from '@nanostores/react';
-import { $appLayout, setAppLayout } from '@/stores/AppLayout';
+import { setAppLayout, useLayout } from '@/stores/AppLayout';
 import { YasumuLayout, YasumuLayoutIcons, YasumuLayoutList } from '@/lib/constants/layout';
 import { VscLayout } from 'react-icons/vsc';
 
 export default function SidebarLayoutStyleSelector() {
-  const layout = useStore($appLayout);
+  const layout = useLayout();
 
   return (
     <DropdownMenuSub>

@@ -96,9 +96,7 @@ const restDataTabs: RequestTab[] = [
 export default function Home() {
   return (
     <main className="w-full p-4 space-y-4">
-      <div className="w-full overflow-auto zw-scrollbar">
-        <RequestTabs tabs={restDataTabs} />
-      </div>
+      <RequestTabs tabs={restDataTabs} />
       <div className="flex gap-4">
         <HttpMethodSelector />
         <Input placeholder="Enter a URL..." />
