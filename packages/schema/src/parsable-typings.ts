@@ -1,10 +1,9 @@
 import type {
-    YasumuSchemaParasableScript,
+    YasumuSchemaParsableScript,
     YasumuSchemaParsable,
     YasumuSchemaParsableBlock,
     YasumuSchemaParsableCodeBlock,
     YasumuSchemaParsableConstant,
-    YasumuSchemaParsableKeyPairs,
     YasumuSchemaParsableList,
     YasumuSchemaParsableObject,
     YasumuSchemaParsableObjectBlock,
@@ -12,12 +11,12 @@ import type {
 } from "./parsable.js";
 
 export type YasumuSchemaParasableScriptToType<
-    T extends YasumuSchemaParasableScript,
+    T extends YasumuSchemaParsableScript,
 > = {
     annotation: string;
     blocks: {
-        [K in keyof T["blocks"]]: YasumuSchemaParsableBlockToType<
-            T["blocks"][K]
+        [K in keyof T["schema"]]: YasumuSchemaParsableBlockToType<
+            T["schema"][K]
         >;
     };
 };
@@ -51,17 +50,13 @@ export type YasumuSchemaParsableToType<T extends YasumuSchemaParsable> =
               ? YasumuSchemaParsableConstantToType<T>
               : never;
 
-export type YasumuSchemaParsableKeyPairsToType<
-    T extends YasumuSchemaParsableKeyPairs,
-> = {
-    [K in keyof T]: T[K] extends { required: true }
-        ? YasumuSchemaParsableToType<T[K]["schema"]>
-        : YasumuSchemaParsableToType<T[K]["schema"]> | null;
-};
-
 export type YasumuSchemaParsableObjectToType<
     T extends YasumuSchemaParsableObject,
-> = YasumuSchemaParsableKeyPairsToType<T["schema"]>;
+> = {
+    [K in keyof T["schema"]]: T["schema"][K] extends { required: true }
+        ? YasumuSchemaParsableToType<T["schema"][K]["schema"]>
+        : YasumuSchemaParsableToType<T["schema"][K]["schema"]> | null;
+};
 
 export type YasumuSchemaParsableRecordToType<
     T extends YasumuSchemaParsableRecord,

@@ -1,9 +1,9 @@
 import { WorkspaceModuleType } from "@yasumu/core";
-import { YasumuSchemaParasableScript, YasumuScriptActions } from "../src";
+import { YasumuSchemaParsableScript, YasumuScriptActions } from "../src";
 
 const WorkspaceSchema = {
     annotation: "workspace",
-    blocks: {
+    schema: {
         Metadata: {
             type: "object",
             schema: {
@@ -281,7 +281,7 @@ const WorkspaceSchema = {
             },
         },
     },
-} as const satisfies YasumuSchemaParasableScript;
+} as const satisfies YasumuSchemaParsableScript;
 
 const script = `
 @workspace
@@ -295,7 +295,7 @@ Metadata {
 
 Rest {
     entities: {
-        "5b29b86c-f11e-4c8a-8cd3-bca92cb38297": {
+        \`5b29b86c-f11e-4c8a-8cd3-bca92cb38297\`: {
             name: "My Entity"
             id: "5b29b86c-f11e-4c8a-8cd3-bca92cb38297"
             method: "GET"

@@ -1,14 +1,12 @@
 import type {
-    YasumuSchemaParasableScript,
+    YasumuSchemaParsableScript,
     YasumuSchemaParsable,
-    YasumuSchemaParsableKeyPairs,
     YasumuSchemaParsableList,
     YasumuSchemaParsableObject,
     YasumuSchemaParsableRecord,
 } from "./parsable.js";
 import type {
     YasumuSchemaParasableScriptToType,
-    YasumuSchemaParsableKeyPairsToType,
     YasumuSchemaParsableListToType,
     YasumuSchemaParsableObjectToType,
     YasumuSchemaParsableRecordToType,
@@ -27,9 +25,9 @@ export class YasumuSchemaParser {
         this.advance();
     }
 
-    parse<T extends YasumuSchemaParasableScript>(script: T) {
+    parse<T extends YasumuSchemaParsableScript>(script: T) {
         const blocks: Record<string, any> = {};
-        const keys = new Set(Object.keys(script.blocks));
+        const keys = new Set(Object.keys(script.schema));
         const annotation = this.parseAnnotation(script);
         while (!this.isEOF()) {
             const [key, value] = this.parseBlock(script);
@@ -37,7 +35,7 @@ export class YasumuSchemaParser {
             keys.delete(key);
         }
         for (const x of keys) {
-            if (script.blocks[x]!.required && !(x in blocks)) {
+            if (script.schema[x]!.required && !(x in blocks)) {
                 throw new YasumuSchemaParserError(
                     `Missing required block '${x}'`,
                 );
@@ -47,7 +45,7 @@ export class YasumuSchemaParser {
         return { annotation, blocks } as YasumuSchemaParasableScriptToType<T>;
     }
 
-    parseAnnotation(script: YasumuSchemaParasableScript) {
+    parseAnnotation(script: YasumuSchemaParsableScript) {
         const annotation = this.consume(YasumuSchemaTokenTypes.ANNOTATION);
         if (annotation.value !== script.annotation) {
             const { line, column } = annotation.span.start;
@@ -58,9 +56,9 @@ export class YasumuSchemaParser {
         return annotation.value;
     }
 
-    parseBlock(script: YasumuSchemaParasableScript) {
+    parseBlock(script: YasumuSchemaParsableScript) {
         const identifier = this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
-        const node = script.blocks[identifier.value]!;
+        const node = script.schema[identifier.value]!;
         if (!node) {
             const { line, column } = identifier.span.start;
             throw new YasumuSchemaParserError(
@@ -125,21 +123,14 @@ export class YasumuSchemaParser {
     }
 
     parseObject<T extends YasumuSchemaParsableObject>(node: T) {
-        const object = this.parseKeyPairs(node.schema);
-        return object as YasumuSchemaParsableObjectToType<T>;
-    }
-
-    parseKeyPairs<T extends YasumuSchemaParsableKeyPairs>(node: T) {
         const object: Record<string, any> = {};
-        const keys = new Set(Object.keys(node));
+        const keys = new Set(Object.keys(node.schema));
         this.consume(YasumuSchemaTokenTypes.LEFT_CURLY_BRACKET);
         while (
             !this.isEOF() &&
             !this.check(YasumuSchemaTokenTypes.RIGHT_CURLY_BRACKET)
         ) {
-            const x =
-                this.match(YasumuSchemaTokenTypes.STRING) ||
-                this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
+            const x = this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
             if (!keys.has(x.value)) {
                 const { line, column } = x.span.start;
                 throw new YasumuSchemaParserError(
@@ -147,7 +138,7 @@ export class YasumuSchemaParser {
                 );
             }
             this.consume(YasumuSchemaTokenTypes.COLON);
-            const schema = node[x.value]!;
+            const schema = node.schema[x.value]!;
             const value =
                 !schema.required && this.check(YasumuSchemaTokenTypes.NULL)
                     ? this.parseNull()
@@ -157,7 +148,7 @@ export class YasumuSchemaParser {
         }
         const end = this.consume(YasumuSchemaTokenTypes.RIGHT_CURLY_BRACKET);
         for (const x of keys) {
-            if (node[x]!.required && !(x in object)) {
+            if (node.schema[x]!.required && !(x in object)) {
                 const { line, column } = end.span.start;
                 throw new YasumuSchemaParserError(
                     `Missing required object key '${x}' (at line ${line}, column ${column})`,
@@ -165,7 +156,7 @@ export class YasumuSchemaParser {
             }
             object[x] ??= null;
         }
-        return object as YasumuSchemaParsableKeyPairsToType<T>;
+        return object as YasumuSchemaParsableObjectToType<T>;
     }
 
     parseRecord<T extends YasumuSchemaParsableRecord>(node: T) {
@@ -175,9 +166,7 @@ export class YasumuSchemaParser {
             !this.isEOF() &&
             !this.check(YasumuSchemaTokenTypes.RIGHT_CURLY_BRACKET)
         ) {
-            const key =
-                this.match(YasumuSchemaTokenTypes.STRING) ||
-                this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
+            const key = this.consume(YasumuSchemaTokenTypes.IDENTIFIER);
             this.consume(YasumuSchemaTokenTypes.COLON);
             const value = this.parseNode(node.schema);
             record[key.value] = value;

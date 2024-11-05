@@ -9,7 +9,7 @@ Metadata {
 
 Rest {
   entities: {
-    5c86fb8b-1610-4afd-a917-c9a025e8fb31: {
+    `5c86fb8b-1610-4afd-a917-c9a025e8fb31`: {
       name: "Get todo by id"
       id: "5c86fb8b-1610-4afd-a917-c9a025e8fb31"
       method: "GET"
@@ -20,7 +20,7 @@ Rest {
 
 GraphQL {
   entities: {
-    17f0a342-6200-4bfd-ba0f-a7dd7da55439: {
+    `17f0a342-6200-4bfd-ba0f-a7dd7da55439`: {
       name: "GraphQL Demo"
       id: "17f0a342-6200-4bfd-ba0f-a7dd7da55439"
       method: "POST"

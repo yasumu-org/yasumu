@@ -17,13 +17,26 @@ export class YasumuSchemaUtils {
         }
         const codePoint = char.codePointAt(0)!;
         return (
+            codePoint === 95 ||
             (codePoint >= 65 && codePoint <= 90) ||
             (codePoint >= 97 && codePoint <= 122)
         );
     }
 
-    static isAlphaNumericChar(char: string) {
+    static isIdentifier(char: string) {
+        if (char === "") {
+            return false;
+        }
         return this.isNumericChar(char) || this.isAlphabeticChar(char);
+    }
+
+    static isIdentifierString(value: string) {
+        for (const x of value) {
+            if (!this.isIdentifier(x)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static maybeParseInt(value: string, radix?: number) {

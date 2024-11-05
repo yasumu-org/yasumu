@@ -1,8 +1,10 @@
-export interface YasumuSchemaParasableScript {
+export interface YasumuSchemaParsableScript {
     annotation: string;
-    blocks: {
-        [K: string]: YasumuSchemaParsableBlock;
-    };
+    schema: YasumuSchemaParsableScriptSchema;
+}
+
+export interface YasumuSchemaParsableScriptSchema {
+    [K: string]: YasumuSchemaParsableBlock;
 }
 
 export type YasumuSchemaParsableBlock =
@@ -25,16 +27,18 @@ export type YasumuSchemaParsable =
     | YasumuSchemaParsableList
     | YasumuSchemaParsableConstant;
 
-export interface YasumuSchemaParsableKeyPairs {
-    [K: string]: {
-        schema: YasumuSchemaParsable;
-        required: boolean;
-    };
-}
-
 export interface YasumuSchemaParsableObject {
     type: "object";
-    schema: YasumuSchemaParsableKeyPairs;
+    schema: YasumuSchemaParsableObjectSchema;
+}
+
+export interface YasumuSchemaParsableObjectSchema {
+    [K: string]: YasumuSchemaParsableObjectSchemaValue;
+}
+
+export interface YasumuSchemaParsableObjectSchemaValue {
+    schema: YasumuSchemaParsable;
+    required: boolean;
 }
 
 export interface YasumuSchemaParsableRecord {

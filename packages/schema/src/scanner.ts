@@ -46,6 +46,9 @@ export class YasumuSchemaScanner {
         if (YasumuSchemaUtils.isAlphabeticChar(char)) {
             return this.readIdentifier(char, start);
         }
+        if (char === "`") {
+            return this.readRawIdentifier(start);
+        }
         return {
             type: YasumuSchemaTokenTypes.ILLEGAL,
             value: char,
@@ -120,7 +123,7 @@ export class YasumuSchemaScanner {
                                 start,
                                 end: this.lexer.getCurrentSpan(),
                             },
-                            error: `Invalid unicode character sequence`,
+                            error: "Invalid unicode character sequence",
                         };
                     }
                     value += String.fromCodePoint(parsed);
@@ -143,7 +146,7 @@ export class YasumuSchemaScanner {
                                 start,
                                 end: this.lexer.getCurrentSpan(),
                             },
-                            error: `Invalid unicode character sequence`,
+                            error: "Invalid unicode character sequence",
                         };
                     }
                     value += String.fromCodePoint(parsed);
@@ -177,7 +180,7 @@ export class YasumuSchemaScanner {
         value: string,
         start: YasumuSchemaTokenSpanPosition,
     ): YasumuSchemaToken {
-        while (YasumuSchemaUtils.isAlphaNumericChar(this.lexer.peek())) {
+        while (YasumuSchemaUtils.isIdentifier(this.lexer.peek())) {
             value += this.lexer.advance();
         }
         return {
@@ -193,9 +196,25 @@ export class YasumuSchemaScanner {
         };
     }
 
+    readRawIdentifier(start: YasumuSchemaTokenSpanPosition): YasumuSchemaToken {
+        let value = "";
+        while (this.lexer.peek() !== "`") {
+            value += this.lexer.advance();
+        }
+        this.lexer.advance();
+        return {
+            type: YasumuSchemaTokenTypes.IDENTIFIER,
+            value: value,
+            span: {
+                start,
+                end: this.lexer.getCurrentSpan(),
+            },
+        };
+    }
+
     readAnnotation(start: YasumuSchemaTokenSpanPosition): YasumuSchemaToken {
         let value = "";
-        while (YasumuSchemaUtils.isAlphaNumericChar(this.lexer.peek())) {
+        while (YasumuSchemaUtils.isIdentifier(this.lexer.peek())) {
             value += this.lexer.advance();
         }
         return {
