@@ -1,9 +1,5 @@
-import YasumuBackgroundArt from '@/components/YasumuBackgroundArt';
+import { redirect, RedirectType } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <main className="w-full h-screen relative grid place-items-center">
-      <YasumuBackgroundArt message="Yasumu" />
-    </main>
-  );
+  redirect('/rest', RedirectType.replace);
 }

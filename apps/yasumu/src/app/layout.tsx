@@ -33,8 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}>
-      <body>
+      <body className="select-none">
         <ThemeProvider>
+          <Toaster />
           <WorkspaceProvider>
             <SidebarProvider>
               <LayoutGroup>
@@ -43,7 +44,6 @@ export default function RootLayout({
               </LayoutGroup>
             </SidebarProvider>
           </WorkspaceProvider>
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>
