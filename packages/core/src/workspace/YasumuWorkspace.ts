@@ -8,6 +8,7 @@ import type { BaseScriptRuntime } from './runtime/BaseScriptRuntime.js';
 import { YasumuIndexerService } from './indexer/YasumuIndexerService.js';
 import { WorkspaceModuleType } from './modules/common/constants.js';
 import { WebRequestService } from './network/WebRequestService.js';
+import { ExternalCollectionsUtility } from './externals/ExternalCollectionsUtility.js';
 
 export interface YasumuWorkspaceOptions {
   /**
@@ -71,6 +72,11 @@ export class YasumuWorkspace {
    * The interactive web request service for this workspace.
    */
   public readonly webRequest = new WebRequestService(this);
+
+  /**
+   * External collections utility for this workspace.
+   */
+  public readonly externals = new ExternalCollectionsUtility(this);
 
   /**
    * The script runtime for this workspace.

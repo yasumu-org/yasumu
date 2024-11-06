@@ -1,10 +1,13 @@
 import type { YasumuWorkspace } from '@/workspace/YasumuWorkspace.js';
-import { WorkspaceModuleType, type YasumuEntityMap } from './constants.js';
+import { WorkspaceModuleType, YasumuEntityMap } from './constants.js';
 import { IndexNotFoundError } from '@/common/errors/IndexNotFoundError.js';
 import { EntityNotFoundError } from '@/common/errors/EntityNotFoundError.js';
 import type { YasumuEntityDataMap } from './types.js';
 import type { YasumuSchemaParsableScript, YasumuScriptActions } from '@yasumu/schema';
 import type { BaseEntity } from './BaseEntity.js';
+import type { YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
+import type { RootIndex } from '@/workspace/YasumuWorkspaceMetadata.js';
+import type { RestIndex } from '../rest/types.js';
 
 export abstract class YasumuBaseModule<T extends WorkspaceModuleType = WorkspaceModuleType> {
   /**
@@ -108,6 +111,43 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
 
   public findEntity(id: string) {
     return this.getRootIndex().entities[id] ?? null;
+  }
+
+  public async getRawEntities(index?: RootIndex<unknown>): Promise<YasumuEntityDataMap[T][]> {
+    const rootIndex = index ?? this.getRootIndex();
+    const entities = await Promise.all(
+      Object.keys(rootIndex.entities).map((id) => {
+        return this.loadEntity(id);
+      }),
+    );
+
+    return entities;
+  }
+
+  public async getEntities(): Promise<YasumuEntityMap[T][]> {
+    const entities = await this.getRawEntities();
+
+    // @ts-expect-error this should be resolved
+    return entities.map((entity) => {
+      // @ts-expect-error this should be resolved
+      return new YasumuEntityMap[this.type](this, entity);
+    });
+  }
+
+  public async toStandalone(): Promise<YasumuStandaloneFormat['entities'][T]> {
+    const index = this.getRootIndex();
+    const entities = await this.getRawEntities(index);
+    const indexes = await Promise.all(
+      Object.values(index.entities)
+        .filter((e) => e && typeof e === 'object' && 'path' in e && e.path && typeof e.path === 'string')
+        .map((e) => this.workspace.indexer.getIndexFile((e as RestIndex).path)),
+    );
+
+    // @ts-expect-error this should be resolved
+    return {
+      indexes: indexes.reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+      entities,
+    };
   }
 
   /**

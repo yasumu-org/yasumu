@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 import { networkInterfaces } from 'node:os';
 
 const isProd = process.env.NODE_ENV === 'production';
+const isMobile = process.env.TAURI_ENV_PLATFORM && /android|ios/.test(process.env.TAURI_ENV_PLATFORM);
 
 let internalHost: string | undefined;
 
@@ -17,8 +18,8 @@ function getInternalHost() {
   internalHost = address;
 }
 
-function getAssetPrefix(disable = false) {
-  if (isProd || disable) return;
+function getAssetPrefix() {
+  if (isProd || isMobile) return;
 
   return `http://${getInternalHost()}:3000`;
 }
@@ -28,7 +29,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  assetPrefix: getAssetPrefix(true),
+  assetPrefix: getAssetPrefix(),
   typescript: {
     ignoreBuildErrors: true,
   },

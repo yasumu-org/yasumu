@@ -4,3 +4,5 @@ export * from './YasumuWorkspaceMetadata.js';
 export * from './runtime/index.js';
 export * from './schema/index.js';
 export * from './network/index.js';
+export * from './externals/index.js';
+export * from './standalone/index.js';

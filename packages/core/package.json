@@ -42,7 +42,7 @@
   "dependencies": {
     "@yasumu/common": "workspace:^",
     "@yasumu/schema": "workspace:^",
-    "@yasumu/utilities": "workspace:^",
-    "graphql": "^16.9.0"
+    "graphql": "^16.9.0",
+    "nanoid": "^5.0.8"
   }
 }
