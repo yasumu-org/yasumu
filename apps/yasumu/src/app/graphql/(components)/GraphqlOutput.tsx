@@ -1,13 +1,10 @@
 'use client';
+import { PrettyRespnseViewer } from '@/components/PrettyRespnseViewer';
 import { useGraphqlResult } from '@/stores/GraphqlSchemaStore';
 import React from 'react';
 
 export default function GraphqlOutput() {
   const result = useGraphqlResult();
 
-  return (
-    <div className="max-h-[95%] overflow-y-auto">
-      <pre className="font-mono text-xs whitespace-pre-wrap break-words">{result}</pre>
-    </div>
-  );
+  return <PrettyRespnseViewer content={result} />;
 }

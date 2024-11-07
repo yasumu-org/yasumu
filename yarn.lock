@@ -405,6 +405,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@codemirror/lang-json@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "@codemirror/lang-json@npm:6.0.1"
+  dependencies:
+    "@codemirror/language": "npm:^6.0.0"
+    "@lezer/json": "npm:^1.0.0"
+  checksum: 10c0/c70301ba43d44dbd1ff0ccab6ec6e3fb9825d61d4854b4839441a8144a9c96997acdad16d93199d157308dd80088a5e9f14b66f395c7e79f4dadc6b4e70ce8a8
+  languageName: node
+  linkType: hard
+
 "@codemirror/language@npm:^6.0.0, @codemirror/language@npm:^6.6.0":
   version: 6.10.3
   resolution: "@codemirror/language@npm:6.10.3"
@@ -1040,6 +1050,17 @@ __metadata:
     "@lezer/highlight": "npm:^1.1.3"
     "@lezer/lr": "npm:^1.3.0"
   checksum: 10c0/04cb49e028dd03b07009e3bef8f1e99ead84ee5ee1f3210371a07b2d8af1e8f5fabf6316115d10f8f44b5db6efa0af713d9fe20ab2c99c83d9abe778a3eb3369
+  languageName: node
+  linkType: hard
+
+"@lezer/json@npm:^1.0.0":
+  version: 1.0.2
+  resolution: "@lezer/json@npm:1.0.2"
+  dependencies:
+    "@lezer/common": "npm:^1.2.0"
+    "@lezer/highlight": "npm:^1.0.0"
+    "@lezer/lr": "npm:^1.0.0"
+  checksum: 10c0/a84283b4e4ded682b5e90a068c52155deaeac79e8dc16da0e9904e72633be029a00ad2da26daa259e503ae3b116722985c3e15d9448336e5f0fde59f79b716ad
   languageName: node
   linkType: hard
 
@@ -2575,6 +2596,7 @@ __metadata:
   resolution: "@yasumu/app@workspace:apps/yasumu"
   dependencies:
     "@codemirror/lang-javascript": "npm:^6.2.2"
+    "@codemirror/lang-json": "npm:^6.0.1"
     "@nanostores/persistent": "npm:^0.10.2"
     "@nanostores/react": "npm:^0.8.0"
     "@radix-ui/react-accordion": "npm:^1.2.1"

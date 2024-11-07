@@ -78,6 +78,10 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     return this.data.blocks.Request.headers ?? [];
   }
 
+  public setURL(url: string) {
+    this.data.blocks.Request.url = url;
+  }
+
   public createRootIndexData(): GraphqlIndex {
     return {
       id: this.id,
@@ -120,6 +124,9 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     for (const { key, value } of this.headers) {
       headers.append(key, value);
     }
+
+    this.data.blocks.Request.body = options.query;
+    await this.save().catch(console.error);
 
     const opt = JSON.stringify(options);
 

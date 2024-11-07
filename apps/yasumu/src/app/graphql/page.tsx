@@ -110,9 +110,11 @@ export default function Home() {
         return;
       }
 
-      entity.data.blocks.Request.url = debouncedUrl;
+      if (debouncedUrl !== entity.url && debouncedUrl) {
+        entity.data.blocks.Request.url = debouncedUrl;
 
-      await entity.save().catch(console.error);
+        await entity.save().catch(console.error);
+      }
 
       setIsIntrospecting(true);
       const result = await entity.introspect();
@@ -133,6 +135,8 @@ export default function Home() {
     introspect(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedUrl]);
+
+  console.log({ url: entity?.url });
 
   return (
     <main className="p-4 flex flex-col h-screen gap-4">
