@@ -1,9 +1,94 @@
 import type { YasumuWorkspace } from '../YasumuWorkspace.js';
+import {
+  YasumuEnvironment,
+  type CreateEnvironmentOptions,
+  type YasumuEnvironmentEntityData,
+} from './YasumuEnvironment.js';
+
+export interface YasumuWorkspaceEnvironmentData {
+  selectedEnvironment: string;
+  environments: YasumuEnvironmentEntityData;
+}
 
 export class YasumuEnvironmentManager {
+  /**
+   * The cache of environments.
+   */
+  #environments = new Map<string, YasumuEnvironment>();
+
   /**
    * Creates a new environment manager.
    * @param workspace The workspace this environment manager is associated with.
    */
   public constructor(public readonly workspace: YasumuWorkspace) {}
+
+  public async loadEnvironments() {
+    const { environments } = this.workspace.getMetadata().getRawData().blocks.Environment;
+
+    for (const id in environments) {
+      const env = new YasumuEnvironment(this, environments[id]);
+      this.#environments.set(id, env);
+      await env.save();
+    }
+  }
+
+  /**
+   * Get all environments.
+   */
+  public getEnvironments(): YasumuEnvironment[] {
+    return Array.from(this.#environments.values());
+  }
+
+  /**
+   * Get currently selected environment.
+   */
+  public getSelectedEnvironment(): YasumuEnvironment | null {
+    const selectedId = this.workspace.getMetadata().getRawData().blocks.Environment.selectedEnvironment;
+    return this.getEnvironment(selectedId);
+  }
+
+  /**
+   * Select an environment.
+   * @param id The environment id.
+   */
+  public async selectEnvironment(id: string): Promise<void> {
+    const env = this.getEnvironment(id);
+
+    if (!env) {
+      throw new Error(`Environment with id "${id}" does not exist.`);
+    }
+
+    const workspaceMetadata = this.workspace.getMetadata();
+    const metadata = workspaceMetadata.getRawData();
+    metadata.blocks.Environment.selectedEnvironment = id;
+
+    await workspaceMetadata.save();
+  }
+
+  /**
+   * Gets an environment by its id.
+   * @param id The environment id.
+   */
+  public getEnvironment(id: string): YasumuEnvironment | null {
+    return this.#environments.get(id) ?? null;
+  }
+
+  /**
+   * Creates a new environment.
+   * @param options The options to create the environment with.
+   */
+  public async createEnvironment(options: CreateEnvironmentOptions): Promise<YasumuEnvironment> {
+    if (options.id && this.#environments.has(options.id)) {
+      throw new Error(`An environment with the id "${options.id}" already exists.`);
+    }
+
+    const env = new YasumuEnvironment(this, {
+      name: options.name,
+      id: options.id,
+    });
+
+    await env.save();
+
+    return env;
+  }
 }

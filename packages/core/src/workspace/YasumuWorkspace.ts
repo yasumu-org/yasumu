@@ -9,6 +9,7 @@ import { YasumuIndexerService } from './indexer/YasumuIndexerService.js';
 import { WorkspaceModuleType } from './modules/common/constants.js';
 import { WebRequestService } from './network/WebRequestService.js';
 import { ExternalCollectionsUtility } from './externals/ExternalCollectionsUtility.js';
+import { YasumuEnvironmentManager } from './environments/YasumuEnvironmentManager.js';
 
 export interface YasumuWorkspaceOptions {
   /**
@@ -77,6 +78,11 @@ export class YasumuWorkspace {
    * External collections utility for this workspace.
    */
   public readonly externals = new ExternalCollectionsUtility(this);
+
+  /**
+   * The environment manager for this workspace.
+   */
+  public readonly environments = new YasumuEnvironmentManager(this);
 
   /**
    * The script runtime for this workspace.
@@ -166,6 +172,12 @@ export class YasumuWorkspace {
       this.#metadata = await createWorkspaceMetadata(this, YasumuWorkspaceMetadata.deserialize(metadata), false);
     } else {
       this.#metadata = await createWorkspaceMetadata(this, {}, true);
+    }
+
+    try {
+      await this.environments.loadEnvironments();
+    } catch {
+      //
     }
 
     return this.#metadata;

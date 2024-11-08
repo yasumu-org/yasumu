@@ -1,0 +1,67 @@
+@Workspace
+
+Metadata {
+  name: "Untitled Workspace"
+  id: "-lTH6lopHARWX-FBuXKIF"
+  createdAt: 1731086149583
+  version: "0.0.0"
+}
+
+Environment {
+  selectedEnvironment: ""
+  environments: {
+    `Gu3HVpdIiCOgM_1DgX-Cd`: {
+      name: "Nightly"
+      id: "Gu3HVpdIiCOgM_1DgX-Cd"
+      createdAt: 1731086430170
+      variables: [
+        {
+          key: "API_URL"
+          value: "https://api.example.com"
+          enabled: true
+        },
+      ]
+      secrets: [
+        {
+          key: "API_KEY"
+          enabled: true
+        },
+        {
+          key: "API_KEY"
+          enabled: true
+        },
+      ]
+    }
+  }
+}
+
+Rest {
+  entities: {
+  }
+}
+
+GraphQL {
+  entities: {
+  }
+}
+
+SMTP {
+  entities: {
+  }
+}
+
+WebSocket {
+  entities: {
+  }
+}
+
+SocketIO {
+  entities: {
+  }
+}
+
+SSE {
+  entities: {
+  }
+}
+

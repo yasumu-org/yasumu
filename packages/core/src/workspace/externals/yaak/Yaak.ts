@@ -179,6 +179,10 @@ export class Yaak extends ExternalCollectionsProvider<YaakCollection> {
             id: workspace.id,
             version: '',
           },
+          Environment: {
+            selectedEnvironment: '',
+            environments: {},
+          },
           Rest: {
             entities: httpRequests.reduce(
               (acc, r) => {

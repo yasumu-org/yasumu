@@ -9,6 +9,35 @@ export const WorkspaceSchema = t.script(YASUMU_WORKSPACE_ANNOTATION, {
     createdAt: t.objectValue(t.number()),
     version: t.objectValue(t.string()),
   }),
+  Environment: t.objectBlock({
+    selectedEnvironment: t.objectValue(t.string()),
+    environments: t.objectValue(
+      t.record(
+        t.object({
+          name: t.objectValue(t.string()),
+          id: t.objectValue(t.string()),
+          createdAt: t.objectValue(t.number()),
+          variables: t.objectValue(
+            t.list(
+              t.object({
+                key: t.objectValue(t.string()),
+                value: t.objectValue(t.string()),
+                enabled: t.objectValue(t.boolean()),
+              }),
+            ),
+          ),
+          secrets: t.objectValue(
+            t.list(
+              t.object({
+                key: t.objectValue(t.string()),
+                enabled: t.objectValue(t.boolean()),
+              }),
+            ),
+          ),
+        }),
+      ),
+    ),
+  }),
   [WorkspaceModuleType.Rest]: t.objectBlock({
     entities: t.objectValue(
       t.record(

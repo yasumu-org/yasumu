@@ -5,6 +5,7 @@ import { WorkspaceModuleType } from './modules/common/constants.js';
 import { YasumuScriptActions } from '@yasumu/schema';
 import { WorkspaceSchema } from './schema/WorkspaceSchema.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
+import type { YasumuWorkspaceEnvironmentData } from './environments/YasumuEnvironmentManager.js';
 
 export type RootIndex<T> = { entities: Record<string, T> };
 
@@ -29,6 +30,10 @@ export interface YasumuRawWorkspaceMetadata {
        */
       version: string;
     };
+    /**
+     * The workspace environments
+     */
+    Environment: YasumuWorkspaceEnvironmentData;
     /**
      * The associated REST entities of this workspace.
      */
@@ -93,6 +98,7 @@ export class YasumuWorkspaceMetadata {
     this.data.blocks.Metadata.name ??= 'Untitled Workspace';
     this.data.blocks.Metadata.id ??= generateId();
 
+    this.data.blocks.Environment ??= { selectedEnvironment: '', environments: {} };
     this.data.blocks[WorkspaceModuleType.Rest] ??= { entities: {} };
     this.data.blocks[WorkspaceModuleType.GraphQL] ??= { entities: {} };
     this.data.blocks[WorkspaceModuleType.SMTP] ??= { entities: {} };

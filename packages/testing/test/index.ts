@@ -1,46 +1,31 @@
-import { YasumuGraphqlEntity, YasumuRestEntity } from '@yasumu/core';
 import { Yasumu } from '@yasumu/testing';
 
-const dir = import.meta.dirname + '/sample-workspace';
+const dir = import.meta.dirname + '/env-workspace';
 
 const workspace = await Yasumu.openWorkspace({
   path: dir,
 });
 
-const target = Object.keys(workspace.getMetadata().getRawData().blocks.GraphQL.entities)[0];
+const nightly = workspace.environments.getEnvironment('Gu3HVpdIiCOgM_1DgX-Cd');
 
-let graphql: YasumuGraphqlEntity;
-if (!target)
-  graphql = await workspace.graphql.create({
-    name: 'GraphQL Demo',
-    url: 'https://readonlydemo.vendure.io/shop-api',
+if (!nightly) {
+  console.error('noooo');
+} else {
+  await nightly.addSecret({
+    key: 'API_KEY',
   });
-else graphql = await workspace.graphql.open(target);
+}
 
-console.log(await graphql.introspect());
+console.log(await nightly?.getVariable('API_URL'));
 
-// let entity: YasumuRestEntity;
+// console.log(workspace.getMetadata().getRawData());
 
-// if (!target)
-//   entity = await workspace.rest.create({
-//     name: 'Get todo by id',
-//     url: 'https://jsonplaceholder.typicode.com/todos/1',
-//   });
-// else entity = await workspace.rest.open(target);
+// const env = await workspace.environments.createEnvironment({
+//   name: 'Nightly',
+// });
 
-// const request = entity.createInteractiveWebRequest();
-
-// setTimeout(() => request.cancel(), 500);
-
-// await entity.execute({ request });
-
-// console.log(entity.toJSON());
-
-// await entity.delete();
-
-// console.log(entity.toJSON());
-
-// await entity.setPath('/updated-path');
-// await entity.rename('New Name');
-
-// console.log(entity.toJSON());
+// await env.addVariable({
+//   key: 'API_URL',
+//   value: 'https://api.example.com',
+//   enabled: true,
+// });

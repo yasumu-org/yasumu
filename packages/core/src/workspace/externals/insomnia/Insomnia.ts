@@ -203,6 +203,10 @@ export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
             name: workspace.name,
             version: '',
           },
+          Environment: {
+            selectedEnvironment: '',
+            environments: {},
+          },
           Rest: {
             entities: httpRequests.reduce(
               (acc, r) => {
