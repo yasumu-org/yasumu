@@ -74,7 +74,7 @@ export default function WorkspaceProvider({ children }: React.PropsWithChildren)
   return (
     <YasumuContext.Provider value={yasumu}>
       {loading ? (
-        <div className="h-screen grid place-items-center">
+        <div className="h-full grid place-items-center">
           <LoaderCircle className="size-8 animate-spin" />
         </div>
       ) : !yasumu?.workspace ? (

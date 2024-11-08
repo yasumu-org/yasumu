@@ -3,10 +3,10 @@ import { usePrettier } from '@/hooks/use-prettier';
 import { useTextEditor } from '@/hooks/use-text-editor';
 import React, { useRef } from 'react';
 
-export function PrettyRespnseViewer({ content }: { content: string }) {
-  console.log({ content });
+export function PrettyResponseViewer({ content }: { content: string }) {
   const editorRef = useRef<HTMLDivElement>(null);
   const { code, parser } = usePrettier(content, 'application/json');
+
   useTextEditor(editorRef, {
     code,
     setCode(code) {
@@ -22,6 +22,7 @@ export function PrettyRespnseViewer({ content }: { content: string }) {
       tabSize: 2,
       lineNumbers: true,
     },
+    className: 'overflow-auto h-full w-full',
   });
   return <div ref={editorRef} />;
 }

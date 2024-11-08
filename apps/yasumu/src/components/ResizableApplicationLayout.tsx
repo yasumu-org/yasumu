@@ -28,7 +28,7 @@ export function ResizableApplicationLayout({
         <ResizablePanelGroup direction={direction} autoSaveId={`${id}:2`}>
           <ResizablePanel>{right}</ResizablePanel>
           <ResizableHandle />
-          <ResizablePanel>{bottom}</ResizablePanel>
+          <ResizablePanel className="h-[99%] w-0 overflow-auto">{bottom}</ResizablePanel>
         </ResizablePanelGroup>
       </ResizablePanel>
     </ResizablePanelGroup>

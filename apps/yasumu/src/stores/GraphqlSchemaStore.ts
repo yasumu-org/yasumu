@@ -4,7 +4,28 @@ import { atom } from 'nanostores';
 
 export const $graphqlSchema = atom<IntrospectionQuery | null>(null);
 export const $graphqlResult = atom<string>('');
-export const $graphqlDocument = atom<string>('');
+export const $graphqlDocument = atom<string>(`query GetProductList {
+  products(
+    options: {
+      take: 10
+      filter: { name: { contains: "shoe" } }
+      sort: { name: ASC }
+    }
+  ) {
+    totalItems
+    items {
+      id
+      name
+      slug
+      featuredAsset {
+        preview
+        mimeType
+        width
+        height
+      }
+    }
+  }
+}`);
 
 export function setGraphqlSchema(schema: IntrospectionQuery | null) {
   $graphqlSchema.set(schema);

@@ -49,7 +49,7 @@ export const graphqlDataTabs: RequestTab[] = [
 export default function Home() {
   const yasumu = useYasumu();
   const [entity, setEntity] = useState<YasumuGraphqlEntity | null>(null);
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState('https://readonlydemo.vendure.io/shop-api');
   const debouncedUrl = useDebounce(url, 500);
   const [isIntrospecting, setIsIntrospecting] = useState(false);
   const schema = useGraphqlDocument();
@@ -75,7 +75,7 @@ export default function Home() {
       const entity = await yasumu.workspace!.graphql.open(target);
       console.log({ entity });
       setEntity(entity);
-      setUrl(entity.url);
+      setUrl(entity.url || 'https://readonlydemo.vendure.io/shop-api');
       setGraphqlDocument(String(entity.data.blocks.Request.body || ''));
     })();
   }, [yasumu.workspace]);

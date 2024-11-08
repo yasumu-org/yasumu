@@ -10,12 +10,7 @@ export default function EnvironmentLayout({ children }: React.PropsWithChildren)
           <EnvironmentSidebar className="hidden flex-1 md:flex max-h-screen w-full" />
         </ResizablePanel>
         <ResizableHandle />
-
-        <ResizablePanel>
-          <ResizablePanelGroup direction="horizontal" autoSaveId="yasumu-email-layout-2">
-            <ResizablePanel>{children}</ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
+        <ResizablePanel>{children}</ResizablePanel>
       </ResizablePanelGroup>
     </LayoutGroup>
   );

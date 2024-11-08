@@ -6,7 +6,7 @@ export default function LayoutGroup({
   ...rest
 }: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={cn('flex w-full', className)} {...rest}>
+    <div className={cn('flex w-full h-full', className)} {...rest}>
       {children}
     </div>
   );
