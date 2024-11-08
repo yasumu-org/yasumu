@@ -25,11 +25,7 @@ Environment {
         {
           key: "API_KEY"
           enabled: true
-        },
-        {
-          key: "API_KEY"
-          enabled: true
-        },
+        }
       ]
     }
   }

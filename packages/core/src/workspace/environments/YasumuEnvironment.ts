@@ -198,6 +198,8 @@ export class YasumuEnvironment {
    * @param value The variable value.
    */
   public async addVariable(variable: Partial<YasumuEnvironmentVariable>) {
+    if (this.data.variables.some((v) => v.key === variable.key)) return;
+
     this.data.variables.push({
       enabled: variable.enabled ?? true,
       key: variable.key ?? '',
@@ -219,6 +221,8 @@ export class YasumuEnvironment {
       }
     >,
   ) {
+    if (this.data.secrets.some((v) => v.key === secret.key)) return;
+
     this.data.secrets.push({
       enabled: secret.enabled ?? true,
       key: secret.key ?? '',
