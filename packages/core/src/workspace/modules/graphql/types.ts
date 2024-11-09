@@ -1,6 +1,7 @@
 import type { GraphqlHttpMethod } from '@yasumu/common';
 import type { WorkspaceModuleType } from '../common/constants.js';
 import type { CommonEntityMetadata, YasumuEntityScript } from '../common/types.js';
+import type { GraphqlQueryVariableType } from './YasumuGraphqlEntity.js';
 
 export interface GraphqlIndex extends CommonEntityMetadata {
   /**
@@ -39,6 +40,10 @@ export interface YasumuRawGraphqlEntity {
        * The headers of the request.
        */
       headers: Array<{ key: string; value: string }>;
+      /**
+       * The variables of the request.
+       */
+      variables: Record<string, GraphqlQueryVariableType>;
       /**
        * The body of the request.
        */

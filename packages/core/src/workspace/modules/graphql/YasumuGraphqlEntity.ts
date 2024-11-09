@@ -10,7 +10,10 @@ import { INTROSPECTION_QUERY, type IntrospectionQuery } from './constants.js';
 export interface GraphqlQueryOptions {
   query: string;
   operationName?: string;
+  variables?: Record<string, GraphqlQueryVariableType>;
 }
+
+export type GraphqlQueryVariableType = string | number | boolean | null;
 
 export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
   public data!: YasumuRawGraphqlEntity;
@@ -50,6 +53,7 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
           value: 'application/json',
         },
       ],
+      variables: data.blocks!.Request?.variables ?? {},
       url: data.blocks!.Request?.url ?? '',
       body: data.blocks!.Request?.body ?? '',
     };
@@ -82,6 +86,24 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     this.data.blocks.Request.url = url;
   }
 
+  public get variables() {
+    return this.data.blocks.Request.variables;
+  }
+
+  public setVariable(key: string, value: GraphqlQueryVariableType) {
+    this.data.blocks.Request.variables[key] = value;
+    return this.save();
+  }
+
+  public deleteVariable(key: string) {
+    delete this.data.blocks.Request.variables[key];
+    return this.save();
+  }
+
+  public getVariable(key: string) {
+    return this.data.blocks.Request.variables[key];
+  }
+
   public createRootIndexData(): GraphqlIndex {
     return {
       id: this.id,
@@ -91,11 +113,14 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     };
   }
 
+  /**
+   * Introspect the GraphQL schema
+   */
   public async introspect(): Promise<IntrospectionQuery | null> {
-    // Fetch the introspection data of this graphql entity
     const response = await this.send({
       query: INTROSPECTION_QUERY,
       operationName: 'IntrospectionQuery',
+      variables: undefined,
     });
 
     if (!response?.ok) {
@@ -117,6 +142,10 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
   public async send(options: GraphqlQueryOptions): Promise<Response | null> {
     if (!this.url) return null;
 
+    if (!('variables' in options)) {
+      options.variables = this.variables;
+    }
+
     const { fetch } = this.module.workspace.yasumu;
 
     const headers = new Headers();
@@ -130,29 +159,23 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
 
     const opt = JSON.stringify(options);
 
-    if (this.method === GraphqlHttpMethod.Get) {
-      const url = new URL(this.url);
-      url.searchParams.append('query', opt);
+    const init: RequestInit & { maxRedirects: number; timeout: number } = {
+      method: this.method,
+      headers,
+      body: this.method === 'GET' ? undefined : opt,
+      redirect: 'follow',
+      maxRedirects: 5,
+      timeout: 60_000,
+      signal: AbortSignal.timeout(60_000),
+    };
 
-      return fetch(url.href, {
-        method: 'GET',
-        headers,
-        redirect: 'follow',
-        maxRedirects: 5,
-        timeout: 60_000,
-        signal: AbortSignal.timeout(60_000),
-      });
-    } else {
-      return fetch(this.url, {
-        method: 'POST',
-        headers,
-        body: opt,
-        redirect: 'follow',
-        maxRedirects: 5,
-        timeout: 60_000,
-        signal: AbortSignal.timeout(60_000),
-      });
+    const url = new URL(this.url);
+
+    if (this.method === GraphqlHttpMethod.Get) {
+      url.searchParams.append('query', opt);
     }
+
+    return fetch(url.toString(), init);
   }
 
   public async execute(options?: ExecutionOptions): Promise<ExecutionResult> {
