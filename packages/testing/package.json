@@ -15,8 +15,9 @@
     "prepublishOnly": "yarn build",
     "build": "rimraf dist && tsc && tsc-alias",
     "build:check": "tsc --noEmit",
-    "test": "tsx ./test/index.ts",
-    "test2": "tsx ./test/command.ts"
+    "test": "vitest",
+    "atest": "tsx ./test/index.ts",
+    "atest2": "tsx ./test/command.ts"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,8 @@
     "rimraf": "^6.0.1",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.17.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.4"
   },
   "dependencies": {
     "@yasumu/core": "workspace:^",
