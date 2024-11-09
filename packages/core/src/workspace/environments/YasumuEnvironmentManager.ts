@@ -52,15 +52,20 @@ export class YasumuEnvironmentManager {
    * @param id The environment id.
    */
   public async selectEnvironment(id: string): Promise<void> {
-    const env = this.getEnvironment(id);
-
-    if (!env) {
-      throw new Error(`Environment with id "${id}" does not exist.`);
-    }
-
     const workspaceMetadata = this.workspace.getMetadata();
     const metadata = workspaceMetadata.getRawData();
-    metadata.blocks.Environment.selectedEnvironment = id;
+
+    if (id !== '') {
+      const env = this.getEnvironment(id);
+
+      if (!env) {
+        throw new Error(`Environment with id "${id}" does not exist.`);
+      }
+
+      metadata.blocks.Environment.selectedEnvironment = id;
+    } else {
+      metadata.blocks.Environment.selectedEnvironment = '';
+    }
 
     await workspaceMetadata.save();
   }
@@ -90,5 +95,23 @@ export class YasumuEnvironmentManager {
     await env.save();
 
     return env;
+  }
+
+  /**
+   * Deletes an environment.
+   * @param id The environment id.
+   */
+  public async deleteEnvironment(id: string): Promise<void> {
+    if (!this.#environments.has(id)) {
+      throw new Error(`Environment with id "${id}" does not exist.`);
+    }
+
+    this.#environments.delete(id);
+
+    const workspaceMetadata = this.workspace.getMetadata();
+    const metadata = workspaceMetadata.getRawData();
+    delete metadata.blocks.Environment.environments[id];
+
+    await workspaceMetadata.save();
   }
 }

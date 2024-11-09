@@ -30,9 +30,13 @@ export class StoreMock implements StoreCommon {
   public async onKeyChange<T extends unknown>(key: string, cb: Callback<[value: T]>): Promise<Callback> {
     return () => {};
   }
-  public async reset(): Promise<void> {}
+  public async reset(): Promise<void> {
+    this.#store.clear();
+  }
   public async save(): Promise<void> {}
-  public async set(key: string, value: unknown): Promise<void> {}
+  public async set(key: string, value: unknown): Promise<void> {
+    this.#store.set(key, value);
+  }
   public async values<T = unknown>(): Promise<T[]> {
     return Array.from(this.#store.values()) as T[];
   }

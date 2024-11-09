@@ -8,13 +8,13 @@ import type {
   ApplicationCommon,
   EventsCommon,
   FetchCommon,
+  StoreOptions,
 } from './types/index.js';
 import type { ShellCommon } from './types/shell.js';
 
 export type AdapterCommon =
   | PathCommon
   | FileSystemCommon
-  | StoreCommon
   | CommandCommon
   | DialogCommon
   | ProcessCommon
@@ -26,7 +26,6 @@ export type AdapterCommon =
 export const AdapterType = {
   Path: 'path',
   FileSystem: 'fs',
-  Store: 'store',
   Command: 'command',
   Dialog: 'dialog',
   Process: 'process',
@@ -41,7 +40,6 @@ export type AdapterType = (typeof AdapterType)[keyof typeof AdapterType];
 export interface AdapterCommonMap {
   [AdapterType.Path]: PathCommon;
   [AdapterType.FileSystem]: FileSystemCommon;
-  [AdapterType.Store]: StoreCommon;
   [AdapterType.Command]: CommandCommon;
   [AdapterType.Dialog]: DialogCommon;
   [AdapterType.Process]: ProcessCommon;
@@ -51,7 +49,11 @@ export interface AdapterCommonMap {
   [AdapterType.Fetch]: FetchCommon;
 }
 
-export type Config<YasumuAdapterType extends AdapterType> = AdapterCommonMap[YasumuAdapterType];
+export type StoreType = (name: string, options?: StoreOptions) => Promise<StoreCommon>;
+
+export type WithCreateStore<T> = T & { createStore: StoreType };
+
+export type Config<YasumuAdapterType extends AdapterType> = WithCreateStore<AdapterCommonMap[YasumuAdapterType]>;
 
 export function createAdapter<YasumuAdapterType extends AdapterType>(
   type: YasumuAdapterType,
@@ -62,7 +64,7 @@ export function createAdapter<YasumuAdapterType extends AdapterType>(
   }
 
   for (const key in config) {
-    if (config[key] === undefined) {
+    if (config[key as keyof typeof config] === undefined) {
       throw new Error(`[${type}] Missing required config value: ${key}`);
     }
   }

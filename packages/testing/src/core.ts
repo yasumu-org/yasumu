@@ -11,11 +11,11 @@ import {
   ShellMock,
 } from './mocks/index.js';
 
-export const Yasumu = createYasumu({
+export const yasumu = createYasumu({
   adapters: {
     app: new ApplicationMock(),
     command: new CommandsMock(),
-    store: new StoreMock('test'),
+    createStore: async (name) => new StoreMock(name),
     dialog: new DialogMock(),
     events: new EventsMock(),
     fs: new FileSystemMock(),

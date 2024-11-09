@@ -1,8 +1,8 @@
-import { Yasumu } from '@yasumu/testing';
+import { yasumu } from '@yasumu/testing';
 
 const dir = import.meta.dirname + '/env-workspace';
 
-const workspace = await Yasumu.openWorkspace({
+const workspace = await yasumu.openWorkspace({
   path: dir,
 });
 
@@ -13,10 +13,11 @@ if (!nightly) {
 } else {
   await nightly.addSecret({
     key: 'API_KEY',
+    value: '123456',
   });
 }
 
-console.log(await nightly?.getVariable('API_URL'));
+console.log(await nightly?.getSecret('API_KEY'));
 
 // console.log(workspace.getMetadata().getRawData());
 

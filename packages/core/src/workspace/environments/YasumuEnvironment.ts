@@ -120,6 +120,28 @@ export class YasumuEnvironment {
   }
 
   /**
+   * Delete this environment.
+   */
+  public async delete() {
+    return this.manager.deleteEnvironment(this.data.id);
+  }
+
+  /**
+   * Clone this environment.
+   */
+  public async clone() {
+    const newName = this.data.name.replace(/(\d+)?$/, (match, num) => {
+      if (num) return String(Number(num) + 1);
+      return ' 2';
+    });
+
+    return this.manager.createEnvironment({
+      name: newName,
+      id: generateId(),
+    });
+  }
+
+  /**
    * Get the variable by its key.
    * @param key The variable key.
    * @returns The variable.
@@ -134,8 +156,7 @@ export class YasumuEnvironment {
    * @returns The secret.
    */
   public async getSecret(key: string): Promise<(YasumuEnvironmentSecret & { value: string }) | null> {
-    const secret = this.data.variables.find((variable) => variable.key === key) ?? null;
-
+    const secret = this.data.secrets.find((variable) => variable.key === key) ?? null;
     if (!secret) return null;
 
     return {
@@ -190,6 +211,13 @@ export class YasumuEnvironment {
    */
   public async select() {
     await this.manager.selectEnvironment(this.data.id);
+  }
+
+  /**
+   * Unselect this environment.
+   */
+  public async unselect() {
+    await this.manager.selectEnvironment('');
   }
 
   /**

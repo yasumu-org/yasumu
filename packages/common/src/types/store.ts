@@ -15,3 +15,10 @@ export interface StoreCommon {
   set(key: string, value: unknown): Promise<void>;
   values<T = unknown>(): Promise<T[]>;
 }
+
+export interface StoreOptions {
+  autoSave?: boolean;
+  createNew?: boolean;
+  deserializeFnName?: string;
+  serializeFnName?: string;
+}

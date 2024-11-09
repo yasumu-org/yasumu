@@ -1,9 +1,9 @@
-import { Yasumu, CommandInterceptor } from '@yasumu/testing';
+import { yasumu, CommandInterceptor } from '@yasumu/testing';
 
 new CommandInterceptor('ping').intercept(() => {
   return 'Pong!';
 });
 
-await Yasumu.command.invoke('ping').then((result) => {
+await yasumu.command.invoke('ping').then((result) => {
   console.log(result); // Pong!
 });

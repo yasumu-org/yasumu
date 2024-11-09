@@ -11,6 +11,8 @@ import type {
   StoreCommon,
   AdapterCommonMap,
   FetchCommon,
+  WithCreateStore,
+  StoreType,
 } from '@yasumu/common';
 import { AdapterType } from '@yasumu/common';
 import { YASUMU_API_VERSION } from './common/constants.js';
@@ -21,7 +23,7 @@ export type YasumuCommon = {
 };
 
 export interface YasumuBootstrapOptions {
-  adapters: AdapterCommonMap;
+  adapters: WithCreateStore<AdapterCommonMap>;
 }
 
 /**
@@ -63,11 +65,16 @@ export class Yasumu implements YasumuCommon {
   /**
    * The kv store adapter to use.
    */
-  public readonly store: StoreCommon;
+  public store!: StoreCommon;
   /**
    * The fetch adapter to use.
    */
   public readonly fetch: FetchCommon;
+  /**
+   * The store creator function.
+   */
+  public readonly createStore: StoreType;
+
   /**
    * The current workspace. This is set when a workspace is opened. If no workspace is open, this returns `null`.
    */
@@ -91,9 +98,13 @@ export class Yasumu implements YasumuCommon {
     this.path = options.adapters[AdapterType.Path];
     this.process = options.adapters[AdapterType.Process];
     this.shell = options.adapters[AdapterType.Shell];
-    this.store = options.adapters[AdapterType.Store];
+    this.createStore = options.adapters.createStore;
     this.fetch = options.adapters[AdapterType.Fetch];
     this.utils = new YasumuUtilities(this);
+
+    options.adapters.createStore('yasumu').then((store) => {
+      this.store = store;
+    }, console.error);
   }
 
   /**

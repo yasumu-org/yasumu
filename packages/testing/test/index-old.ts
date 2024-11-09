@@ -1,9 +1,9 @@
 import { YasumuGraphqlEntity } from '@yasumu/core';
-import { Yasumu } from '@yasumu/testing';
+import { yasumu } from '@yasumu/testing';
 
 const dir = import.meta.dirname + '/sample-workspace';
 
-const workspace = await Yasumu.openWorkspace({
+const workspace = await yasumu.openWorkspace({
   path: dir,
 });
 
