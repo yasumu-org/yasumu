@@ -11,13 +11,12 @@
     "LICENSE"
   ],
   "scripts": {
+    "dev": "tsx ./test/index-old.ts",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
     "build": "rimraf dist && tsc && tsc-alias",
     "build:check": "tsc --noEmit",
-    "test": "vitest",
-    "atest": "tsx ./test/index.ts",
-    "atest2": "tsx ./test/command.ts"
+    "test": "vitest"
   },
   "repository": {
     "type": "git",

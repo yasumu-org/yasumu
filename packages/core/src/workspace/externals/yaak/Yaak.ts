@@ -155,6 +155,7 @@ export class Yaak extends ExternalCollectionsProvider<YaakCollection> {
               body: q.body?.query || null,
               headers: q.headers.map((h) => ({ key: h.name, value: h.value })),
               url: q.url,
+              variables: {},
             },
             Response: {
               body: '',

@@ -146,6 +146,7 @@ export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
                   value: h.value,
                 })) ?? [],
               url: r.url ?? '',
+              variables: {},
             },
             Response: {
               body: '',

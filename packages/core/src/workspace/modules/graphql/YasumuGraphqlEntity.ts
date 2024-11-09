@@ -8,7 +8,7 @@ import type { YasumuGraphql } from './YasumuGraphql.js';
 import { INTROSPECTION_QUERY, type IntrospectionQuery } from './constants.js';
 
 export interface GraphqlQueryOptions {
-  query: string;
+  query?: string;
   operationName?: string;
   variables?: Record<string, GraphqlQueryVariableType>;
 }
@@ -104,6 +104,15 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     return this.data.blocks.Request.variables[key];
   }
 
+  public setQuery(query: string | FormData | null) {
+    this.data.blocks.Request.body = query;
+    return this.save();
+  }
+
+  public get query() {
+    return this.data.blocks.Request.body;
+  }
+
   public createRootIndexData(): GraphqlIndex {
     return {
       id: this.id,
@@ -139,8 +148,10 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     return schema;
   }
 
-  public async send(options: GraphqlQueryOptions): Promise<Response | null> {
+  public async send(options: GraphqlQueryOptions = {}): Promise<Response | null> {
     if (!this.url) return null;
+
+    options.query ??= this.query as string;
 
     if (!('variables' in options)) {
       options.variables = this.variables;
@@ -153,9 +164,6 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     for (const { key, value } of this.headers) {
       headers.append(key, value);
     }
-
-    this.data.blocks.Request.body = options.query;
-    await this.save().catch(console.error);
 
     const opt = JSON.stringify(options);
 

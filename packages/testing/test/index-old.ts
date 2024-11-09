@@ -17,7 +17,35 @@ if (!target)
   });
 else graphql = await workspace.graphql.open(target);
 
-console.log(await graphql.introspect());
+graphql.setVariable('term', 'shoe');
+graphql.setVariable('take', 1);
+
+graphql.setQuery(`query GetProductList($take: Int, $term: String) {
+  products(
+    options: {
+      take: $take
+      filter: { name: { contains: $term } }
+      sort: { name: ASC }
+    }
+  ) {
+    totalItems
+    items {
+      id
+      name
+      slug
+      featuredAsset {
+        preview
+        mimeType
+        width
+        height
+      }
+    }
+  }
+}`);
+
+const res = await graphql.send();
+
+console.log(await res?.json());
 
 // let entity: YasumuRestEntity;
 

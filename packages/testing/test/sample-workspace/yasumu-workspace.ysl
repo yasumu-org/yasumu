@@ -2,27 +2,27 @@
 
 Metadata {
   name: "Untitled Workspace"
-  id: "929d51bc-f8a5-4749-8bf8-da740e7b6373"
-  createdAt: 1730698544023
-  version: "0.0"
+  id: "1zFRN1oeaXNHCTkzpxi3L"
+  createdAt: 1731142874654
+  version: "0.0.0"
+}
+
+Environment {
+  selectedEnvironment: ""
+  environments: {
+  }
 }
 
 Rest {
   entities: {
-    `5c86fb8b-1610-4afd-a917-c9a025e8fb31`: {
-      name: "Get todo by id"
-      id: "5c86fb8b-1610-4afd-a917-c9a025e8fb31"
-      method: "GET"
-      path: "/"
-    }
   }
 }
 
 GraphQL {
   entities: {
-    `17f0a342-6200-4bfd-ba0f-a7dd7da55439`: {
+    P5wilHxCFWK7DKHhiN8qD: {
       name: "GraphQL Demo"
-      id: "17f0a342-6200-4bfd-ba0f-a7dd7da55439"
+      id: "P5wilHxCFWK7DKHhiN8qD"
       method: "POST"
       path: "/"
     }

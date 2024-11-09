@@ -1,0 +1,39 @@
+@GraphQL
+
+Metadata {
+  name: "GraphQL Demo"
+  id: "P5wilHxCFWK7DKHhiN8qD"
+  createdAt: 1731142874656
+  path: "/"
+  method: "POST"
+}
+
+Request {
+  url: "https://readonlydemo.vendure.io/shop-api"
+  headers: [
+    {
+      key: "Content-Type"
+      value: "application/json"
+    },
+  ]
+  body: "query GetProductList($take: Int, $term: String) {\n  products(\n    options: {\n      take: $take\n      filter: { name: { contains: $term } }\n      sort: { name: ASC }\n    }\n  ) {\n    totalItems\n    items {\n      id\n      name\n      slug\n      featuredAsset {\n        preview\n        mimeType\n        width\n        height\n      }\n    }\n  }\n}"
+}
+
+Response {
+  headers: [
+  ]
+  body: ""
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+
