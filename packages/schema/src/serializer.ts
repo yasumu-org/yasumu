@@ -8,6 +8,7 @@ import { YasumuSchemaUtils } from "./utils.js";
  * This is highly experimental. Use with caution.
  */
 export class YasumuSchemaSerializer {
+    indentation = 2;
     depth = 0;
     keyPath: string[] = [];
 
@@ -36,7 +37,7 @@ export class YasumuSchemaSerializer {
     indent() {
         let output = "";
         for (let i = 0; i < this.depth; i++) {
-            output += INDENTATION_SPACE;
+            output += " ".repeat(this.indentation);
         }
         return output;
     }
@@ -48,12 +49,8 @@ export class YasumuSchemaSerializer {
     decrementIndent() {
         this.depth--;
     }
-}
 
-const INDENTATION_SPACE = " ".repeat(2);
-
-export class YasumuSchemaUnexpectedSerializerError extends Error {
-    constructor() {
-        super("This should never be executed");
+    setIdentation(indentation: number) {
+        this.indentation = indentation;
     }
 }

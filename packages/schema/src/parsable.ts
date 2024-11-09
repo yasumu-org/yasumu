@@ -1,5 +1,6 @@
 export * from "./parsable/boolean.js";
 export * from "./parsable/code.js";
+export * from "./parsable/enum.js";
 export * from "./parsable/factory.js";
 export * from "./parsable/list.js";
 export * from "./parsable/null.js";

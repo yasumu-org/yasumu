@@ -1,5 +1,9 @@
 import { YasumuSchemaParsableBoolean } from "./boolean.js";
 import { YasumuSchemaParsableCode } from "./code.js";
+import {
+    YasumuSchemaParsableEnum,
+    type _YasumuSchemaParsableEnumExpect,
+} from "./enum.js";
 import { YasumuSchemaParsableList } from "./list.js";
 import { YasumuSchemaParsableNull } from "./null.js";
 import { YasumuSchemaParsableNullable } from "./nullable.js";
@@ -63,6 +67,10 @@ export class YasumuSchemaFactory {
 
     union<E extends _YasumuSchemaParsableUnionExpect>(...expect: E) {
         return new YasumuSchemaParsableUnion(...expect);
+    }
+
+    enum<E extends _YasumuSchemaParsableEnumExpect>(...expect: E) {
+        return new YasumuSchemaParsableEnum(...expect);
     }
 }
 

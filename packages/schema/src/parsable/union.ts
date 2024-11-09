@@ -16,11 +16,7 @@ export type _YasumuSchemaParsableUnionReturn<
 
 export class YasumuSchemaParsableUnion<
     E extends _YasumuSchemaParsableUnionExpect,
-> extends YasumuSchemaParsable<
-    {
-        [P in keyof E]: YasumuSchemaParsableToType<E[P]>;
-    }[number]
-> {
+> extends YasumuSchemaParsable<_YasumuSchemaParsableUnionReturn<E>> {
     expect: E;
 
     constructor(...expect: E) {

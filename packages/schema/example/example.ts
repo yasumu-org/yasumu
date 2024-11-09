@@ -1,11 +1,11 @@
-import { t, YasumuSchemaActions } from "../src";
+import { t, YasumuSchemaActions, YasumuSchemaParsableToType } from "../src";
 
 const script = `
 @Example
 
 Metadata {
     name: "Test"
-    method: "GET"
+    method: GET
 }
 
 Request {
@@ -29,7 +29,7 @@ export const YasumuExampleScript = t.script({
     blocks: {
         Metadata: t.object({
             name: t.nullable(t.string()),
-            method: t.nullable(t.string()),
+            method: t.nullable(t.enum("GET", "POST")),
         }),
         Request: t.object({
             url: t.string(),
@@ -51,6 +51,30 @@ export const YasumuExampleScript = t.script({
         Test: t.nullable(t.code()),
     },
 });
+
+const scriptValue: YasumuSchemaParsableToType<typeof YasumuExampleScript> = {
+    annotation: "Example",
+    blocks: {
+        Metadata: {
+            name: "Test",
+            method: "GET",
+        },
+        Request: {
+            url: "https://example.com",
+            body: null,
+            params: {
+                key1: "hello",
+                key2: 123,
+                key3: true,
+                key4: null,
+            },
+            headers: null,
+        },
+        Test: '\n    console.log("tested");\n',
+        BeforeRequest: null,
+        AfterRequest: null,
+    },
+};
 
 const start = () => {
     const actions = new YasumuSchemaActions(YasumuExampleScript);
