@@ -1,56 +1,13 @@
-export interface YasumuSchemaParsableScript {
-    annotation: string;
-    schema: YasumuSchemaParsableScriptSchema;
-}
-
-export interface YasumuSchemaParsableScriptSchema {
-    [K: string]: YasumuSchemaParsableBlock;
-}
-
-export type YasumuSchemaParsableBlock =
-    | YasumuSchemaParsableCodeBlock
-    | YasumuSchemaParsableObjectBlock;
-
-export interface YasumuSchemaParsableCodeBlock {
-    type: "code";
-    required: boolean;
-}
-
-export interface YasumuSchemaParsableObjectBlock
-    extends YasumuSchemaParsableObject {
-    required: boolean;
-}
-
-export type YasumuSchemaParsable =
-    | YasumuSchemaParsableObject
-    | YasumuSchemaParsableRecord
-    | YasumuSchemaParsableList
-    | YasumuSchemaParsableConstant;
-
-export interface YasumuSchemaParsableObject {
-    type: "object";
-    schema: YasumuSchemaParsableObjectSchema;
-}
-
-export interface YasumuSchemaParsableObjectSchema {
-    [K: string]: YasumuSchemaParsableObjectSchemaValue;
-}
-
-export interface YasumuSchemaParsableObjectSchemaValue {
-    schema: YasumuSchemaParsable;
-    required: boolean;
-}
-
-export interface YasumuSchemaParsableRecord {
-    type: "record";
-    schema: YasumuSchemaParsable;
-}
-
-export interface YasumuSchemaParsableList {
-    type: "list";
-    schema: YasumuSchemaParsable;
-}
-
-export interface YasumuSchemaParsableConstant {
-    type: "boolean" | "number" | "string" | "null";
-}
+export * from "./parsable/boolean.js";
+export * from "./parsable/code.js";
+export * from "./parsable/factory.js";
+export * from "./parsable/list.js";
+export * from "./parsable/null.js";
+export * from "./parsable/nullable.js";
+export * from "./parsable/number.js";
+export * from "./parsable/object.js";
+export * from "./parsable/parsable.js";
+export * from "./parsable/record.js";
+export * from "./parsable/script.js";
+export * from "./parsable/string.js";
+export * from "./parsable/union.js";
