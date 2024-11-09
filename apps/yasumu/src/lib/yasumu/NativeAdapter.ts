@@ -45,55 +45,9 @@ export function NativeAdapter(): YasumuBootstrapOptions {
       [AdapterType.Process]: process,
       [AdapterType.Fetch]: http.fetch,
       [AdapterType.Dialog]: dialog as unknown as DialogCommon,
-      [AdapterType.Store]: (() => {
-        let _store: store.Store;
-
-        store.load('yasumu-store.json').then((s) => {
-          _store = s;
-        });
-
-        return {
-          delete(key) {
-            return _store.delete(key);
-          },
-          entries() {
-            return _store.entries();
-          },
-          get(key) {
-            return _store.get(key);
-          },
-          set(key, value) {
-            return _store.set(key, value);
-          },
-          has(key) {
-            return _store.has(key);
-          },
-          keys() {
-            return _store.keys();
-          },
-          length() {
-            return _store.length();
-          },
-          async load() {
-            // return _store.load();
-          },
-          onChange(cb: any) {
-            return _store.onChange(cb);
-          },
-          onKeyChange(key, cb: any) {
-            return _store.onKeyChange(key, cb);
-          },
-          reset() {
-            return _store.reset();
-          },
-          save() {
-            return _store.save();
-          },
-          values() {
-            return _store.values();
-          },
-        } as StoreCommon;
-      })(),
+      async createStore(name: string) {
+        return store.load(name) as unknown as Promise<StoreCommon>;
+      },
     },
   };
 }

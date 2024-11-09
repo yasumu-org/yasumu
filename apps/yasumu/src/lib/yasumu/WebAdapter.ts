@@ -29,51 +29,54 @@ export function WebAdapter(): YasumuBootstrapOptions {
         // eslint-disable-next-line
         async invoke(command: unknown, args: unknown, options: unknown) {},
       } as unknown as CommandCommon,
-      store: {
-        async delete(key) {
-          localStorage.removeItem(key);
-          return true;
-        },
-        async entries() {
-          return Object.entries(localStorage) as any;
-        },
-        async get(key) {
-          return localStorage.getItem(key) as any;
-        },
-        async has(key) {
-          return localStorage.getItem(key) !== null;
-        },
-        async keys() {
-          return Object.keys(localStorage);
-        },
-        async length() {
-          return localStorage.length;
-        },
-        async load() {
-          //
-        },
-        // eslint-disable-next-line
-        async onChange(cb) {
-          //
-          return () => {};
-        },
-        // eslint-disable-next-line
-        async onKeyChange(key, cb) {
-          //
-          return () => {};
-        },
-        async reset() {
-          localStorage.clear();
-        },
-        async save() {
-          //
-        },
-        async set(key, value) {
-          localStorage.setItem(key, value as string);
-        },
-        async values() {
-          return Object.values(localStorage);
-        },
+      async createStore(name: string) {
+        const makeKey = (key: string) => `yasumu_kv::${name}:${key}`;
+        return {
+          async delete(key) {
+            localStorage.removeItem(makeKey(key));
+            return true;
+          },
+          async entries() {
+            return Object.entries(localStorage) as any;
+          },
+          async get(key) {
+            return localStorage.getItem(makeKey(key)) as any;
+          },
+          async has(key) {
+            return localStorage.getItem(makeKey(key)) !== null;
+          },
+          async keys() {
+            return Object.keys(localStorage);
+          },
+          async length() {
+            return localStorage.length;
+          },
+          async load() {
+            //
+          },
+          // eslint-disable-next-line
+          async onChange(cb) {
+            //
+            return () => {};
+          },
+          // eslint-disable-next-line
+          async onKeyChange(key, cb) {
+            //
+            return () => {};
+          },
+          async reset() {
+            localStorage.clear();
+          },
+          async save() {
+            //
+          },
+          async set(key, value) {
+            localStorage.setItem(makeKey(key), value as string);
+          },
+          async values() {
+            return Object.values(localStorage);
+          },
+        };
       },
       dialog: {
         async open(options) {
