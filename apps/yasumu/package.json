@@ -42,6 +42,8 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cm6-graphql": "^0.2.0",
+    "common-tags": "^1.8.2",
+    "date-fns": "^4.1.0",
     "detect-programming-language": "^1.0.4",
     "lucide-react": "^0.454.0",
     "memfs": "^4.14.0",
@@ -61,6 +63,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.4",
+    "@types/common-tags": "^1",
     "@types/mime-types": "^2",
     "@types/node": "^20",
     "@types/path-browserify": "^1",

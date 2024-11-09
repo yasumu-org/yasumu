@@ -1,3 +1,5 @@
+import { MailDisplay } from './(components)/display';
+
 export default function Emails() {
-  return <div className="grid place-items-center h-screen">This is an email page</div>;
+  return <MailDisplay />;
 }
