@@ -1,11 +1,12 @@
 import { generateId } from '@/common/utils.js';
 import { BaseEntity } from '../common/BaseEntity.js';
 import { type ExecutionOptions, type ExecutionResult } from '../common/types.js';
-import type { GraphqlIndex, YasumuRawGraphqlEntity } from './types.js';
+import type { GraphqlIndex } from './types.js';
 import { GraphqlHttpMethod } from '@yasumu/common';
 import type { DeepPartial } from '../rest/YasumuRestEntity.js';
 import type { YasumuGraphql } from './YasumuGraphql.js';
 import { INTROSPECTION_QUERY, type IntrospectionQuery } from './constants.js';
+import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
 
 export interface GraphqlQueryOptions {
   query?: string;
@@ -15,8 +16,8 @@ export interface GraphqlQueryOptions {
 
 export type GraphqlQueryVariableType = string | number | boolean | null;
 
-export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
-  public data!: YasumuRawGraphqlEntity;
+export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
+  public data!: GraphqlEntitySchemaType;
   public introspectionData: IntrospectionQuery | null = null;
 
   /**
@@ -26,17 +27,17 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
    */
   public constructor(
     public readonly module: YasumuGraphql,
-    data?: DeepPartial<YasumuRawGraphqlEntity>,
+    data?: DeepPartial<GraphqlEntitySchemaType>,
   ) {
     super();
     this.#reformat(data);
   }
 
-  #reformat(data?: DeepPartial<YasumuRawGraphqlEntity>) {
+  #reformat(data?: DeepPartial<GraphqlEntitySchemaType>) {
     if (!data || typeof data !== 'object') {
       data = {
         blocks: {},
-      } as YasumuRawGraphqlEntity;
+      } as GraphqlEntitySchemaType;
     }
 
     data.annotation = this.module.type;
@@ -67,7 +68,7 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
     data.blocks!.BeforeRequest ??= '';
     data.blocks!.Test ??= '';
 
-    this.data = data as YasumuRawGraphqlEntity;
+    this.data = data as GraphqlEntitySchemaType;
   }
 
   public get method() {
@@ -105,7 +106,7 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
   }
 
   public setQuery(query: string | FormData | null) {
-    this.data.blocks.Request.body = query;
+    this.data.blocks.Request.body = query as string;
     return this.save();
   }
 
@@ -118,7 +119,7 @@ export class YasumuGraphqlEntity extends BaseEntity<YasumuRawGraphqlEntity> {
       id: this.id,
       name: this.name,
       path: this.path,
-      method: this.method,
+      method: this.method as GraphqlHttpMethod,
     };
   }
 

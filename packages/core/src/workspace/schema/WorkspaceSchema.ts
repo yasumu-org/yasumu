@@ -1,110 +1,97 @@
-import { t } from '@yasumu/schema';
+import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
 
-export const WorkspaceSchema = t.script(YASUMU_WORKSPACE_ANNOTATION, {
-  Metadata: t.objectBlock({
-    name: t.objectValue(t.string()),
-    id: t.objectValue(t.string()),
-    createdAt: t.objectValue(t.number()),
-    version: t.objectValue(t.string()),
-  }),
-  Environment: t.objectBlock({
-    selectedEnvironment: t.objectValue(t.string()),
-    environments: t.objectValue(
-      t.record(
+export const WorkspaceSchema = t.script({
+  annotation: YASUMU_WORKSPACE_ANNOTATION,
+  blocks: {
+    Metadata: t.object({
+      name: t.string(),
+      id: t.string(),
+      createdAt: t.number(),
+      version: t.string(),
+    }),
+    Environment: t.object({
+      selectedEnvironment: t.string(),
+      environments: t.record(
         t.object({
-          name: t.objectValue(t.string()),
-          id: t.objectValue(t.string()),
-          createdAt: t.objectValue(t.number()),
-          variables: t.objectValue(
-            t.list(
-              t.object({
-                key: t.objectValue(t.string()),
-                value: t.objectValue(t.string()),
-                enabled: t.objectValue(t.boolean()),
-              }),
-            ),
+          name: t.string(),
+          id: t.string(),
+          createdAt: t.number(),
+          variables: t.list(
+            t.object({
+              key: t.string(),
+              value: t.string(),
+              enabled: t.boolean(),
+            }),
           ),
-          secrets: t.objectValue(
-            t.list(
-              t.object({
-                key: t.objectValue(t.string()),
-                enabled: t.objectValue(t.boolean()),
-              }),
-            ),
+          secrets: t.list(
+            t.object({
+              key: t.string(),
+              enabled: t.boolean(),
+            }),
           ),
         }),
       ),
-    ),
-  }),
-  [WorkspaceModuleType.Rest]: t.objectBlock({
-    entities: t.objectValue(
-      t.record(
+    }),
+    [WorkspaceModuleType.Rest]: t.object({
+      entities: t.record(
         t.object({
-          name: t.objectValue(t.string()),
-          id: t.objectValue(t.string()),
-          method: t.objectValue(t.string()),
-          path: t.objectValue(t.string()),
+          name: t.string(),
+          id: t.string(),
+          method: t.string(),
+          path: t.string(),
         }),
       ),
-    ),
-  }),
-  [WorkspaceModuleType.GraphQL]: t.objectBlock({
-    entities: t.objectValue(
-      t.record(
+    }),
+    [WorkspaceModuleType.GraphQL]: t.object({
+      entities: t.record(
         t.object({
-          name: t.objectValue(t.string()),
-          id: t.objectValue(t.string()),
-          method: t.objectValue(t.string()),
-          path: t.objectValue(t.string()),
+          name: t.string(),
+          id: t.string(),
+          method: t.string(),
+          path: t.string(),
         }),
       ),
-    ),
-  }),
-  [WorkspaceModuleType.SMTP]: t.objectBlock({
-    entities: t.objectValue(
-      t.record(
+    }),
+    [WorkspaceModuleType.SMTP]: t.object({
+      entities: t.record(
         t.object({
-          name: t.objectValue(t.string()),
-          id: t.objectValue(t.string()),
-          path: t.objectValue(t.string()),
+          name: t.string(),
+          id: t.string(),
+          path: t.string(),
         }),
       ),
-    ),
-  }),
-  [WorkspaceModuleType.Websocket]: t.objectBlock({
-    entities: t.objectValue(
-      t.record(
+    }),
+    [WorkspaceModuleType.Websocket]: t.object({
+      entities: t.record(
         t.object({
-          name: t.objectValue(t.string()),
-          id: t.objectValue(t.string()),
-          path: t.objectValue(t.string()),
+          name: t.string(),
+          id: t.string(),
+          path: t.string(),
         }),
       ),
-    ),
-  }),
-  [WorkspaceModuleType.SocketIO]: t.objectBlock({
-    entities: t.objectValue(
-      t.record(
+    }),
+    [WorkspaceModuleType.SocketIO]: t.object({
+      entities: t.record(
         t.object({
-          name: t.objectValue(t.string()),
-          id: t.objectValue(t.string()),
-          path: t.objectValue(t.string()),
+          name: t.string(),
+          id: t.string(),
+          path: t.string(),
         }),
       ),
-    ),
-  }),
-  [WorkspaceModuleType.SSE]: t.objectBlock({
-    entities: t.objectValue(
-      t.record(
+    }),
+    [WorkspaceModuleType.SSE]: t.object({
+      entities: t.record(
         t.object({
-          name: t.objectValue(t.string()),
-          id: t.objectValue(t.string()),
-          method: t.objectValue(t.string()),
-          path: t.objectValue(t.string()),
+          name: t.string(),
+          id: t.string(),
+          method: t.string(),
+          path: t.string(),
         }),
       ),
-    ),
-  }),
+    }),
+  },
 });
+
+export type WorkspaceSchemaType = YasumuSchemaParsableToType<typeof WorkspaceSchema>;

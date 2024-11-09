@@ -3,7 +3,7 @@ import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
 import { YasumuRestEntity } from './YasumuRestEntity.js';
 import { RestEntitySchema } from '@/workspace/schema/RestEntitySchema.js';
-import { YasumuScriptActions } from '@yasumu/schema';
+import { YasumuSchemaActions } from '@yasumu/schema';
 
 export interface CreateRestEntityParams {
   /**
@@ -26,7 +26,7 @@ export interface CreateRestEntityParams {
 
 export class YasumuRest extends YasumuBaseModule<(typeof WorkspaceModuleType)['Rest']> {
   public override type = WorkspaceModuleType.Rest;
-  public readonly schema = new YasumuScriptActions(RestEntitySchema);
+  public readonly schema = new YasumuSchemaActions(RestEntitySchema);
 
   /**
    * Open a REST entity by its id.

@@ -1,7 +1,7 @@
 import { YASUMU_API_VERSION } from '@/common/constants.js';
 import type { WorkspaceModuleType, YasumuEntityDataMap } from '../modules/index.js';
-import type { YasumuRawWorkspaceMetadata } from '../YasumuWorkspaceMetadata.js';
 import type { Index } from '../indexer/YasumuIndexerService.js';
+import type { WorkspaceSchemaType } from '../schema/WorkspaceSchema.js';
 
 export type StandaloneIndex = Record<string, Index>;
 
@@ -12,7 +12,7 @@ export type WithStandaloneIndex<T> = {
 
 export interface YasumuStandaloneFormat {
   $$typeof: 'yasumu.standalone';
-  workspace: YasumuRawWorkspaceMetadata;
+  workspace: WorkspaceSchemaType;
   entities: Partial<{
     [K in WorkspaceModuleType]: WithStandaloneIndex<Record<string, YasumuEntityDataMap[K]>>;
   }>;

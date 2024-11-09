@@ -1,5 +1,9 @@
 import type { YasumuBaseModule } from './BaseModule.js';
-import type { YasumuSchemaParsableScriptToType, YasumuSchemaParsableScript } from '@yasumu/schema';
+import type {
+  YasumuSchemaParsableToType,
+  YasumuSchemaParsableScript,
+  _YasumuSchemaParsableScriptExpect,
+} from '@yasumu/schema';
 import type { ExecutionOptions, ExecutionResult } from './types.js';
 
 /**
@@ -194,7 +198,7 @@ export abstract class BaseEntity<T extends Record<string, any> = any> {
    */
   public async serialize() {
     return this.module.schema.serialize(
-      this.data as unknown as YasumuSchemaParsableScriptToType<YasumuSchemaParsableScript>,
+      this.data as unknown as YasumuSchemaParsableToType<YasumuSchemaParsableScript<_YasumuSchemaParsableScriptExpect>>,
     );
   }
 

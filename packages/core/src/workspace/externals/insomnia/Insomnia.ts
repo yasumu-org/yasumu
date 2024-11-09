@@ -1,16 +1,12 @@
 import { createStandalone, type YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
 import { ExternalCollectionsProvider } from '../base/ExternalCollectionsProvider.js';
 import type { InsomniaCollection } from './types.js';
-import {
-  WorkspaceModuleType,
-  type GraphqlIndex,
-  type RestIndex,
-  type YasumuRawGraphqlEntity,
-  type YasumuRawRestEntity,
-} from '@/workspace/modules/index.js';
+import { WorkspaceModuleType, type GraphqlIndex, type RestIndex } from '@/workspace/modules/index.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
 import { GraphqlHttpMethod, HttpMethod } from '@yasumu/common';
 import { generateId } from '@/common/utils.js';
+import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
+import type { RestEntitySchemaType } from '@/workspace/schema/RestEntitySchema.js';
 
 export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
   public async export(): Promise<InsomniaCollection> {
@@ -156,7 +152,7 @@ export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
             },
             Test: '',
           },
-        } satisfies YasumuRawGraphqlEntity;
+        } satisfies GraphqlEntitySchemaType;
       });
 
     const httpRequests = data.resources
@@ -181,6 +177,7 @@ export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
             Request: {
               headers: r.headers?.map((h) => ({ key: h.name, value: h.value })) ?? [],
               url: r.url ?? '',
+              body: r.body?.text ?? null,
             },
             Response: {
               body: '',
@@ -191,7 +188,7 @@ export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
             },
             Test: '',
           },
-        } satisfies YasumuRawRestEntity;
+        } satisfies RestEntitySchemaType;
       });
 
     return createStandalone({
@@ -272,7 +269,7 @@ export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
               acc[q.blocks.Metadata.id] = q;
               return acc;
             },
-            {} as Record<string, YasumuRawGraphqlEntity>,
+            {} as Record<string, GraphqlEntitySchemaType>,
           ),
         },
         [WorkspaceModuleType.Rest]: {
@@ -290,7 +287,7 @@ export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
               acc[r.blocks.Metadata.id] = r;
               return acc;
             },
-            {} as Record<string, YasumuRawRestEntity>,
+            {} as Record<string, RestEntitySchemaType>,
           ),
         },
       },

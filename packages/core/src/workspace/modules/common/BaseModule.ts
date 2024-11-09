@@ -3,7 +3,11 @@ import { WorkspaceModuleType, YasumuEntityMap } from './constants.js';
 import { IndexNotFoundError } from '@/common/errors/IndexNotFoundError.js';
 import { EntityNotFoundError } from '@/common/errors/EntityNotFoundError.js';
 import type { YasumuEntityDataMap } from './types.js';
-import type { YasumuSchemaParsableScript, YasumuScriptActions } from '@yasumu/schema';
+import type {
+  YasumuSchemaParsableScript,
+  YasumuSchemaActions,
+  _YasumuSchemaParsableScriptExpect,
+} from '@yasumu/schema';
 import type { BaseEntity } from './BaseEntity.js';
 import type { YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
 import type { RootIndex } from '@/workspace/YasumuWorkspaceMetadata.js';
@@ -17,7 +21,7 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
   /**
    * The schema for the entities in this module.
    */
-  public abstract readonly schema: YasumuScriptActions<YasumuSchemaParsableScript>;
+  public abstract readonly schema: YasumuSchemaActions<YasumuSchemaParsableScript<_YasumuSchemaParsableScriptExpect>>;
 
   /**
    * The base module for Yasumu.
@@ -93,7 +97,6 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
     if (!rootIndex) return null;
 
     const location = this.getLocation();
-    // @ts-expect-error this should be resolved
     const targetPath = this.workspace.yasumu.utils.joinPathSync(location, rootIndex.path);
     const target = await this.workspace.indexer.findIndex(targetPath, id);
 

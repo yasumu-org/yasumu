@@ -1,11 +1,16 @@
-import { t } from '@yasumu/schema';
+import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
-export const SocketioEntitySchema = t.script(WorkspaceModuleType.Websocket, {
-  Metadata: t.objectBlock({
-    name: t.objectValue(t.string()),
-    id: t.objectValue(t.string()),
-    createdAt: t.objectValue(t.number()),
-    path: t.objectValue(t.string()),
-  }),
+export const SocketioEntitySchema = t.script({
+  annotation: WorkspaceModuleType.SocketIO,
+  blocks: {
+    Metadata: t.object({
+      name: t.string(),
+      id: t.string(),
+      createdAt: t.number(),
+      path: t.string(),
+    }),
+  },
 });
+
+export type SocketioEntitySchemaType = YasumuSchemaParsableToType<typeof SocketioEntitySchema>;

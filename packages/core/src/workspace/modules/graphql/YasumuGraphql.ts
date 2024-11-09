@@ -1,4 +1,4 @@
-import { YasumuScriptActions } from '@yasumu/schema';
+import { YasumuSchemaActions } from '@yasumu/schema';
 import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
 import { GraphqlEntitySchema } from '@/workspace/schema/GraphqlEntitySchema.js';
@@ -26,7 +26,7 @@ export interface CreateGraphqlEntityParams {
 
 export class YasumuGraphql extends YasumuBaseModule<(typeof WorkspaceModuleType)['GraphQL']> {
   public type = WorkspaceModuleType.GraphQL;
-  public schema = new YasumuScriptActions(GraphqlEntitySchema);
+  public schema = new YasumuSchemaActions(GraphqlEntitySchema);
 
   /**
    * Open a GraphQL entity by its id.

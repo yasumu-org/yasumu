@@ -2,14 +2,10 @@ import { createStandalone, type YasumuStandaloneFormat } from '@/workspace/stand
 import { ExternalCollectionsProvider } from '../base/ExternalCollectionsProvider.js';
 import type { YaakCollection } from './types.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
-import {
-  WorkspaceModuleType,
-  type GraphqlIndex,
-  type RestIndex,
-  type YasumuRawGraphqlEntity,
-  type YasumuRawRestEntity,
-} from '@/workspace/modules/index.js';
+import { WorkspaceModuleType, type GraphqlIndex, type RestIndex } from '@/workspace/modules/index.js';
 import type { GraphqlHttpMethod, HttpMethod } from '@yasumu/common';
+import type { RestEntitySchemaType } from '@/workspace/schema/RestEntitySchema.js';
+import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
 
 const schema = 2;
 const YAAK_VERSION = '2024.11.5';
@@ -123,6 +119,7 @@ export class Yaak extends ExternalCollectionsProvider<YaakCollection> {
             Request: {
               headers: r.headers.map((h) => ({ key: h.name, value: h.value })),
               url: r.url,
+              body: r.body?.text || null,
             },
             Response: {
               body: '',
@@ -135,7 +132,7 @@ export class Yaak extends ExternalCollectionsProvider<YaakCollection> {
             BeforeRequest: '',
             Test: '',
           },
-        } satisfies YasumuRawRestEntity;
+        } satisfies RestEntitySchemaType;
       });
 
     const graphqlQueries = data.resources.httpRequests
@@ -167,7 +164,7 @@ export class Yaak extends ExternalCollectionsProvider<YaakCollection> {
             BeforeRequest: '',
             Test: '',
           },
-        } satisfies YasumuRawGraphqlEntity;
+        } satisfies GraphqlEntitySchemaType;
       });
 
     const standalone = createStandalone({
@@ -248,7 +245,7 @@ export class Yaak extends ExternalCollectionsProvider<YaakCollection> {
               acc[q.blocks.Metadata.id] = q;
               return acc;
             },
-            {} as Record<string, YasumuRawGraphqlEntity>,
+            {} as Record<string, GraphqlEntitySchemaType>,
           ),
         },
         [WorkspaceModuleType.Rest]: {
@@ -266,7 +263,7 @@ export class Yaak extends ExternalCollectionsProvider<YaakCollection> {
               acc[r.blocks.Metadata.id] = r;
               return acc;
             },
-            {} as Record<string, YasumuRawRestEntity>,
+            {} as Record<string, RestEntitySchemaType>,
           ),
         },
       },

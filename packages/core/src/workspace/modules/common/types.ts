@@ -1,20 +1,20 @@
 import type { InteractiveWebResponse } from '@/workspace/network/InteractiveWebResponse.js';
-import type { YasumuRawGraphqlEntity } from '../graphql/types.js';
-import type { YasumuRawRestEntity } from '../rest/types.js';
-import type { YasumuSmtpEntity } from '../smtp/YasumuSmtpEntity.js';
-import type { YasumuSocketIOEntity } from '../socketio/YasumuSocketIOEntity.js';
-import type { YasumuSseEntity } from '../sse/YasumuSseEntity.js';
-import type { YasumuWebSocketEntity } from '../websocket/YasumuWebSocketEntity.js';
 import type { WorkspaceModuleType } from './constants.js';
 import type { InteractiveWebRequest } from '@/workspace/network/InteractiveWebRequest.js';
+import type { RestEntitySchemaType } from '@/workspace/schema/RestEntitySchema.js';
+import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
+import type { SmtpEntitySchemaType } from '@/workspace/schema/SmtpEntitySchema.js';
+import type { SseEntitySchemaType } from '@/workspace/schema/SseEntitySchema.js';
+import type { SocketioEntitySchemaType } from '@/workspace/schema/SocketioEntitySchema.js';
+import type { WebsocketEntitySchemaType } from '@/workspace/schema/WebsocketEntitySchema.js';
 
 export interface YasumuEntityDataMap {
-  [WorkspaceModuleType.Rest]: YasumuRawRestEntity;
-  [WorkspaceModuleType.GraphQL]: YasumuRawGraphqlEntity;
-  [WorkspaceModuleType.SMTP]: YasumuSmtpEntity;
-  [WorkspaceModuleType.SSE]: YasumuSseEntity;
-  [WorkspaceModuleType.SocketIO]: YasumuSocketIOEntity;
-  [WorkspaceModuleType.Websocket]: YasumuWebSocketEntity;
+  [WorkspaceModuleType.Rest]: RestEntitySchemaType;
+  [WorkspaceModuleType.GraphQL]: GraphqlEntitySchemaType;
+  [WorkspaceModuleType.SMTP]: SmtpEntitySchemaType;
+  [WorkspaceModuleType.SSE]: SseEntitySchemaType;
+  [WorkspaceModuleType.SocketIO]: SocketioEntitySchemaType;
+  [WorkspaceModuleType.Websocket]: WebsocketEntitySchemaType;
 }
 
 export type YasumuEntityScript = string;

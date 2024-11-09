@@ -1,40 +1,44 @@
-import { t } from '@yasumu/schema';
+import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
-export const GraphqlEntitySchema = t.script(WorkspaceModuleType.GraphQL, {
-  Metadata: t.objectBlock({
-    name: t.objectValue(t.string()),
-    id: t.objectValue(t.string()),
-    createdAt: t.objectValue(t.number()),
-    path: t.objectValue(t.string()),
-    method: t.objectValue(t.string()),
-  }),
-  Request: t.objectBlock({
-    url: t.objectValue(t.string()),
-    headers: t.objectValue(
-      t.list(
+export const GraphqlEntitySchema = t.script({
+  annotation: WorkspaceModuleType.GraphQL,
+  blocks: {
+    Metadata: t.object({
+      name: t.string(),
+      id: t.string(),
+      createdAt: t.number(),
+      path: t.string(),
+      method: t.string(),
+    }),
+    Request: t.object({
+      url: t.string(),
+      headers: t.list(
         t.object({
-          key: t.objectValue(t.string()),
-          value: t.objectValue(t.string()),
+          key: t.string(),
+          value: t.string(),
         }),
       ),
-    ),
-    body: t.objectValue(t.string()),
-  }),
-  Response: t.objectBlock({
-    time: t.optionalObjectValue(t.number()),
-    size: t.optionalObjectValue(t.number()),
-    headers: t.optionalObjectValue(
-      t.list(
-        t.object({
-          key: t.objectValue(t.string()),
-          value: t.objectValue(t.string()),
-        }),
+      body: t.nullable(t.string()),
+      variables: t.record(t.union(t.null(), t.string(), t.number(), t.boolean())),
+    }),
+    Response: t.object({
+      time: t.nullable(t.number()),
+      size: t.nullable(t.number()),
+      headers: t.nullable(
+        t.list(
+          t.object({
+            key: t.string(),
+            value: t.string(),
+          }),
+        ),
       ),
-    ),
-    body: t.optionalObjectValue(t.string()),
-  }),
-  BeforeRequest: t.optionalCodeBlock(),
-  AfterResponse: t.optionalCodeBlock(),
-  Test: t.optionalCodeBlock(),
+      body: t.nullable(t.string()),
+    }),
+    BeforeRequest: t.nullable(t.code()),
+    AfterResponse: t.nullable(t.code()),
+    Test: t.nullable(t.code()),
+  },
 });
+
+export type GraphqlEntitySchemaType = YasumuSchemaParsableToType<typeof GraphqlEntitySchema>;

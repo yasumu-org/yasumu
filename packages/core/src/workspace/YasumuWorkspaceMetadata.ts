@@ -1,75 +1,22 @@
 import { deepMerge, generateId } from '@/common/utils.js';
 import type { YasumuWorkspace } from './YasumuWorkspace.js';
-import type { DeepPartial, RestIndex } from './modules/index.js';
+import type { DeepPartial } from './modules/index.js';
 import { WorkspaceModuleType } from './modules/common/constants.js';
-import { YasumuScriptActions } from '@yasumu/schema';
-import { WorkspaceSchema } from './schema/WorkspaceSchema.js';
+import { YasumuSchemaActions } from '@yasumu/schema';
+import { WorkspaceSchema, type WorkspaceSchemaType } from './schema/WorkspaceSchema.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
-import type { YasumuWorkspaceEnvironmentData } from './environments/YasumuEnvironmentManager.js';
 
 export type RootIndex<T> = { entities: Record<string, T> };
 
-export interface YasumuRawWorkspaceMetadata {
-  annotation: typeof YASUMU_WORKSPACE_ANNOTATION;
-  blocks: {
-    Metadata: {
-      /**
-       * The ID of the workspace.
-       */
-      id: string;
-      /**
-       * The name of the workspace.
-       */
-      name: string;
-      /**
-       * The date the workspace was created.
-       */
-      createdAt: number;
-      /**
-       * The version of the workspace.
-       */
-      version: string;
-    };
-    /**
-     * The workspace environments
-     */
-    Environment: YasumuWorkspaceEnvironmentData;
-    /**
-     * The associated REST entities of this workspace.
-     */
-    [WorkspaceModuleType.Rest]: RootIndex<RestIndex>;
-    /**
-     * The associated GraphQL entities of this workspace.
-     */
-    [WorkspaceModuleType.GraphQL]: RootIndex<unknown>;
-    /**
-     * The associated SMTP entities of this workspace.
-     */
-    [WorkspaceModuleType.SMTP]: RootIndex<unknown>;
-    /**
-     * The associated WebSocket entities of this workspace.
-     */
-    [WorkspaceModuleType.Websocket]: RootIndex<unknown>;
-    /**
-     * The associated Socket.IO entities of this workspace.
-     */
-    [WorkspaceModuleType.SocketIO]: RootIndex<unknown>;
-    /**
-     * The associated SSE entities of this workspace.
-     */
-    [WorkspaceModuleType.SSE]: RootIndex<unknown>;
-  };
-}
-
 export type MetadataSetter =
-  | ((data: YasumuRawWorkspaceMetadata) => DeepPartial<YasumuRawWorkspaceMetadata>)
-  | DeepPartial<YasumuRawWorkspaceMetadata>;
+  | ((data: WorkspaceSchemaType) => DeepPartial<WorkspaceSchemaType>)
+  | DeepPartial<WorkspaceSchemaType>;
 
 export class YasumuWorkspaceMetadata {
   /**
    * The schema for the workspace metadata.
    */
-  public static readonly schema = new YasumuScriptActions(WorkspaceSchema);
+  public static readonly schema = new YasumuSchemaActions(WorkspaceSchema);
 
   /**
    * The metadata for a workspace.
@@ -79,7 +26,7 @@ export class YasumuWorkspaceMetadata {
    */
   public constructor(
     public readonly workspace: YasumuWorkspace,
-    private data: YasumuRawWorkspaceMetadata,
+    private data: WorkspaceSchemaType,
   ) {
     this.#reformat();
   }
@@ -124,7 +71,7 @@ export class YasumuWorkspaceMetadata {
   /**
    * The raw metadata of this workspace.
    */
-  public getRawData(): YasumuRawWorkspaceMetadata {
+  public getRawData(): WorkspaceSchemaType {
     return this.data;
   }
 
@@ -185,7 +132,7 @@ export class YasumuWorkspaceMetadata {
   /**
    * Deserializes a string to workspace metadata.
    */
-  public deserialize(data: string): YasumuRawWorkspaceMetadata {
+  public deserialize(data: string): WorkspaceSchemaType {
     return YasumuWorkspaceMetadata.deserialize(data);
   }
 
@@ -199,21 +146,21 @@ export class YasumuWorkspaceMetadata {
   /**
    * Deserializes a string to workspace metadata.
    */
-  public static deserialize(data: string): YasumuRawWorkspaceMetadata {
+  public static deserialize(data: string): WorkspaceSchemaType {
     return this.schema.parse(data) as any;
   }
 
   /**
    * Serializes this workspace's metadata to a string.
    */
-  public static serialize(data: YasumuRawWorkspaceMetadata): string {
+  public static serialize(data: WorkspaceSchemaType): string {
     return this.schema.serialize(data as any);
   }
 
   /**
    * JSON representation of this workspace's metadata.
    */
-  public toJSON(): YasumuRawWorkspaceMetadata {
+  public toJSON(): WorkspaceSchemaType {
     return this.data;
   }
 }
@@ -225,10 +172,10 @@ export class YasumuWorkspaceMetadata {
  */
 export async function createWorkspaceMetadata(
   workspace: YasumuWorkspace,
-  options: Partial<YasumuRawWorkspaceMetadata> = {},
+  options: Partial<WorkspaceSchemaType> = {},
   save = false,
 ): Promise<YasumuWorkspaceMetadata> {
-  const metadata = new YasumuWorkspaceMetadata(workspace, options as YasumuRawWorkspaceMetadata);
+  const metadata = new YasumuWorkspaceMetadata(workspace, options as WorkspaceSchemaType);
 
   if (save) await metadata.save();
 

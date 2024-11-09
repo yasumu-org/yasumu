@@ -1,16 +1,17 @@
 import { generateId } from '@/common/utils.js';
 import { BaseEntity } from '../common/BaseEntity.js';
 import { ScriptType, type ExecutionOptions, type ExecutionResult } from '../common/types.js';
-import type { RestIndex, YasumuRawRestEntity } from './types.js';
+import type { RestIndex } from './types.js';
 import type { YasumuRest } from './YasumuRest.js';
 import { HttpMethod } from '@/common/index.js';
+import type { RestEntitySchemaType } from '@/workspace/schema/RestEntitySchema.js';
 
 export type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
 
-export class YasumuRestEntity extends BaseEntity<YasumuRawRestEntity> {
-  public data!: YasumuRawRestEntity;
+export class YasumuRestEntity extends BaseEntity<RestEntitySchemaType> {
+  public data!: RestEntitySchemaType;
 
   /**
    * Construct a new rest entity
@@ -19,17 +20,17 @@ export class YasumuRestEntity extends BaseEntity<YasumuRawRestEntity> {
    */
   public constructor(
     public readonly module: YasumuRest,
-    data?: DeepPartial<YasumuRawRestEntity>,
+    data?: DeepPartial<RestEntitySchemaType>,
   ) {
     super();
     this.#reformat(data);
   }
 
-  #reformat(data?: DeepPartial<YasumuRawRestEntity>) {
+  #reformat(data?: DeepPartial<RestEntitySchemaType>) {
     if (!data || typeof data !== 'object') {
       data = {
         blocks: {},
-      } as YasumuRawRestEntity;
+      } as RestEntitySchemaType;
     }
 
     data.annotation = this.module.type;
@@ -54,7 +55,7 @@ export class YasumuRestEntity extends BaseEntity<YasumuRawRestEntity> {
     data.blocks!.BeforeRequest ??= '';
     data.blocks!.Test ??= '';
 
-    this.data = data as YasumuRawRestEntity;
+    this.data = data as RestEntitySchemaType;
   }
 
   /**
@@ -116,7 +117,7 @@ export class YasumuRestEntity extends BaseEntity<YasumuRawRestEntity> {
   public createRootIndexData(): RestIndex {
     return {
       id: this.id,
-      method: this.method,
+      method: this.method as HttpMethod,
       name: this.name,
       path: this.path,
     };
@@ -128,7 +129,7 @@ export class YasumuRestEntity extends BaseEntity<YasumuRawRestEntity> {
    */
   public createInteractiveWebRequest() {
     const request = this.module.workspace.webRequest.create({
-      method: this.method,
+      method: this.method as HttpMethod,
       url: this.url,
       headers: this.headers,
       timeout: 60_000,
