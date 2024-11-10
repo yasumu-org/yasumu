@@ -7,3 +7,4 @@ export * from './PathMock.js';
 export * from './ProcessMock.js';
 export * from './ShellMock.js';
 export * from './StoreMock.js';
+export * from './WebSocketMock.js';

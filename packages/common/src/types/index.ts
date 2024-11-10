@@ -9,3 +9,4 @@ export * from './process.js';
 export * from './application.js';
 export * from './events.js';
 export * from './shell.js';
+export * from './websocket.js';

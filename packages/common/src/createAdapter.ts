@@ -9,6 +9,7 @@ import type {
   EventsCommon,
   FetchCommon,
   StoreOptions,
+  WebSocketCommon,
 } from './types/index.js';
 import type { ShellCommon } from './types/shell.js';
 
@@ -33,6 +34,7 @@ export const AdapterType = {
   Events: 'events',
   Shell: 'shell',
   Fetch: 'fetch',
+  WebSocket: 'websocket',
 } as const;
 
 export type AdapterType = (typeof AdapterType)[keyof typeof AdapterType];
@@ -47,6 +49,7 @@ export interface AdapterCommonMap {
   [AdapterType.Events]: EventsCommon;
   [AdapterType.Shell]: ShellCommon;
   [AdapterType.Fetch]: FetchCommon;
+  [AdapterType.WebSocket]: WebSocketCommon;
 }
 
 export type StoreType = (name: string, options?: StoreOptions) => Promise<StoreCommon>;

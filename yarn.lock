@@ -2623,6 +2623,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tauri-apps/plugin-websocket@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@tauri-apps/plugin-websocket@npm:2.0.0"
+  dependencies:
+    "@tauri-apps/api": "npm:^2.0.0"
+  checksum: 10c0/ce6f0bfd75313ed185a8868ba0358338b98532035256589f359ca7a398c2dc7626e15cf5ccf991d28040b677e2127608b077575714480efc4375f7955785f44c
+  languageName: node
+  linkType: hard
+
 "@ts-morph/common@npm:~0.19.0":
   version: 0.19.0
   resolution: "@ts-morph/common@npm:0.19.0"
@@ -3003,6 +3012,7 @@ __metadata:
     "@tauri-apps/plugin-process": "npm:^2.0.0"
     "@tauri-apps/plugin-shell": "npm:^2.0.1"
     "@tauri-apps/plugin-store": "npm:^2.1.0"
+    "@tauri-apps/plugin-websocket": "npm:^2.0.0"
     "@types/common-tags": "npm:^1"
     "@types/mime-types": "npm:^2"
     "@types/node": "npm:^20"

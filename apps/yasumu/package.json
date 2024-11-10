@@ -37,6 +37,7 @@
     "@tauri-apps/plugin-process": "^2.0.0",
     "@tauri-apps/plugin-shell": "^2.0.1",
     "@tauri-apps/plugin-store": "^2.1.0",
+    "@tauri-apps/plugin-websocket": "^2.0.0",
     "@uiw/react-codemirror": "^4.23.6",
     "@yasumu/core": "workspace:^",
     "class-variance-authority": "^0.7.0",

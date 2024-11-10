@@ -3,6 +3,14 @@ import { CommandCommon, YasumuBootstrapOptions } from '@yasumu/core';
 import memfs from 'memfs';
 import { createVolume } from 'memfs/lib/volume-localstorage';
 import bpath from 'path-browserify';
+import type {
+  Callback,
+  WebSocketCommon,
+  WebSocketImpl,
+  WsConnectionConfig,
+  WsMessage,
+  WsMessageSend,
+} from '@yasumu/core';
 
 export function WebAdapter(): YasumuBootstrapOptions {
   console.log('Loading WebAdapter');
@@ -274,6 +282,78 @@ export function WebAdapter(): YasumuBootstrapOptions {
         },
       },
       fetch,
+      websocket: (() => {
+        let id = 0;
+
+        type WsListener = Set<Callback<[WsMessage], unknown>>;
+
+        class WebSocketMock implements WebSocketCommon {
+          async connect(url: string, config?: WsConnectionConfig): Promise<WebSocketImpl> {
+            const nextId = id++;
+            void config;
+
+            return new Promise<WebSocketInner>((resolve, reject) => {
+              const ws = new WebSocket(url);
+              const listeners: WsListener = new Set();
+
+              ws.onmessage = (event) => {
+                const message: WsMessage = JSON.parse(event.data);
+                listeners.forEach((listener) => listener(message));
+              };
+
+              ws.onclose = () => {
+                listeners.clear();
+              };
+
+              ws.onopen = () => {
+                resolve(
+                  new WebSocketInner(
+                    nextId,
+                    listeners,
+                    () => {
+                      ws.close();
+                    },
+                    (payload) => {
+                      ws.send(JSON.stringify(payload));
+                    },
+                  ),
+                );
+              };
+
+              ws.onerror = (err) => {
+                reject(err);
+              };
+            });
+          }
+        }
+
+        class WebSocketInner implements WebSocketImpl {
+          public constructor(
+            public readonly id: number,
+            private readonly listeners: WsListener,
+            private readonly close: Callback,
+            private readonly _send: Callback<[WsMessageSend], void>,
+          ) {}
+
+          addListener(cb: Callback<[WsMessage], unknown>): Callback {
+            this.listeners.add(cb);
+
+            return () => {
+              this.listeners.delete(cb);
+            };
+          }
+
+          disconnect(): void {
+            this.close();
+          }
+
+          async send(message: WsMessageSend): Promise<void> {
+            this._send(message);
+          }
+        }
+
+        return new WebSocketMock();
+      })(),
     },
   };
 }

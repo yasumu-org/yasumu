@@ -6,6 +6,7 @@ import {
   FileSystemCommon,
   PathCommon,
   StoreCommon,
+  WebSocketCommon,
   YasumuBootstrapOptions,
 } from '@yasumu/core';
 import * as fs from '@tauri-apps/plugin-fs';
@@ -17,6 +18,7 @@ import * as process from '@tauri-apps/plugin-process';
 import * as dialog from '@tauri-apps/plugin-dialog';
 import * as http from '@tauri-apps/plugin-http';
 import * as store from '@tauri-apps/plugin-store';
+import ws from '@tauri-apps/plugin-websocket';
 import { invoke, addPluginListener } from '@tauri-apps/api/core';
 
 export function NativeAdapter(): YasumuBootstrapOptions {
@@ -45,6 +47,7 @@ export function NativeAdapter(): YasumuBootstrapOptions {
       [AdapterType.Process]: process,
       [AdapterType.Fetch]: http.fetch,
       [AdapterType.Dialog]: dialog as unknown as DialogCommon,
+      [AdapterType.WebSocket]: ws as unknown as WebSocketCommon,
       async createStore(name: string) {
         return store.load(name) as unknown as Promise<StoreCommon>;
       },

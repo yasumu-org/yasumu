@@ -9,6 +9,7 @@ import {
   PathMock,
   ProcessMock,
   ShellMock,
+  WebSocketMock,
 } from './mocks/index.js';
 
 export const yasumu = createYasumu({
@@ -22,6 +23,7 @@ export const yasumu = createYasumu({
     path: new PathMock(),
     process: new ProcessMock(),
     shell: new ShellMock(),
+    websocket: new WebSocketMock(),
     fetch,
   },
 });

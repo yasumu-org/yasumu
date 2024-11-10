@@ -13,6 +13,7 @@ import type {
   FetchCommon,
   WithCreateStore,
   StoreType,
+  WebSocketCommon,
 } from '@yasumu/common';
 import { AdapterType } from '@yasumu/common';
 import { YASUMU_API_VERSION } from './common/constants.js';
@@ -74,6 +75,10 @@ export class Yasumu implements YasumuCommon {
    * The store creator function.
    */
   public readonly createStore: StoreType;
+  /**
+   * The websocket adapter to use.
+   */
+  public readonly websocket!: WebSocketCommon;
 
   /**
    * The current workspace. This is set when a workspace is opened. If no workspace is open, this returns `null`.
@@ -100,6 +105,7 @@ export class Yasumu implements YasumuCommon {
     this.shell = options.adapters[AdapterType.Shell];
     this.createStore = options.adapters.createStore;
     this.fetch = options.adapters[AdapterType.Fetch];
+    this.websocket = options.adapters[AdapterType.WebSocket];
     this.utils = new YasumuUtilities(this);
 
     options.adapters.createStore('yasumu').then((store) => {

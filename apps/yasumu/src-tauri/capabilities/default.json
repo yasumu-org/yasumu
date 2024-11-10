@@ -166,6 +166,7 @@
     "store:default",
     "shell:default",
     "process:default",
-    "dialog:default"
+    "dialog:default",
+    "websocket:default"
   ]
 }
