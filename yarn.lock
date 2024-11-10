@@ -8628,6 +8628,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tanxium@workspace:packages/tanxium":
+  version: 0.0.0-use.local
+  resolution: "tanxium@workspace:packages/tanxium"
+  languageName: unknown
+  linkType: soft
+
 "tapable@npm:^2.2.0":
   version: 2.2.1
   resolution: "tapable@npm:2.2.1"

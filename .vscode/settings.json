@@ -10,6 +10,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "rust-analyzer.linkedProjects": ["apps/yasumu/src-tauri/Cargo.toml"],
-  "deno.enablePaths": ["./apps/yasumu/src-tauri/src/javascript"],
+  "deno.enablePaths": ["./packages/tanxium"],
   "deno.lint": false
 }

@@ -5,8 +5,12 @@ import { useCurrentMail } from '@/stores/MailStore';
 
 export function MailDisplay() {
   const mail = useCurrentMail();
-
-  if (!mail) return;
+  if (!mail)
+    return (
+      <div className="grid place-items-center text-center h-full">
+        <h1>Select an email to preview</h1>
+      </div>
+    );
 
   return (
     <div className="flex h-full flex-col">
