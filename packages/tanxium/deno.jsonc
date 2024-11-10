@@ -1,8 +1,11 @@
 {
   "exclude": ["dist"],
   "imports": {
-    "@faker-js/faker": "npm:@faker-js/faker@9.2.0",
     "nanoid": "npm:nanoid@5.0.8",
     "yasumu": "./lib/yasumu/index.ts",
+  },
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "compile": "deno compile --unstable-bare-node-builtins --unstable-detect-cjs -A --output ./dist/tanxium --no-check --config deno.jsonc ./src/index.ts",
   },
 }

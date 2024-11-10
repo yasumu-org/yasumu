@@ -1,3 +1,6 @@
-import * as yasumu from 'yasumu';
+import { Hono } from 'jsr:@hono/hono@4.6.9';
+const app = new Hono();
 
-console.log(yasumu.hello());
+app.get('/', (c) => c.text('Hono!'));
+
+Deno.serve(app.fetch);

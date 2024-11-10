@@ -5,7 +5,7 @@
   "scripts": {
     "app": "tauri dev",
     "cargo": "cd src-tauri && cargo",
-    "build-tanxium": "yarn workspace tanxium compile",
+    "build-tanxium": "cd ../../packages/tanxium && deno task compile",
     "copy-tanxium": "node ./scripts/copy-tanxium.mjs",
     "tanxium": "yarn build-tanxium && yarn copy-tanxium",
     "dev": "next dev --turbopack",

@@ -1,8 +1,0 @@
-{
-  "name": "tanxium",
-  "version": "2.0.0",
-  "description": "JavaScript runtime for Yasumu",
-  "scripts": {
-    "compile": "deno compile --unstable-bare-node-builtins --unstable-detect-cjs -A --output ./dist/tanxium --no-check --config deno.jsonc ./src/index.ts"
-  }
-}
