@@ -3,5 +3,6 @@
   "imports": {
     "@faker-js/faker": "npm:@faker-js/faker@9.2.0",
     "nanoid": "npm:nanoid@5.0.8",
+    "yasumu": "./lib/yasumu/index.ts",
   },
 }

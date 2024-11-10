@@ -11,5 +11,6 @@
   },
   "rust-analyzer.linkedProjects": ["apps/yasumu/src-tauri/Cargo.toml"],
   "deno.enablePaths": ["./packages/tanxium"],
-  "deno.lint": false
+  "deno.lint": false,
+  "deno.importMap": "./packages/tanxium/deno.jsonc"
 }
