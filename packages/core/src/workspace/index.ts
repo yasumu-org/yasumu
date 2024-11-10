@@ -6,3 +6,5 @@ export * from './schema/index.js';
 export * from './network/index.js';
 export * from './externals/index.js';
 export * from './standalone/index.js';
+export * from './events/index.js';
+export * from './environments/index.js';

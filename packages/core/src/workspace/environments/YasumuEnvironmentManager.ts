@@ -1,3 +1,4 @@
+import { YasumuWorkspaceEvents } from '../events/common.js';
 import type { YasumuWorkspace } from '../YasumuWorkspace.js';
 import {
   YasumuEnvironment,
@@ -63,8 +64,12 @@ export class YasumuEnvironmentManager {
       }
 
       metadata.blocks.Environment.selectedEnvironment = id;
+
+      this.workspace.events.emit(YasumuWorkspaceEvents.EnvironmentSelected, env);
     } else {
       metadata.blocks.Environment.selectedEnvironment = '';
+
+      this.workspace.events.emit(YasumuWorkspaceEvents.EnvironmentSelectionRemoved);
     }
 
     await workspaceMetadata.save();
@@ -94,6 +99,8 @@ export class YasumuEnvironmentManager {
 
     await env.save();
 
+    this.workspace.events.emit(YasumuWorkspaceEvents.EnvironmentCreated, env);
+
     return env;
   }
 
@@ -102,7 +109,9 @@ export class YasumuEnvironmentManager {
    * @param id The environment id.
    */
   public async deleteEnvironment(id: string): Promise<void> {
-    if (!this.#environments.has(id)) {
+    const env = this.#environments.get(id);
+
+    if (!env) {
       throw new Error(`Environment with id "${id}" does not exist.`);
     }
 
@@ -113,5 +122,7 @@ export class YasumuEnvironmentManager {
     delete metadata.blocks.Environment.environments[id];
 
     await workspaceMetadata.save();
+
+    this.workspace.events.emit(YasumuWorkspaceEvents.EnvironmentDeleted, env);
   }
 }

@@ -5,6 +5,7 @@ import { WorkspaceModuleType } from './modules/common/constants.js';
 import { YasumuSchemaActions } from '@yasumu/schema';
 import { WorkspaceSchema, type WorkspaceSchemaType } from './schema/WorkspaceSchema.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
+import { YasumuWorkspaceEvents } from './events/common.js';
 
 export type RootIndex<T> = { entities: Record<string, T> };
 
@@ -126,7 +127,9 @@ export class YasumuWorkspaceMetadata {
    * Saves this workspace's metadata.
    */
   public async save(): Promise<void> {
-    return this.workspace.yasumu.fs.writeTextFile(this.workspace.metadataPath, this.serialize());
+    return this.workspace.yasumu.fs.writeTextFile(this.workspace.metadataPath, this.serialize()).then(() => {
+      this.workspace.events.emit(YasumuWorkspaceEvents.WorkspaceMetadataUpdated, this);
+    });
   }
 
   /**

@@ -1,19 +1,24 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CirclePlus, File, Trash } from 'lucide-react';
 
-interface EnvVar {
+export interface EnvVar {
   id: string;
   key: string;
   value: string;
 }
 
-export function EnvVarsTable() {
-  const [envVars, setEnvVars] = useState<Array<EnvVar>>([{ id: '1', key: '', value: '' }]);
+export function EnvVarsTable({
+  envVars,
+  setEnvVars,
+}: {
+  envVars: EnvVar[];
+  setEnvVars: React.Dispatch<React.SetStateAction<EnvVar[]>>;
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function addAnother() {

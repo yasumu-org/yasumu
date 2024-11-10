@@ -10,6 +10,8 @@ import { WorkspaceModuleType } from './modules/common/constants.js';
 import { WebRequestService } from './network/WebRequestService.js';
 import { ExternalCollectionsUtility } from './externals/ExternalCollectionsUtility.js';
 import { YasumuEnvironmentManager } from './environments/YasumuEnvironmentManager.js';
+import { createYasumuEventBus } from './events/YasumuEventBus.js';
+import { YasumuWorkspaceEvents, type YasumuWorkspaceEventsMap } from './events/common.js';
 
 export interface YasumuWorkspaceOptions {
   /**
@@ -83,6 +85,11 @@ export class YasumuWorkspace {
    * The environment manager for this workspace.
    */
   public readonly environments = new YasumuEnvironmentManager(this);
+
+  /**
+   * The event bus for this workspace.
+   */
+  public readonly events = createYasumuEventBus();
 
   /**
    * The script runtime for this workspace.
@@ -179,6 +186,8 @@ export class YasumuWorkspace {
     } catch {
       //
     }
+
+    this.events.emit(YasumuWorkspaceEvents.WorkspaceCreated, this);
 
     return this.#metadata;
   }

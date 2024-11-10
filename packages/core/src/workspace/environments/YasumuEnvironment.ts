@@ -1,5 +1,6 @@
 import { deepMerge, generateId } from '@/common/utils.js';
 import type { YasumuEnvironmentManager } from './YasumuEnvironmentManager.js';
+import { YasumuWorkspaceEvents } from '../events/common.js';
 
 export interface CreateEnvironmentOptions {
   /**
@@ -79,8 +80,6 @@ export class YasumuEnvironment {
     this.data.name ??= 'Untitled environment';
     this.data.variables ??= [];
     this.data.secrets ??= [];
-
-    console.log(this.data);
   }
 
   /**
@@ -112,11 +111,43 @@ export class YasumuEnvironment {
   }
 
   /**
+   * The variables of this environment.
+   */
+  public get variables(): YasumuEnvironmentVariable[] {
+    return this.data.variables;
+  }
+
+  /**
+   * The secrets of this environment.
+   */
+  public get secrets(): YasumuEnvironmentSecret[] {
+    return this.data.secrets;
+  }
+
+  /**
+   * Get secrets with their values.
+   */
+  public async getSecretsWithValues(): Promise<(YasumuEnvironmentSecret & { value: string })[]> {
+    return Promise.all(
+      this.data.secrets.map(async (secret) => {
+        return {
+          ...secret,
+          value: (await this.manager.workspace.yasumu.store.get(this.#getKey(secret.key))) ?? '',
+        };
+      }),
+    );
+  }
+
+  /**
    * Sets the name of this environment.
    * @param name The new name.
    */
-  public setName(name: string) {
+  public async setName(name: string) {
     this.data.name = name;
+
+    await this.save();
+
+    this.#emitUpdate();
   }
 
   /**
@@ -135,10 +166,17 @@ export class YasumuEnvironment {
       return ' 2';
     });
 
-    return this.manager.createEnvironment({
+    const cloned = await this.manager.createEnvironment({
       name: newName,
       id: generateId(),
     });
+
+    cloned.data.variables = this.data.variables.map((variable) => ({ ...variable }));
+    cloned.data.secrets = this.data.secrets.map((secret) => ({ ...secret }));
+
+    await cloned.save();
+
+    return cloned;
   }
 
   /**
@@ -176,7 +214,9 @@ export class YasumuEnvironment {
       Object.assign(variable, data);
     }
 
-    return this.save();
+    await this.save();
+
+    this.#emitUpdate();
   }
 
   /**
@@ -203,21 +243,23 @@ export class YasumuEnvironment {
       }
     }
 
-    return this.save();
+    await this.save();
+
+    this.#emitUpdate();
   }
 
   /**
    * Select this environment.
    */
   public async select() {
-    await this.manager.selectEnvironment(this.data.id);
+    return this.manager.selectEnvironment(this.data.id);
   }
 
   /**
    * Unselect this environment.
    */
   public async unselect() {
-    await this.manager.selectEnvironment('');
+    return this.manager.selectEnvironment('');
   }
 
   /**
@@ -235,6 +277,8 @@ export class YasumuEnvironment {
     });
 
     await this.save();
+
+    this.#emitUpdate();
   }
 
   /**
@@ -262,6 +306,12 @@ export class YasumuEnvironment {
     }
 
     await this.save();
+
+    this.#emitUpdate();
+  }
+
+  #emitUpdate() {
+    this.manager.workspace.events.emit(YasumuWorkspaceEvents.EnvironmentUpdated, this);
   }
 
   #getKey(key: string) {
