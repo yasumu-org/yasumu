@@ -9,15 +9,18 @@ Yasumu is a customizable, free and open-source application to test various types
 
 The following table shows the status of the features in the project.
 
-| Feature           | Status  |
-| ----------------- | ------- |
-| REST API Testing  | ✅      |
-| SMTP Server       | ✅      |
-| GraphQL Testing   | Planned |
-| WebSocket Testing | Planned |
-| gRPC Testing      | Planned |
-| Custom Plugins    | Planned |
-| Custom Themes     | Planned |
+| Feature              | Status  |
+| -------------------- | ------- |
+| REST API             | ⌚      |
+| Catch-all SMTP Server| ⌚      |
+| GraphQL              | ⌚      |
+| WebSocket            | ⌚      |
+| Socket.IO            | ⌚      |
+| gRPC Testing         | Planned |
+| Custom Plugins       | Planned |
+| Custom Themes        | Planned |
+
+⌚ We are currently in our 3rd prototype stage.
 
 ## About
 
