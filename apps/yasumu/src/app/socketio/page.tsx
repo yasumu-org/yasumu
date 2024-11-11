@@ -42,7 +42,7 @@ export default function Home() {
         <Button>Send</Button>
       </div>
       <Separator />
-      <KeyValueTable />
+      <KeyValueTable value={{}} onChange={() => {}} />
     </main>
   );
 }

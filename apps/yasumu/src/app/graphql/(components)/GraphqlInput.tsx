@@ -5,9 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { YasumuLayout } from '@/lib/constants/layout';
 import { useLayout } from '@/stores/AppLayout';
 import { GraphqlEditor } from './GraphqlEditor';
+import { setGraphqlVariables, useGraphqlVariables } from '@/stores/GraphqlSchemaStore';
 
 export default function GraphqlInput() {
   const layout = useLayout();
+  const variables = useGraphqlVariables();
 
   return (
     <ResizablePanelGroup
@@ -26,10 +28,15 @@ export default function GraphqlInput() {
             <TabsTrigger value="headers">Headers</TabsTrigger>
           </TabsList>
           <TabsContent value="variables">
-            <KeyValueTable />
+            <KeyValueTable
+              value={variables}
+              onChange={(value) => {
+                setGraphqlVariables(value);
+              }}
+            />
           </TabsContent>
           <TabsContent value="headers">
-            <KeyValueTable />
+            <KeyValueTable value={{}} onChange={() => {}} />
           </TabsContent>
         </Tabs>
       </ResizablePanel>

@@ -13,7 +13,9 @@ import {
   setGraphqlDocument,
   setGraphqlResult,
   setGraphqlSchema,
+  setGraphqlVariables,
   useGraphqlDocument,
+  useGraphqlVariables,
 } from '@/stores/GraphqlSchemaStore';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -53,6 +55,7 @@ export default function Home() {
   const debouncedUrl = useDebounce(url, 500);
   const [isIntrospecting, setIsIntrospecting] = useState(false);
   const schema = useGraphqlDocument();
+  const variables = useGraphqlVariables();
 
   useEffect(() => {
     if (!yasumu.workspace) return;
@@ -77,6 +80,9 @@ export default function Home() {
       setEntity(entity);
       setUrl(entity.url || 'https://readonlydemo.vendure.io/shop-api');
       setGraphqlDocument(String(entity.data.blocks.Request.body || ''));
+      if (Object.keys(entity.variables).length) {
+        setGraphqlVariables(entity.variables);
+      }
     })();
   }, [yasumu.workspace]);
 
@@ -190,6 +196,7 @@ export default function Home() {
 
                 entity.data.blocks.Request.url = debouncedUrl;
                 entity.data.blocks.Request.body = schema;
+                entity.data.blocks.Request.variables = variables;
 
                 await entity.save().catch(console.error);
 
