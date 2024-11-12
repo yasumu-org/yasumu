@@ -5,25 +5,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CirclePlus, File, Trash } from 'lucide-react';
+import { type EnvVar } from '@/stores/EnvStore';
 
-export interface EnvVar {
-  id: string;
-  key: string;
-  value: string;
+interface Props {
+  envVars: Array<EnvVar>;
+  setEnvVars: (v: Array<EnvVar>) => void;
 }
 
-export function EnvVarsTable({
-  envVars,
-  setEnvVars,
-}: {
-  envVars: EnvVar[];
-  setEnvVars: React.Dispatch<React.SetStateAction<EnvVar[]>>;
-}) {
+export function EnvVarsTable({ envVars, setEnvVars }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function addAnother() {
-    setEnvVars((prev) => [
-      ...prev,
+    setEnvVars([
+      ...envVars,
       {
         id: Math.random().toString(),
         key: '',
@@ -33,7 +27,7 @@ export function EnvVarsTable({
   }
 
   function parseEnvContent(content: string) {
-    const envVars = content
+    const newEnvVars = content
       .split('\n')
       .map((c): null | EnvVar => {
         const [key, value] = c.split('=');
@@ -43,7 +37,7 @@ export function EnvVarsTable({
       })
       .filter(Boolean) as Array<EnvVar>;
 
-    setEnvVars((prev) => [...prev, ...envVars]);
+    setEnvVars([...envVars, ...newEnvVars]);
   }
 
   function parseEnvFile(file: File) {

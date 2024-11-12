@@ -3,39 +3,14 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { type EnvVar, EnvVarsTable } from './(components)/env-table';
-import { useYasumu } from '@/providers/WorkspaceProvider';
+import React from 'react';
+import { EnvVarsTable } from './(components)/env-table';
+import { useEnvironment } from '@/stores/EnvStore';
 
 export default function Environment() {
-  const [envVars, setEnvVars] = useState<Array<EnvVar>>([]);
-  const [envSecrets, setEnvSecrets] = useState<Array<EnvVar>>([]);
   const params = useSearchParams();
   const envId = params.get('env');
-  const yasumu = useYasumu();
-  const env = yasumu.workspace?.environments.getEnvironment(envId ?? '');
-
-  useEffect(() => {
-    if (!env) return;
-
-    const vars = env.variables.map((v) => ({
-      id: v.key,
-      key: v.key,
-      value: v.value,
-    }));
-
-    setEnvVars(vars);
-
-    env.getSecretsWithValues().then((secrets) => {
-      const s = secrets.map((v) => ({
-        id: v.key,
-        key: v.key,
-        value: v.value,
-      }));
-
-      setEnvSecrets(s);
-    }, console.error);
-  }, [env]);
+  const { env, envVars, envSecrets, setEnvVars, setEnvSecrets } = useEnvironment(envId);
 
   if (!env) return null;
 
