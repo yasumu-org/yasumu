@@ -7,6 +7,7 @@ import type { DeepPartial } from '../rest/YasumuRestEntity.js';
 import type { YasumuGraphql } from './YasumuGraphql.js';
 import { INTROSPECTION_QUERY, type IntrospectionQuery } from './constants.js';
 import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
+import * as graphql from 'graphql';
 
 export interface GraphqlQueryOptions {
   query?: string;
@@ -166,6 +167,10 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
       headers.append(key, value);
     }
 
+    if (options.variables) {
+      options.variables = this.reformatVariableTypes(options.variables);
+    }
+
     const opt = JSON.stringify(options);
 
     const init: RequestInit & { maxRedirects: number; timeout: number } = {
@@ -185,6 +190,49 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
     }
 
     return fetch(url.toString(), init);
+  }
+
+  /**
+   * Reformats the given variables to the correct types based on the current graphql query
+   * @param variables The variables to reformat
+   */
+  public reformatVariableTypes(variables: Record<string, GraphqlQueryVariableType>) {
+    const rawQuery = this.data.blocks.Request.body;
+    if (!rawQuery) return variables;
+
+    const schema = graphql.parse(rawQuery);
+
+    const variableDefinitions = schema.definitions
+      .filter((def) => def.kind === 'OperationDefinition')
+      .flatMap((def) => def.variableDefinitions ?? []);
+
+    for (const variableDef of variableDefinitions) {
+      const name = variableDef.variable.name.value;
+      const type = variableDef.type;
+
+      if (name in variables) {
+        if (type.kind === 'NamedType') {
+          switch (type.name.value) {
+            case 'Int':
+              variables[name] = Number.parseInt(variables[name] as string);
+              break;
+            case 'Float':
+              variables[name] = Number.parseFloat(variables[name] as string);
+              break;
+            case 'Boolean':
+              variables[name] = Boolean(variables[name]);
+              break;
+            default:
+              if (typeof variables[name] !== 'string') {
+                variables[name] = String(variables[name]);
+              }
+              break;
+          }
+        }
+      }
+    }
+
+    return variables;
   }
 
   public async execute(options?: ExecutionOptions): Promise<ExecutionResult> {
