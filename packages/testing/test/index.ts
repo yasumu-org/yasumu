@@ -130,6 +130,20 @@ async function createRequests() {
 
 // await createRequests();
 
-const tree = await workspace.rest.generateTree();
+const Tree = await workspace.rest.generateTree();
 
-console.dir(tree, { depth: Infinity });
+console.dir(Tree, { depth: Infinity });
+
+// const printTree = (tree: typeof Tree, level = 0) => {
+//   console.log('  '.repeat(level) + `${tree.children ? '| ' : '- '}` + tree.name);
+
+//   if (tree.children) {
+//     for (const child of tree.children) {
+//       printTree(child as any, level + 1);
+//     }
+//   }
+// };
+
+// Tree.children?.forEach((child) => {
+//   printTree(child as any);
+// });

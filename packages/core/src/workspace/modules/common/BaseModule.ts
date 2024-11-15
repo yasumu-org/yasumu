@@ -220,13 +220,22 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
       current.push(entity);
     }
 
-    tree.children?.sort((a, b) => {
-      if (a.children && !b.children) return -1;
-      if (!a.children && b.children) return 1;
-      if (!a.name || !b.name) return 0;
+    const deepSort = (children: YasumuEntityTree[]) => {
+      children.sort((a, b) => {
+        if (a.children && !b.children) return -1;
+        if (!a.children && b.children) return 1;
 
-      return a.name.localeCompare(b.name);
-    });
+        return (a.name ?? '').localeCompare(b.name ?? '');
+      });
+
+      for (const child of children) {
+        if (child.children) {
+          deepSort(child.children);
+        }
+      }
+    };
+
+    deepSort(tree.children!);
 
     return tree;
   }
