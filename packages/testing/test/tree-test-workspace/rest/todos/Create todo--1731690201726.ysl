@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Create todo"
+  id: "txWqPN3sTUhNUaIIYjg7u"
+  createdAt: 1731690201726
+  path: "todos"
+  method: "POST"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/todos"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

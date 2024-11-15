@@ -2,7 +2,7 @@ import type { YasumuWorkspace } from '@/workspace/YasumuWorkspace.js';
 import { WorkspaceModuleType, YasumuEntityMap } from './constants.js';
 import { IndexNotFoundError } from '@/common/errors/IndexNotFoundError.js';
 import { EntityNotFoundError } from '@/common/errors/EntityNotFoundError.js';
-import type { YasumuEntityDataMap } from './types.js';
+import type { YasumuEntityDataMap, YasumuEntityTree, YasumuRootEntityIndexMap } from './types.js';
 import type {
   YasumuSchemaParsableScript,
   YasumuSchemaActions,
@@ -167,5 +167,67 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
    */
   public notifyDeleted(entity: YasumuEntityMap[T] | BaseEntity) {
     // TODO: notify subscribers about the deletion
+  }
+
+  /**
+   * Generate a file tree object for this module.
+   */
+  public async generateTree(): Promise<
+    YasumuEntityTree & {
+      __type: T;
+    }
+  > {
+    const { entities } = this.getRootIndex();
+
+    const tree: YasumuEntityTree & {
+      __type: T;
+    } = {
+      __type: this.type,
+      children: [],
+      id: '__YASUMU_ROOT__',
+      name: '__YASUMU_ROOT__',
+    };
+
+    let i = 0;
+
+    for (const entity of Object.values(entities)) {
+      if (entity.path === '/') {
+        tree.children?.push(entity);
+        continue;
+      }
+
+      const parts = entity.path.split('/');
+
+      let current: YasumuEntityTree[] = tree.children!;
+
+      for (const part of parts) {
+        const child = tree.children?.find((c) => c.name === part);
+
+        if (!child) {
+          const newChild: YasumuEntityTree = {
+            children: [],
+            name: part,
+            id: `dir::${i++}`,
+          };
+
+          current?.push(newChild);
+          current = newChild.children!;
+        } else {
+          current = child.children!;
+        }
+      }
+
+      current.push(entity);
+    }
+
+    tree.children?.sort((a, b) => {
+      if (a.children && !b.children) return -1;
+      if (!a.children && b.children) return 1;
+      if (!a.name || !b.name) return 0;
+
+      return a.name.localeCompare(b.name);
+    });
+
+    return tree;
   }
 }

@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Update comment"
+  id: "9XAvm8aN_PMBQXF1QgNIc"
+  createdAt: 1731690201771
+  path: "comments"
+  method: "PUT"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/comments/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

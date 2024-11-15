@@ -1,32 +1,135 @@
 import { yasumu } from '@yasumu/testing';
 
-const dir = import.meta.dirname + '/env-workspace';
+const dir = import.meta.dirname + '/tree-test-workspace';
 
 const workspace = await yasumu.openWorkspace({
   path: dir,
 });
 
-const nightly = workspace.environments.getEnvironment('Gu3HVpdIiCOgM_1DgX-Cd');
-
-if (!nightly) {
-  console.error('noooo');
-} else {
-  await nightly.addSecret({
-    key: 'API_KEY',
-    value: '123456',
+async function createRequests() {
+  // root
+  await workspace.rest.create({
+    name: 'Ping',
+    url: 'https://example.com',
   });
+
+  // todos
+  {
+    await workspace.rest.create({
+      name: 'Get todo by id',
+      url: 'https://jsonplaceholder.typicode.com/todos/1',
+      path: 'todos',
+    });
+
+    await workspace.rest.create({
+      name: 'Get all todos',
+      url: 'https://jsonplaceholder.typicode.com/todos',
+      path: 'todos',
+    });
+
+    await workspace.rest.create({
+      name: 'Create todo',
+      url: 'https://jsonplaceholder.typicode.com/todos',
+      method: 'POST',
+      path: 'todos',
+    });
+
+    await workspace.rest.create({
+      name: 'Update todo',
+      url: 'https://jsonplaceholder.typicode.com/todos/1',
+      method: 'PUT',
+      path: 'todos',
+    });
+
+    await workspace.rest.create({
+      name: 'Delete todo',
+      url: 'https://jsonplaceholder.typicode.com/todos/1',
+      method: 'DELETE',
+      path: 'todos',
+    });
+
+    await workspace.rest.create({
+      name: 'Get todo by id',
+      url: 'https://jsonplaceholder.typicode.com/todos/1',
+      path: 'todos/get todo',
+    });
+  }
+
+  // users
+  {
+    await workspace.rest.create({
+      name: 'Get user by id',
+      url: 'https://jsonplaceholder.typicode.com/users/1',
+      path: 'users',
+    });
+
+    await workspace.rest.create({
+      name: 'Get all users',
+      url: 'https://jsonplaceholder.typicode.com/users',
+      path: 'users',
+    });
+
+    await workspace.rest.create({
+      name: 'Create user',
+      url: 'https://jsonplaceholder.typicode.com/users',
+      method: 'POST',
+      path: 'users',
+    });
+
+    await workspace.rest.create({
+      name: 'Update user',
+      url: 'https://jsonplaceholder.typicode.com/users/1',
+      method: 'PUT',
+      path: 'users',
+    });
+
+    await workspace.rest.create({
+      name: 'Delete user',
+      url: 'https://jsonplaceholder.typicode.com/users/1',
+      method: 'DELETE',
+      path: 'users',
+    });
+  }
+
+  // comments
+  {
+    await workspace.rest.create({
+      name: 'Get comment by id',
+      url: 'https://jsonplaceholder.typicode.com/comments/1',
+      path: 'comments',
+    });
+
+    await workspace.rest.create({
+      name: 'Get all comments',
+      url: 'https://jsonplaceholder.typicode.com/comments',
+      path: 'comments',
+    });
+
+    await workspace.rest.create({
+      name: 'Create comment',
+      url: 'https://jsonplaceholder.typicode.com/comments',
+      method: 'POST',
+      path: 'comments',
+    });
+
+    await workspace.rest.create({
+      name: 'Update comment',
+      url: 'https://jsonplaceholder.typicode.com/comments/1',
+      method: 'PUT',
+      path: 'comments',
+    });
+
+    await workspace.rest.create({
+      name: 'Delete comment',
+      url: 'https://jsonplaceholder.typicode.com/comments/1',
+      method: 'DELETE',
+      path: 'comments',
+    });
+  }
 }
 
-console.log(await nightly?.getSecret('API_KEY'));
+// await createRequests();
 
-// console.log(workspace.getMetadata().getRawData());
+const tree = await workspace.rest.generateTree();
 
-// const env = await workspace.environments.createEnvironment({
-//   name: 'Nightly',
-// });
-
-// await env.addVariable({
-//   key: 'API_URL',
-//   value: 'https://api.example.com',
-//   enabled: true,
-// });
+console.dir(tree, { depth: Infinity });

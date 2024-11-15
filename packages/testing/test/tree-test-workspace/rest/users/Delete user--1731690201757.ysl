@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Delete user"
+  id: "viUWSYYBPguKDvMsn7i1M"
+  createdAt: 1731690201757
+  path: "users"
+  method: "DELETE"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/users/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

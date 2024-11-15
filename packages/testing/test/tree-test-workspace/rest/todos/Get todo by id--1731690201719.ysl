@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Get todo by id"
+  id: "d037T_eOxon27caRcMbra"
+  createdAt: 1731690201719
+  path: "todos"
+  method: "GET"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/todos/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

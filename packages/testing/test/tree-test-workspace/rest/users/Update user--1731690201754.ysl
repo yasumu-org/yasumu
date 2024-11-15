@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Update user"
+  id: "DdDc5R1xx627Z8dlqLjGs"
+  createdAt: 1731690201754
+  path: "users"
+  method: "PUT"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/users/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

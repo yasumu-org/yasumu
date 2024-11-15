@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Create comment"
+  id: "MU9QUrebda1myS-5UTzAP"
+  createdAt: 1731690201768
+  path: "comments"
+  method: "POST"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/comments"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

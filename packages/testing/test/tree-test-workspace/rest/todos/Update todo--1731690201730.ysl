@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Update todo"
+  id: "8DQh7VHL97cnj0wHIzeRi"
+  createdAt: 1731690201730
+  path: "todos"
+  method: "PUT"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/todos/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

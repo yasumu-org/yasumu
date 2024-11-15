@@ -15,11 +15,15 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { MdFolder } from 'react-icons/md';
+import { DeleteMethodIcon, GetMethodIcon, PatchMethodIcon, PostMethodIcon, PutMethodIcon } from '../assets/HttpMethods';
 
 export interface FileTree {
-  name: string;
+  id?: string;
+  name?: string;
   icon?: () => React.ReactNode;
+  method?: string;
   children?: FileTree[];
+  __type?: string;
 }
 
 const truncate = (str: string, length: number) => (str.length > length ? `${str.slice(0, length)}...` : str);
@@ -57,15 +61,34 @@ export function FileTreeSidebar({
   );
 }
 
+// TODO: organize this properly
+function getIconForHttpMethod(method: string) {
+  switch (method) {
+    case 'GET':
+      return GetMethodIcon;
+    case 'POST':
+      return PostMethodIcon;
+    case 'PUT':
+      return PutMethodIcon;
+    case 'DELETE':
+      return DeleteMethodIcon;
+    case 'PATCH':
+      return PatchMethodIcon;
+    default:
+      return null;
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Tree({ item }: { item: FileTree }) {
   const { name, children } = item;
 
   if (!children?.length) {
+    const Icon = item.icon ?? (item.method ? getIconForHttpMethod(item.method ?? '') : null);
     return (
       <SidebarMenuButton className="data-[active=true]:bg-transparent text-xs">
-        {item.icon && <item.icon />}
-        {truncate(name, 20)}
+        {Icon && <Icon />}
+        {truncate(name || '', 20)}
       </SidebarMenuButton>
     );
   }

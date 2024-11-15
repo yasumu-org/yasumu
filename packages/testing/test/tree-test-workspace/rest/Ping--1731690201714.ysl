@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Ping"
+  id: "RqjrF9oTL4O2tuNsj5aNM"
+  createdAt: 1731690201714
+  path: "/"
+  method: "GET"
+}
+
+Request {
+  url: "https://example.com"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

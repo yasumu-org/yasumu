@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Get all comments"
+  id: "Of2rL3Wdq5-K4_EvCBXTr"
+  createdAt: 1731690201764
+  path: "comments"
+  method: "GET"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/comments"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

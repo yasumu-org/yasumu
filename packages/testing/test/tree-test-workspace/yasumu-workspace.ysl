@@ -1,0 +1,141 @@
+@Workspace
+
+Metadata {
+  name: "Untitled Workspace"
+  id: "L37q6QKiLWjmw2keMwZ2V"
+  createdAt: 1731690201713
+  version: "0.0.0"
+}
+
+Environment {
+  selectedEnvironment: ""
+  environments: {}
+}
+
+Rest {
+  entities: {
+    `RqjrF9oTL4O2tuNsj5aNM`: {
+      name: "Ping"
+      id: "RqjrF9oTL4O2tuNsj5aNM"
+      method: "GET"
+      path: "/"
+    }
+    `d037T_eOxon27caRcMbra`: {
+      name: "Get todo by id"
+      id: "d037T_eOxon27caRcMbra"
+      method: "GET"
+      path: "todos"
+    }
+    `5kip8SZhmnwZJcqy0lh3E`: {
+      name: "Get all todos"
+      id: "5kip8SZhmnwZJcqy0lh3E"
+      method: "GET"
+      path: "todos"
+    }
+    `txWqPN3sTUhNUaIIYjg7u`: {
+      name: "Create todo"
+      id: "txWqPN3sTUhNUaIIYjg7u"
+      method: "POST"
+      path: "todos"
+    }
+    `8DQh7VHL97cnj0wHIzeRi`: {
+      name: "Update todo"
+      id: "8DQh7VHL97cnj0wHIzeRi"
+      method: "PUT"
+      path: "todos"
+    }
+    `xH3PV0PC4dNQ7OgGA-VaA`: {
+      name: "Delete todo"
+      id: "xH3PV0PC4dNQ7OgGA-VaA"
+      method: "DELETE"
+      path: "todos"
+    }
+    `g9HHn0MDp6QRgGyAlhobd`: {
+      name: "Get todo by id"
+      id: "g9HHn0MDp6QRgGyAlhobd"
+      method: "GET"
+      path: "todos/get todo"
+    }
+    `n2UDm1YkTLquN7N93jF9S`: {
+      name: "Get user by id"
+      id: "n2UDm1YkTLquN7N93jF9S"
+      method: "GET"
+      path: "users"
+    }
+    `fq6l9a64Z0u6Ik_dnJHuq`: {
+      name: "Get all users"
+      id: "fq6l9a64Z0u6Ik_dnJHuq"
+      method: "GET"
+      path: "users"
+    }
+    `v0Rsju1pFTvDWaU7OxMqc`: {
+      name: "Create user"
+      id: "v0Rsju1pFTvDWaU7OxMqc"
+      method: "POST"
+      path: "users"
+    }
+    `DdDc5R1xx627Z8dlqLjGs`: {
+      name: "Update user"
+      id: "DdDc5R1xx627Z8dlqLjGs"
+      method: "PUT"
+      path: "users"
+    }
+    `viUWSYYBPguKDvMsn7i1M`: {
+      name: "Delete user"
+      id: "viUWSYYBPguKDvMsn7i1M"
+      method: "DELETE"
+      path: "users"
+    }
+    `lJYJMcIkAPOFj55zmUOB6`: {
+      name: "Get comment by id"
+      id: "lJYJMcIkAPOFj55zmUOB6"
+      method: "GET"
+      path: "comments"
+    }
+    `Of2rL3Wdq5-K4_EvCBXTr`: {
+      name: "Get all comments"
+      id: "Of2rL3Wdq5-K4_EvCBXTr"
+      method: "GET"
+      path: "comments"
+    }
+    `MU9QUrebda1myS-5UTzAP`: {
+      name: "Create comment"
+      id: "MU9QUrebda1myS-5UTzAP"
+      method: "POST"
+      path: "comments"
+    }
+    `9XAvm8aN_PMBQXF1QgNIc`: {
+      name: "Update comment"
+      id: "9XAvm8aN_PMBQXF1QgNIc"
+      method: "PUT"
+      path: "comments"
+    }
+    `aiGfn49jtBfxpUFV_DHAN`: {
+      name: "Delete comment"
+      id: "aiGfn49jtBfxpUFV_DHAN"
+      method: "DELETE"
+      path: "comments"
+    }
+  }
+}
+
+GraphQL {
+  entities: {}
+}
+
+SMTP {
+  entities: {}
+}
+
+WebSocket {
+  entities: {}
+}
+
+SocketIO {
+  entities: {}
+}
+
+SSE {
+  entities: {}
+}
+

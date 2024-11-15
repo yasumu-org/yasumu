@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Delete todo"
+  id: "xH3PV0PC4dNQ7OgGA-VaA"
+  createdAt: 1731690201736
+  path: "todos"
+  method: "DELETE"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/todos/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Get all users"
+  id: "fq6l9a64Z0u6Ik_dnJHuq"
+  createdAt: 1731690201747
+  path: "users"
+  method: "GET"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/users"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

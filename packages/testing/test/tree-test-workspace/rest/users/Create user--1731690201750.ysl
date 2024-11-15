@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Create user"
+  id: "v0Rsju1pFTvDWaU7OxMqc"
+  createdAt: 1731690201750
+  path: "users"
+  method: "POST"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/users"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

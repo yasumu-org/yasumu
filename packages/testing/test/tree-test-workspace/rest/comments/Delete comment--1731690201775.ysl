@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Delete comment"
+  id: "aiGfn49jtBfxpUFV_DHAN"
+  createdAt: 1731690201775
+  path: "comments"
+  method: "DELETE"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/comments/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+

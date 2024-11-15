@@ -7,6 +7,12 @@ import type { SmtpEntitySchemaType } from '@/workspace/schema/SmtpEntitySchema.j
 import type { SseEntitySchemaType } from '@/workspace/schema/SseEntitySchema.js';
 import type { SocketioEntitySchemaType } from '@/workspace/schema/SocketioEntitySchema.js';
 import type { WebsocketEntitySchemaType } from '@/workspace/schema/WebsocketEntitySchema.js';
+import type { RestIndex } from '../rest/types.js';
+import type { GraphqlIndex } from '../graphql/types.js';
+import type { SseIndex } from '../sse/types.js';
+import type { WebsocketIndex } from '../websocket/types.js';
+import type { SmtpIndex } from '../smtp/types.js';
+import type { SocketioIndex } from '../socketio/types.js';
 
 export interface YasumuEntityDataMap {
   [WorkspaceModuleType.Rest]: RestEntitySchemaType;
@@ -109,4 +115,20 @@ export interface ExecutionResult {
   postScript: ScriptResult;
   test: TestResult;
   response: InteractiveWebResponse | null;
+}
+
+export interface YasumuRootEntityIndexMap {
+  [WorkspaceModuleType.Rest]: RestIndex;
+  [WorkspaceModuleType.GraphQL]: GraphqlIndex;
+  [WorkspaceModuleType.SMTP]: SmtpIndex;
+  [WorkspaceModuleType.SSE]: SseIndex;
+  [WorkspaceModuleType.SocketIO]: SocketioIndex;
+  [WorkspaceModuleType.Websocket]: WebsocketIndex;
+}
+
+export interface YasumuEntityTree {
+  id?: string;
+  name?: string;
+  entity?: YasumuRootEntityIndexMap[WorkspaceModuleType];
+  children?: YasumuEntityTree[];
 }

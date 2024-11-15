@@ -1,0 +1,36 @@
+@Rest
+
+Metadata {
+  name: "Get user by id"
+  id: "n2UDm1YkTLquN7N93jF9S"
+  createdAt: 1731690201743
+  path: "users"
+  method: "GET"
+}
+
+Request {
+  url: "https://jsonplaceholder.typicode.com/users/1"
+  headers: []
+  body: null
+}
+
+Response {
+  status: null
+  time: null
+  size: null
+  headers: []
+  body: null
+}
+
+BeforeRequest {
+  
+}
+
+AfterResponse {
+  
+}
+
+Test {
+  
+}
+
