@@ -10,6 +10,10 @@ export interface FromStandaloneOptions {
    * The workspace to import the data into. If not provided, the data will be imported into the current workspace.
    */
   workspace?: YasumuWorkspace | null;
+  /**
+   * Whether to overwrite existing data. Defaults to `true`.
+   */
+  overwrite?: boolean;
 }
 
 export class ExternalCollectionsUtility {
@@ -29,5 +33,21 @@ export class ExternalCollectionsUtility {
     });
   }
 
-  public async fromStandalone(data: YasumuStandaloneFormat, options: FromStandaloneOptions): Promise<void> {}
+  public async fromStandalone(data: YasumuStandaloneFormat, options: FromStandaloneOptions = {}): Promise<void> {
+    const workspace = options.workspace ?? this.workspace;
+    const overwrite = options.overwrite ?? true;
+
+    if (overwrite) {
+      await workspace.getMetadata().setRawData(data.workspace);
+    } else {
+      await workspace.getMetadata().mergeRawData(data.workspace);
+    }
+
+    await workspace.graphql.fromStandalone(data.entities[WorkspaceModuleType.GraphQL], { overwrite });
+    await workspace.rest.fromStandalone(data.entities[WorkspaceModuleType.Rest], { overwrite });
+    await workspace.smtp.fromStandalone(data.entities[WorkspaceModuleType.SMTP], { overwrite });
+    await workspace.sse.fromStandalone(data.entities[WorkspaceModuleType.SSE], { overwrite });
+    await workspace.socketio.fromStandalone(data.entities[WorkspaceModuleType.SocketIO], { overwrite });
+    await workspace.websocket.fromStandalone(data.entities[WorkspaceModuleType.Websocket], { overwrite });
+  }
 }

@@ -140,17 +140,63 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
   public async toStandalone(): Promise<YasumuStandaloneFormat['entities'][T]> {
     const index = this.getRootIndex();
     const entities = await this.getRawEntities(index);
+
     const indexes = await Promise.all(
       Object.values(index.entities)
         .filter((e) => e && typeof e === 'object' && 'path' in e && e.path && typeof e.path === 'string')
-        .map((e) => this.workspace.indexer.getIndexFile((e as RestIndex).path)),
+        .map(async (e) => {
+          const path = e.path;
+          const targetLocation = this.workspace.yasumu.utils.joinPathSync(this.getLocation(), path);
+          return { [path]: await this.workspace.indexer.getIndexFile(targetLocation) };
+        }),
     );
 
-    // @ts-expect-error this should be resolved
     return {
       indexes: indexes.reduce((acc, curr) => ({ ...acc, ...curr }), {}),
-      entities,
+      entities: entities.reduce((acc, curr) => ({ ...acc, [curr.blocks.Metadata.id]: curr }), {}),
     };
+  }
+
+  /**
+   * Import a standalone format into this module.
+   * @param data The data to import.
+   * @param options The options for importing.
+   */
+  public async fromStandalone(data: YasumuStandaloneFormat['entities'][T], options: { overwrite?: boolean }) {
+    const { entities, indexes } = data ?? {};
+
+    if (!entities || !indexes) return;
+
+    const fs = this.workspace.yasumu.fs;
+
+    for (const entity of Object.values(entities)) {
+      const location = this.workspace.yasumu.utils.joinPathSync(this.getLocation(), entity.blocks.Metadata.path);
+      const pathExists = await fs.exists(location);
+
+      const entityPath = this.workspace.yasumu.utils.joinPathSync(
+        location,
+        `${entity.blocks.Metadata.name}--${entity.blocks.Metadata.createdAt}.ysl`,
+      );
+
+      if (!pathExists) {
+        await fs.mkdir(location, { recursive: true });
+      }
+
+      if (!options.overwrite) {
+        const exists = await fs.exists(entityPath);
+
+        if (exists) {
+          continue;
+        }
+      }
+
+      await fs.writeTextFile(entityPath, this.schema.serialize(entity));
+    }
+
+    for (const [path, index] of Object.entries(indexes)) {
+      const location = this.workspace.yasumu.utils.joinPathSync(this.getLocation(), path);
+      await this.workspace.indexer.saveIndex(location, index);
+    }
   }
 
   /**
@@ -172,42 +218,40 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
   /**
    * Generate a file tree object for this module.
    */
-  public async generateTree(): Promise<
-    YasumuEntityTree & {
-      __type: T;
-    }
-  > {
+  public async generateTree(): Promise<YasumuEntityTree<T>> {
     const { entities } = this.getRootIndex();
 
-    const tree: YasumuEntityTree & {
-      __type: T;
-    } = {
-      __type: this.type,
+    const tree: YasumuEntityTree<T> = {
       children: [],
       id: '__YASUMU_ROOT__',
       name: '__YASUMU_ROOT__',
+      __type: this.type,
     };
 
     let i = 0;
 
     for (const entity of Object.values(entities)) {
       if (entity.path === '/') {
-        tree.children?.push(entity);
+        tree.children?.push({
+          ...entity,
+          __type: this.type,
+        });
         continue;
       }
 
       const parts = entity.path.split('/');
 
-      let current: YasumuEntityTree[] = tree.children!;
+      let current: YasumuEntityTree<T>[] = tree.children!;
 
       for (const part of parts) {
         const child = tree.children?.find((c) => c.name === part);
 
         if (!child) {
-          const newChild: YasumuEntityTree = {
+          const newChild: YasumuEntityTree<T> = {
             children: [],
             name: part,
             id: `dir::${i++}`,
+            __type: this.type,
           };
 
           current?.push(newChild);
@@ -217,10 +261,13 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
         }
       }
 
-      current.push(entity);
+      current.push({
+        ...entity,
+        __type: this.type,
+      });
     }
 
-    const deepSort = (children: YasumuEntityTree[]) => {
+    const deepSort = (children: YasumuEntityTree<T>[]) => {
       children.sort((a, b) => {
         if (a.children && !b.children) return -1;
         if (!a.children && b.children) return 1;
