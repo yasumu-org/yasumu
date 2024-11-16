@@ -84,6 +84,7 @@ export class YasumuIndexerService {
     const targetLocation = await this.resolveIndexPath(location);
     const indexPath = this.workspace.yasumu.utils.joinPathSync(targetLocation, YasumuFileNamesMap.IndexFileName);
     const exists = await this.workspace.yasumu.fs.exists(indexPath);
+
     if (!exists) {
       await this.workspace.yasumu.fs.writeTextFile(indexPath, '{}');
       return {};

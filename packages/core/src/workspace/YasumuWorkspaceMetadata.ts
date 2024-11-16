@@ -77,6 +77,20 @@ export class YasumuWorkspaceMetadata {
   }
 
   /**
+   * Sets the raw metadata of this workspace.
+   */
+  public setRawData(data: WorkspaceSchemaType) {
+    this.data = data;
+  }
+
+  /**
+   * Merges the raw metadata of this workspace.
+   */
+  public mergeRawData(data: WorkspaceSchemaType) {
+    deepMerge(this.data, data);
+  }
+
+  /**
    * Sets the name of this workspace.
    * @param value The new name.
    */

@@ -126,9 +126,10 @@ export interface YasumuRootEntityIndexMap {
   [WorkspaceModuleType.Websocket]: WebsocketIndex;
 }
 
-export interface YasumuEntityTree {
-  id?: string;
-  name?: string;
-  entity?: YasumuRootEntityIndexMap[WorkspaceModuleType];
-  children?: YasumuEntityTree[];
+export interface YasumuEntityTree<T extends WorkspaceModuleType> {
+  id: string;
+  name: string;
+  entity?: YasumuRootEntityIndexMap[T];
+  children?: YasumuEntityTree<T>[];
+  __type: T;
 }

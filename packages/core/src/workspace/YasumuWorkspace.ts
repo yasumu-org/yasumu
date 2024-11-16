@@ -3,7 +3,7 @@ import { WorkspaceNotFoundError } from '@/common/errors/WorkspaceNotFoundError.j
 import type { Yasumu } from '@/Yasumu.js';
 import { createWorkspaceMetadata, YasumuWorkspaceMetadata } from './YasumuWorkspaceMetadata.js';
 import { WorkspaceNotLoadedError } from '@/common/index.js';
-import { YasumuGraphql, YasumuRest, YasumuSmtp, YasumuSocketIO, YasumuWebSocket } from './modules/index.js';
+import { YasumuGraphql, YasumuRest, YasumuSmtp, YasumuSocketIO, YasumuSSE, YasumuWebSocket } from './modules/index.js';
 import type { BaseScriptRuntime } from './runtime/BaseScriptRuntime.js';
 import { YasumuIndexerService } from './indexer/YasumuIndexerService.js';
 import { WorkspaceModuleType } from './modules/common/constants.js';
@@ -55,6 +55,11 @@ export class YasumuWorkspace {
    * The smtp module for this workspace.
    */
   public readonly smtp = new YasumuSmtp(this);
+
+  /**
+   * The sse module for this workspace.
+   */
+  public readonly sse = new YasumuSSE(this);
 
   /**
    * The websocket module for this workspace.
