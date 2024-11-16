@@ -31,8 +31,14 @@ export class YasumuSchemaUtils {
     }
 
     static isIdentifierString(value: string) {
-        for (const x of value) {
-            if (!this.isIdentifier(x)) {
+        if (value.length === 0) {
+            return false;
+        }
+        if (!this.isAlphabeticChar(value[0])) {
+            return false;
+        }
+        for (let i = 1; i < value.length; i++) {
+            if (!this.isIdentifier(value[i])) {
                 return false;
             }
         }
