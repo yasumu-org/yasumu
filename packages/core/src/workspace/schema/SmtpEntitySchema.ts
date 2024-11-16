@@ -2,7 +2,7 @@ import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
 export const SmtpEntitySchema = t.script({
-  annotation: WorkspaceModuleType && WorkspaceModuleType.SMTP ? WorkspaceModuleType.SMTP : 'SMTP',
+  annotation: WorkspaceModuleType.SMTP,
   blocks: {
     Metadata: t.object({
       name: t.string(),

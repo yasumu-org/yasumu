@@ -2,7 +2,7 @@ import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
 export const RestEntitySchema = t.script({
-  annotation: WorkspaceModuleType && WorkspaceModuleType.Rest ? WorkspaceModuleType.Rest : 'Rest',
+  annotation: WorkspaceModuleType.Rest,
   blocks: {
     Metadata: t.object({
       name: t.string(),
