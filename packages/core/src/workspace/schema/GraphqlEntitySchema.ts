@@ -2,7 +2,7 @@ import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
 export const GraphqlEntitySchema = t.script({
-  annotation: WorkspaceModuleType.GraphQL,
+  annotation: WorkspaceModuleType && WorkspaceModuleType.GraphQL ? WorkspaceModuleType.GraphQL : 'GrapgQL',
   blocks: {
     Metadata: t.object({
       name: t.string(),

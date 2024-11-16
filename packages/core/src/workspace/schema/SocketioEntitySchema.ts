@@ -2,7 +2,7 @@ import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
 export const SocketioEntitySchema = t.script({
-  annotation: WorkspaceModuleType.SocketIO,
+  annotation: WorkspaceModuleType && WorkspaceModuleType.SocketIO ? WorkspaceModuleType.SocketIO : 'SocketIO',
   blocks: {
     Metadata: t.object({
       name: t.string(),

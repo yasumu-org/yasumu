@@ -1,4 +1,4 @@
-import { COMMAND_BINDINGS } from '@/common/binding.js';
+import { COMMAND_BINDINGS } from '../common/binding.js';
 import type { Callback, CommandCommon, InvokeArgs, InvokeOptions, PluginListenerCommon } from '@yasumu/common';
 
 export class CommandsListener implements PluginListenerCommon {

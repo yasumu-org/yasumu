@@ -2,7 +2,7 @@ import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
 export const SseEntitySchema = t.script({
-  annotation: WorkspaceModuleType.SSE,
+  annotation: WorkspaceModuleType && WorkspaceModuleType.SSE ? WorkspaceModuleType.SSE : 'SSE',
   blocks: {
     Metadata: t.object({
       name: t.string(),

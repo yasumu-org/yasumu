@@ -1,4 +1,4 @@
-import { COMMAND_BINDINGS } from '@/common/binding.js';
+import { COMMAND_BINDINGS } from '../common/binding.js';
 
 export interface CommandHandlerMock {
   name: string;

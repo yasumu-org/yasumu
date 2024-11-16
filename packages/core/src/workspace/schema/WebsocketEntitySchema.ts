@@ -2,7 +2,7 @@ import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
 import { WorkspaceModuleType } from '../modules/index.js';
 
 export const WebsocketEntitySchema = t.script({
-  annotation: WorkspaceModuleType.Websocket,
+  annotation: WorkspaceModuleType && WorkspaceModuleType.Websocket ? WorkspaceModuleType.Websocket : 'WebSocket',
   blocks: {
     Metadata: t.object({
       name: t.string(),
