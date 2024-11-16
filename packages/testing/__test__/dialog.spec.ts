@@ -1,7 +1,7 @@
 import { yasumu } from '../src';
 import { describe, test, expect } from 'vitest';
 
-describe('Dialog', () => {
+describe('Dialog Mock', () => {
   const dialog = yasumu.dialog;
 
   test('should open a dialog', async () => {
@@ -17,5 +17,4 @@ describe('Dialog', () => {
     });
     expect(result).toBe(null);
   });
-  
 });
