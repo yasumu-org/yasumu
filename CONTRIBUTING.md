@@ -101,7 +101,7 @@ Once you've made your changes, you're ready to submit a pull request (PR). Follo
 4. **Open a Pull Request**  
    Go to the Yasumu repository on GitHub and open a new pull request. Provide a detailed description of your changes, the problem you're solving, and any additional context that may be helpful.
 
-   Once the PR is submitted, it will be reviewed by the maintainers. If any changes are requested, please address them in a timely manner to help get your contribution merged quickly.
+   Once the PR is submitted, it will be reviewed by the maintainers. If any changes are requested, please address them in a timely manner to help get your contribution merged quickly. You will be prompted to accept our Contributor License Agreement (CLA) before your PR can be merged.
 
 ## Additional Resources
 
