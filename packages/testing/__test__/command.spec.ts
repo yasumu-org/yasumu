@@ -21,11 +21,6 @@ describe('Commands Mock', () => {
   });
 
   test('should throw error to  handle non-existent command ', async () => {
-    try {
-      await command.invoke('unknown');
-    } catch (error) {
-      expect(error).toBeDefined();
-      expect(error.message).toMatch('Command unknown not found'); // Adjust error handling based on implementation
-    }
+    expect(yasumu.command.invoke('unknown')).rejects.toThrowError('Command unknown not found');
   });
 });
