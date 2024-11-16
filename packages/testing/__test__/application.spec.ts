@@ -2,11 +2,7 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { ApplicationMock, yasumu } from '../src';
 
 describe('Application Mock', () => {
-  let app: ApplicationMock;
-  
-  beforeAll(() => {
-    app = yasumu.app;
-  });
+  const app = yasumu.app;
 
   test('should get name', async () => {
     const name = await app.getName();

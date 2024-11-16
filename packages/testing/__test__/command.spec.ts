@@ -2,14 +2,11 @@ import { describe, beforeAll, expect, test } from 'vitest';
 import { CommandsMock, yasumu, CommandInterceptor } from '../src';
 
 describe('Commands Mock', () => {
-  let command: CommandsMock;
-  
-  beforeAll(() => {
-    command = yasumu.command;
-    new CommandInterceptor('ping').intercept(() => {
+  const command  = yasumu.command;
+  new CommandInterceptor('ping').intercept(() => {
       return 'Pong!';
     });
-  });
+
 
   test('should add plugin listener', async () => {
     const listener = await command.addPluginListener('plugin', 'event', () => {});
