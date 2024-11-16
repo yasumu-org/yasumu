@@ -1,5 +1,5 @@
 import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
-import { WorkspaceModuleType } from '../modules/index.js';
+import { WorkspaceModuleType } from '../modules/common/constants.js';
 
 export const SmtpEntitySchema = t.script({
   annotation: WorkspaceModuleType.SMTP,
