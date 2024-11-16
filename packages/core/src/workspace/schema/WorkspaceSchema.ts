@@ -1,5 +1,5 @@
 import { t, type YasumuSchemaParsableToType } from '@yasumu/schema';
-import { WorkspaceModuleType } from '../modules/index.js';
+import { WorkspaceModuleType } from '../modules/common/constants.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
 
 export const WorkspaceSchema = t.script({

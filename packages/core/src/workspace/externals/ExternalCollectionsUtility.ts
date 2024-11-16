@@ -1,4 +1,4 @@
-import { WorkspaceModuleType } from '../modules/index.js';
+import { WorkspaceModuleType } from '../modules/common/constants.js';
 import { createStandalone, type YasumuStandaloneFormat } from '../standalone/types.js';
 import type { YasumuWorkspace } from '../YasumuWorkspace.js';
 import { Insomnia } from './insomnia/Insomnia.js';
