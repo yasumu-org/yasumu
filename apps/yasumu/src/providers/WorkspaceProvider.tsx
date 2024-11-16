@@ -20,6 +20,12 @@ export function useYasumu() {
   return ctx;
 }
 
+export function useWorkspace() {
+  const ctx = useYasumu();
+
+  return ctx.workspace;
+}
+
 export default function WorkspaceProvider({ children }: React.PropsWithChildren) {
   const [yasumu, setYasumu] = useState<Yasumu | null>(null);
   const [loading, setLoading] = useState(true);

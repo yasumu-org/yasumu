@@ -127,12 +127,31 @@ export class YasumuWorkspace {
   }
 
   /**
+   * Whether this workspace metadata has been loaded.
+   */
+  public isMetadataLoaded() {
+    return !!this.#metadata;
+  }
+
+  /**
+   * The name of this workspace.
+   */
+  public get name() {
+    return this.#metadata?.name ?? '';
+  }
+
+  /**
    * The metadata for this workspace.
    */
-  public getMetadata(): YasumuWorkspaceMetadata {
+  public getMetadata(): YasumuWorkspaceMetadata;
+  public getMetadata(strict?: boolean): YasumuWorkspaceMetadata;
+  public getMetadata(strict: true): YasumuWorkspaceMetadata;
+  public getMetadata(strict: false): YasumuWorkspaceMetadata | undefined;
+  public getMetadata(strict = true): YasumuWorkspaceMetadata | undefined {
     const metadata = this.#metadata;
 
     if (!metadata) {
+      if (!strict) return;
       throw new WorkspaceNotLoadedError();
     }
 
