@@ -7,7 +7,7 @@ export function OutputLayout({
   statusbar?: React.ReactNode;
 }>) {
   return (
-    <div className="p-2 space-y-2 flex flex-col">
+    <div className="flex flex-col">
       {statusbar}
       {children}
     </div>

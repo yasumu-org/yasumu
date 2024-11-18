@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${jetbrainsMono.variable} antialiased`}>
-      <body className="select-none overflow-clip max-h-screen h-screen">
+      <body className="select-none h-screen">
         <ThemeProvider>
           <Toaster />
           <WorkspaceProvider>
