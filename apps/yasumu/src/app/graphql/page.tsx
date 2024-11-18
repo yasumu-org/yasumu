@@ -145,7 +145,7 @@ export default function Home() {
   console.log({ url: entity?.url });
 
   return (
-    <main className="p-4 flex flex-col h-screen gap-4">
+    <main className="p-4 w-full h-full overflow-y-auto flex flex-col gap-4">
       <RequestTabs tabs={graphqlDataTabs} />
       <div className="flex gap-4">
         <Input

@@ -95,17 +95,15 @@ const restDataTabs: RequestTab[] = [
 
 export default function Home() {
   return (
-    <main className="w-full h-screen overflow-y-auto">
-      <div className="p-4 space-y-4">
-        <RequestTabs tabs={restDataTabs} />
-        <div className="flex gap-4">
-          <HttpMethodSelector />
-          <Input placeholder="Enter a URL..." />
-          <Button>Send</Button>
-        </div>
-        <Separator />
-        <KeyValueTable value={{}} onChange={() => {}} />
+    <main className="p-4 w-full h-full overflow-y-auto flex flex-col gap-4">
+      <RequestTabs tabs={restDataTabs} />
+      <div className="flex gap-4">
+        <HttpMethodSelector />
+        <Input placeholder="Enter a URL..." />
+        <Button>Send</Button>
       </div>
+      <Separator />
+      <KeyValueTable value={{}} onChange={() => {}} />
     </main>
   );
 }
