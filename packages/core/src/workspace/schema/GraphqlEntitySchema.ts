@@ -20,7 +20,13 @@ export const GraphqlEntitySchema = t.script({
         }),
       ),
       body: t.nullable(t.string()),
-      variables: t.record(t.union(t.null(), t.string(), t.number(), t.boolean())),
+      variables: t.record(
+        t.object({
+          key: t.string(),
+          value: t.union(t.null(), t.string(), t.number(), t.boolean()),
+          enabled: t.boolean(),
+        }),
+      ),
     }),
     Response: t.object({
       time: t.nullable(t.number()),

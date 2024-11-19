@@ -196,7 +196,7 @@ export default function Home() {
 
                 entity.data.blocks.Request.url = debouncedUrl;
                 entity.data.blocks.Request.body = schema;
-                entity.data.blocks.Request.variables = variables;
+                entity.setVariables(variables);
 
                 await entity.save().catch(console.error);
 

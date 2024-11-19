@@ -1,76 +1,108 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
+
+import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Trash } from 'lucide-react';
+import { Trash, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { GraphqlVariable } from '@/stores/GraphqlSchemaStore';
+
+interface KeyValuePair {
+  key: string;
+  value: string;
+  enabled: boolean;
+}
 
 export default function KeyValueTable({
-  value,
+  value = {},
   onChange,
 }: {
-  value: Record<string, any>;
-  onChange: (value: Record<string, any>) => void;
+  value?: GraphqlVariable;
+  onChange: (value: GraphqlVariable) => void;
 }) {
-  const vals = Object.entries(value);
+  const [pairs, setPairs] = useState<KeyValuePair[]>(() => {
+    const initialPairs = Object.values(value) as KeyValuePair[];
 
-  if (!vals.length) {
-    vals.push(['', '']);
-  }
+    return initialPairs.length ? initialPairs : [{ key: '', value: '', enabled: true }];
+  });
+
+  const updatePairs = (newPairs: KeyValuePair[]) => {
+    setPairs(newPairs);
+    const newValue = newPairs.reduce(
+      (acc, { key, value, enabled }) => {
+        if (enabled && key) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
+    onChange(newValue);
+  };
+
+  const addNewPair = () => {
+    updatePairs([...pairs, { key: '', value: '', enabled: true }]);
+  };
+
+  const deletePair = (index: number) => {
+    const newPairs = pairs.filter((_, i) => i !== index);
+    updatePairs(newPairs.length ? newPairs : [{ key: '', value: '', enabled: true }]);
+  };
+
+  const updatePair = (index: number, field: keyof KeyValuePair, value: string | boolean) => {
+    const newPairs = pairs.map((pair, i) => (i === index ? { ...pair, [field]: value } : pair));
+    updatePairs(newPairs);
+  };
 
   return (
-    <div>
+    <div className="space-y-4">
       <Table>
-        <TableHeader className="border">
+        <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Value</TableHead>
-            <TableHead />
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="border">
-          {vals.map(([key, val], i) => (
-            <TableRow className="border" key={i}>
+        <TableBody>
+          {pairs.map((pair, i) => (
+            <TableRow key={i}>
               <TableCell>
                 <Input
                   placeholder="Name"
-                  className="h-8"
-                  value={key}
-                  onChange={(e) => {
-                    const newVals = [...vals];
-                    newVals[i] = [e.target.value, val];
-                    onChange(Object.fromEntries(newVals));
-                  }}
+                  value={pair.key}
+                  onChange={(e) => updatePair(i, 'key', e.target.value)}
+                  disabled={!pair.enabled}
                 />
               </TableCell>
               <TableCell>
                 <Input
                   placeholder="Value"
-                  className="h-8"
-                  value={val}
-                  onChange={(e) => {
-                    const newVals = [...vals];
-                    newVals[i] = [key, e.target.value];
-                    onChange(Object.fromEntries(newVals));
-                  }}
+                  value={pair.value}
+                  onChange={(e) => updatePair(i, 'value', e.target.value)}
+                  disabled={!pair.enabled}
                 />
               </TableCell>
-              <TableCell className="flex gap-2 items-center">
-                <Checkbox className="size-4" />
-                <button
-                  className="hover:bg-secondary p-2"
-                  onClick={() => {
-                    const newVals = [...vals];
-                    newVals.splice(i, 1);
-                    onChange(Object.fromEntries(newVals));
-                  }}
-                >
-                  <Trash className="size-[18px] text-red-500" />
-                </button>
+              <TableCell>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={pair.enabled}
+                    onCheckedChange={(checked) => updatePair(i, 'enabled', checked === true)}
+                  />
+                  <Button variant="ghost" size="icon" onClick={() => deletePair(i)} disabled={pairs.length === 1}>
+                    <Trash className="h-4 w-4 text-red-500" />
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <Button variant="link" onClick={addNewPair} className="text-sm p-0 h-auto font-normal">
+        <Plus className="mr-1 h-3 w-3" /> Add new row
+      </Button>
     </div>
   );
 }

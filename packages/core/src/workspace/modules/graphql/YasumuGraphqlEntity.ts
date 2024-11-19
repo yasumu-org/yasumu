@@ -9,10 +9,21 @@ import { INTROSPECTION_QUERY, type IntrospectionQuery } from './constants.js';
 import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
 import * as graphql from 'graphql';
 
+export type GraphqlVariable = Record<
+  string,
+  {
+    key: string;
+    value: GraphqlQueryVariableType;
+    enabled: boolean;
+  }
+>;
+
+export type GraphqlQueryVariable = Record<string, GraphqlQueryVariableType>;
+
 export interface GraphqlQueryOptions {
   query?: string;
   operationName?: string;
-  variables?: Record<string, GraphqlQueryVariableType>;
+  variables?: GraphqlVariable;
 }
 
 export type GraphqlQueryVariableType = string | number | boolean | null;
@@ -55,7 +66,7 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
           value: 'application/json',
         },
       ],
-      variables: data.blocks!.Request?.variables ?? {},
+      variables: this.#reformatQueryVariables(data.blocks!.Request?.variables ?? {}),
       url: data.blocks!.Request?.url ?? '',
       body: data.blocks!.Request?.body ?? '',
     };
@@ -70,6 +81,22 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
     data.blocks!.Test ??= '';
 
     this.data = data as GraphqlEntitySchemaType;
+  }
+
+  #reformatQueryVariables(variables: DeepPartial<GraphqlVariable>) {
+    if (!variables || typeof variables !== 'object') {
+      return {};
+    }
+
+    for (const value of Object.values(variables)) {
+      if (!value || typeof value !== 'object') {
+        continue;
+      }
+
+      value.enabled ??= true;
+    }
+
+    return variables;
   }
 
   public get method() {
@@ -92,8 +119,27 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
     return this.data.blocks.Request.variables;
   }
 
-  public setVariable(key: string, value: GraphqlQueryVariableType) {
-    this.data.blocks.Request.variables[key] = value;
+  public setVariables(variables: GraphqlVariable) {
+    // @ts-ignore type issue
+    this.data.blocks.Request.variables = Object.fromEntries(
+      Object.entries(variables).map(([key, value]) => [key, { key, value, enabled: !!value.enabled }]),
+    );
+  }
+
+  public setVariable(key: string, value: GraphqlQueryVariableType | GraphqlVariable) {
+    if (value !== null && typeof value === 'object') {
+      this.data.blocks.Request.variables[key] = {
+        key,
+        enabled: !!value.enabled,
+        value: value.value.value,
+      };
+    } else {
+      this.data.blocks.Request.variables[key] = {
+        key,
+        value,
+        enabled: true,
+      };
+    }
     return this.save();
   }
 
@@ -153,11 +199,11 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
   public async send(options: GraphqlQueryOptions = {}): Promise<Response | null> {
     if (!this.url) return null;
 
-    options.query ??= this.query as string;
-
-    if (!('variables' in options)) {
-      options.variables = this.variables;
-    }
+    const reqOpts = {
+      query: options.query ?? (this.query as string),
+      variables: this.reformatVariableTypes(('variables' in options ? options.variables : this.variables) ?? {}),
+      operationName: options.operationName || undefined,
+    };
 
     const { fetch } = this.module.workspace.yasumu;
 
@@ -167,11 +213,9 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
       headers.append(key, value);
     }
 
-    if (options.variables) {
-      options.variables = this.reformatVariableTypes(options.variables);
-    }
+    console.log(reqOpts, 'reqOpts');
 
-    const opt = JSON.stringify(options);
+    const opt = JSON.stringify(reqOpts);
 
     const init: RequestInit & { maxRedirects: number; timeout: number } = {
       method: this.method,
@@ -196,9 +240,10 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
    * Reformats the given variables to the correct types based on the current graphql query
    * @param variables The variables to reformat
    */
-  public reformatVariableTypes(variables: Record<string, GraphqlQueryVariableType>) {
+  public reformatVariableTypes(variables: GraphqlVariable): GraphqlQueryVariable {
+    const variablesCopy: GraphqlQueryVariable = {};
     const rawQuery = this.data.blocks.Request.body;
-    if (!rawQuery) return variables;
+    if (!rawQuery) return variablesCopy;
 
     const schema = graphql.parse(rawQuery);
 
@@ -211,20 +256,22 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
       const type = variableDef.type;
 
       if (name in variables) {
+        const variable = variables[name];
+
         if (type.kind === 'NamedType') {
           switch (type.name.value) {
             case 'Int':
-              variables[name] = Number.parseInt(variables[name] as string);
+              variablesCopy[name] = Number.parseInt(variable.value as string);
               break;
             case 'Float':
-              variables[name] = Number.parseFloat(variables[name] as string);
+              variablesCopy[name] = Number.parseFloat(variable.value as string);
               break;
             case 'Boolean':
-              variables[name] = Boolean(variables[name]);
+              variablesCopy[name] = typeof variable.value === 'boolean' ? variable.value : variable.value === 'true';
               break;
             default:
-              if (typeof variables[name] !== 'string') {
-                variables[name] = String(variables[name]);
+              if (typeof variable !== 'string') {
+                variablesCopy[name] = variable.value;
               }
               break;
           }
@@ -232,7 +279,7 @@ export class YasumuGraphqlEntity extends BaseEntity<GraphqlEntitySchemaType> {
       }
     }
 
-    return variables;
+    return variablesCopy;
   }
 
   public async execute(options?: ExecutionOptions): Promise<ExecutionResult> {

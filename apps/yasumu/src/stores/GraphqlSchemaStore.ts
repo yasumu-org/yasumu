@@ -4,11 +4,11 @@ import { atom } from 'nanostores';
 
 export const $graphqlSchema = atom<IntrospectionQuery | null>(null);
 export const $graphqlResult = atom<string>('');
-export const $graphqlDocument = atom<string>(`query GetProductList {
+export const $graphqlDocument = atom<string>(`query GetProductList($term: String, $take: Int) {
   products(
     options: {
-      take: 10
-      filter: { name: { contains: "shoe" } }
+      take: $take
+      filter: { name: { contains: $term } }
       sort: { name: ASC }
     }
   ) {
@@ -26,7 +26,20 @@ export const $graphqlDocument = atom<string>(`query GetProductList {
     }
   }
 }`);
-export const $graphqlVariables = atom<Record<string, GraphqlQueryVariableType>>({});
+
+export type GraphqlVariable = Record<
+  string,
+  {
+    key: string;
+    value: GraphqlQueryVariableType;
+    enabled: boolean;
+  }
+>;
+
+export const $graphqlVariables = atom<GraphqlVariable>({
+  term: { key: 'term', value: 'shoe', enabled: true },
+  take: { key: 'take', value: 2, enabled: true },
+});
 
 export function setGraphqlSchema(schema: IntrospectionQuery | null) {
   $graphqlSchema.set(schema);
@@ -52,11 +65,11 @@ export function useGraphqlDocument() {
   return useStore($graphqlDocument);
 }
 
-export function setGraphqlVariables(variables: Record<string, GraphqlQueryVariableType>) {
+export function setGraphqlVariables(variables: GraphqlVariable) {
   $graphqlVariables.set(variables);
 }
 
-export function updateGraphqlVariables(variables: Record<string, GraphqlQueryVariableType>) {
+export function updateGraphqlVariables(variables: GraphqlVariable) {
   $graphqlVariables.set({ ...$graphqlVariables.get(), ...variables });
 }
 
