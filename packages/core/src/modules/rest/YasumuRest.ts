@@ -1,11 +1,11 @@
-import { YasumuSchemaActions } from '@yasumu/schema';
+import { HttpMethod } from '@/common/index.js';
 import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
-import { GraphqlEntitySchema } from '@/workspace/schema/GraphqlEntitySchema.js';
-import { YasumuGraphqlEntity } from './YasumuGraphqlEntity.js';
-import { GraphqlHttpMethod } from '@yasumu/common';
+import { YasumuRestEntity } from './YasumuRestEntity.js';
+import { RestEntitySchema } from '@/schema/RestEntitySchema.js';
+import { YasumuSchemaActions } from '@yasumu/schema';
 
-export interface CreateGraphqlEntityParams {
+export interface CreateRestEntityParams {
   /**
    * The entity name
    */
@@ -17,26 +17,26 @@ export interface CreateGraphqlEntityParams {
   /**
    * The http method
    */
-  method: GraphqlHttpMethod;
+  method: HttpMethod;
   /**
    * The request url
    */
   url: string;
 }
 
-export class YasumuGraphql extends YasumuBaseModule<(typeof WorkspaceModuleType)['GraphQL']> {
-  public type = WorkspaceModuleType.GraphQL;
-  public schema = new YasumuSchemaActions(GraphqlEntitySchema);
+export class YasumuRest extends YasumuBaseModule<(typeof WorkspaceModuleType)['Rest']> {
+  public override type = WorkspaceModuleType.Rest;
+  public readonly schema = new YasumuSchemaActions(RestEntitySchema);
 
   /**
-   * Open a GraphQL entity by its id.
+   * Open a REST entity by its id.
    * @param id The entity id.
    * @param save Whether to save the entity after opening it. This is useful when you want to save the missing data.
    * @returns The opened entity.
    */
   public async open(id: string, save = true) {
     const data = await this.loadEntity(id);
-    const entity = new YasumuGraphqlEntity(this, data);
+    const entity = new YasumuRestEntity(this, data);
 
     if (save) await entity.save();
 
@@ -48,12 +48,12 @@ export class YasumuGraphql extends YasumuBaseModule<(typeof WorkspaceModuleType)
    * @param params The entity creation parameters.
    * @returns The created entity.
    */
-  public async create(params: Partial<CreateGraphqlEntityParams> = {}): Promise<YasumuGraphqlEntity> {
-    const entity = new YasumuGraphqlEntity(this, {
+  public async create(params: Partial<CreateRestEntityParams> = {}): Promise<YasumuRestEntity> {
+    const entity = new YasumuRestEntity(this, {
       blocks: {
         Metadata: {
           name: params.name || 'Untitled request',
-          method: params.method || GraphqlHttpMethod.Post,
+          method: params.method || HttpMethod.Get,
           path: params.path || '/',
         },
         Request: {

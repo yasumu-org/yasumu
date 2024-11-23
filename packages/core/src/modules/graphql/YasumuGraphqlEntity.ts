@@ -6,7 +6,7 @@ import { GraphqlHttpMethod } from '@yasumu/common';
 import type { DeepPartial } from '../rest/YasumuRestEntity.js';
 import type { YasumuGraphql } from './YasumuGraphql.js';
 import { INTROSPECTION_QUERY, type IntrospectionQuery } from './constants.js';
-import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
+import type { GraphqlEntitySchemaType } from '@/schema/GraphqlEntitySchema.js';
 import * as graphql from 'graphql';
 
 export type GraphqlVariable = Record<

@@ -1,6 +1,6 @@
 import { ExternalCollectionsProvider } from '../base/ExternalCollectionsProvider.js';
 import type { PostmanCollection } from './types/index.js';
-import type { YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
+import type { YasumuStandaloneFormat } from '@/standalone/types.js';
 
 export class PostmanExporter extends ExternalCollectionsProvider<PostmanCollection> {
   public async export(): Promise<PostmanCollection> {

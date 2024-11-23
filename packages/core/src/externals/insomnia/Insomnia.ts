@@ -1,12 +1,12 @@
-import { createStandalone, type YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
+import { createStandalone, type YasumuStandaloneFormat } from '@/standalone/types.js';
 import { ExternalCollectionsProvider } from '../base/ExternalCollectionsProvider.js';
 import type { InsomniaCollection } from './types.js';
-import { WorkspaceModuleType, type GraphqlIndex, type RestIndex } from '@/workspace/modules/index.js';
+import { WorkspaceModuleType, type GraphqlIndex, type RestIndex } from '@/modules/index.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
 import { GraphqlHttpMethod, HttpMethod } from '@yasumu/common';
 import { generateId } from '@/common/utils.js';
-import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
-import type { RestEntitySchemaType } from '@/workspace/schema/RestEntitySchema.js';
+import type { GraphqlEntitySchemaType } from '@/schema/GraphqlEntitySchema.js';
+import type { RestEntitySchemaType } from '@/schema/RestEntitySchema.js';
 
 export class Insomnia extends ExternalCollectionsProvider<InsomniaCollection> {
   public async export(): Promise<InsomniaCollection> {

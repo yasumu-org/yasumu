@@ -4,7 +4,7 @@ import { ScriptType, type ExecutionOptions, type ExecutionResult } from '../comm
 import type { RestIndex } from './types.js';
 import type { YasumuRest } from './YasumuRest.js';
 import { HttpMethod } from '@/common/index.js';
-import type { RestEntitySchemaType } from '@/workspace/schema/RestEntitySchema.js';
+import type { RestEntitySchemaType } from '@/schema/RestEntitySchema.js';
 
 export type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
@@ -167,5 +167,14 @@ export class YasumuRestEntity extends BaseEntity<RestEntitySchemaType> {
         tests: [],
       },
     };
+  }
+
+  /**
+   * Execute this entity
+   * @param options The execution options
+   * @returns The execution result
+   */
+  public async send(options: ExecutionOptions = {}): Promise<ExecutionResult> {
+    return this.execute(options);
   }
 }

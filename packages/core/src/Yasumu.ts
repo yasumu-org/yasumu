@@ -1,4 +1,4 @@
-import { YasumuWorkspace, type YasumuWorkspaceOptions } from '@/workspace/YasumuWorkspace.js';
+import { YasumuWorkspace, type YasumuWorkspaceOptions } from '@/YasumuWorkspace.js';
 import type {
   ApplicationCommon,
   CommandCommon,
@@ -23,7 +23,13 @@ export type YasumuCommon = {
   [K in AdapterType]: AdapterCommonMap[K];
 };
 
+/**
+ * The options to bootstrap the yasumu application with.
+ */
 export interface YasumuBootstrapOptions {
+  /**
+   * The adapters to use for the application.
+   */
   adapters: WithCreateStore<AdapterCommonMap>;
 }
 

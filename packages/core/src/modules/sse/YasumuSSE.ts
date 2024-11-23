@@ -1,4 +1,4 @@
-import { SseEntitySchema } from '@/workspace/schema/SseEntitySchema.js';
+import { SseEntitySchema } from '@/schema/SseEntitySchema.js';
 import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
 import { YasumuSchemaActions } from '@yasumu/schema';

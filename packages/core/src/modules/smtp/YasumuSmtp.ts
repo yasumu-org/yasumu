@@ -1,4 +1,4 @@
-import { SmtpEntitySchema } from '@/workspace/schema/SmtpEntitySchema.js';
+import { SmtpEntitySchema } from '@/schema/SmtpEntitySchema.js';
 import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
 import { YasumuSchemaActions } from '@yasumu/schema';

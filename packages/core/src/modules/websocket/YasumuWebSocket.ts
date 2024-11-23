@@ -1,4 +1,4 @@
-import { WebsocketEntitySchema } from '@/workspace/schema/WebsocketEntitySchema.js';
+import { WebsocketEntitySchema } from '@/schema/WebsocketEntitySchema.js';
 import { YasumuBaseModule } from '../common/BaseModule.js';
 import { WorkspaceModuleType } from '../common/constants.js';
 import { YasumuSchemaActions } from '@yasumu/schema';

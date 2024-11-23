@@ -1,5 +1,5 @@
-import type { YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
-import type { YasumuWorkspace } from '@/workspace/YasumuWorkspace.js';
+import type { YasumuStandaloneFormat } from '@/standalone/types.js';
+import type { YasumuWorkspace } from '@/YasumuWorkspace.js';
 
 export abstract class ExternalCollectionsProvider<T> {
   public constructor(public readonly workspace: YasumuWorkspace) {}

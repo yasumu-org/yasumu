@@ -1,11 +1,11 @@
-import { createStandalone, type YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
+import { createStandalone, type YasumuStandaloneFormat } from '@/standalone/types.js';
 import { ExternalCollectionsProvider } from '../base/ExternalCollectionsProvider.js';
 import type { YaakCollection } from './types.js';
 import { YASUMU_WORKSPACE_ANNOTATION } from '@/common/constants.js';
-import { WorkspaceModuleType, type GraphqlIndex, type RestIndex } from '@/workspace/modules/index.js';
+import { WorkspaceModuleType, type GraphqlIndex, type RestIndex } from '@/modules/index.js';
 import type { GraphqlHttpMethod, HttpMethod } from '@yasumu/common';
-import type { RestEntitySchemaType } from '@/workspace/schema/RestEntitySchema.js';
-import type { GraphqlEntitySchemaType } from '@/workspace/schema/GraphqlEntitySchema.js';
+import type { RestEntitySchemaType } from '@/schema/RestEntitySchema.js';
+import type { GraphqlEntitySchemaType } from '@/schema/GraphqlEntitySchema.js';
 
 const schema = 2;
 const YAAK_VERSION = '2024.11.5';

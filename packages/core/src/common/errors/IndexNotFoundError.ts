@@ -1,4 +1,4 @@
-import type { WorkspaceModuleType } from '@/workspace/modules/common/constants.js';
+import type { WorkspaceModuleType } from '@/modules/common/constants.js';
 
 export class IndexNotFoundError extends Error {
   public readonly name = 'IndexNotFoundError';

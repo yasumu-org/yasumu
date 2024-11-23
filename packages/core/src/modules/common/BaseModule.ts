@@ -1,4 +1,4 @@
-import type { YasumuWorkspace } from '@/workspace/YasumuWorkspace.js';
+import type { YasumuWorkspace } from '@/YasumuWorkspace.js';
 import { WorkspaceModuleType, YasumuEntityMap } from './constants.js';
 import { IndexNotFoundError } from '@/common/errors/IndexNotFoundError.js';
 import { EntityNotFoundError } from '@/common/errors/EntityNotFoundError.js';
@@ -9,8 +9,8 @@ import type {
   _YasumuSchemaParsableScriptExpect,
 } from '@yasumu/schema';
 import type { BaseEntity } from './BaseEntity.js';
-import type { YasumuStandaloneFormat } from '@/workspace/standalone/types.js';
-import type { RootIndex } from '@/workspace/YasumuWorkspaceMetadata.js';
+import type { YasumuStandaloneFormat } from '@/standalone/types.js';
+import type { RootIndex } from '@/YasumuWorkspaceMetadata.js';
 import type { RestIndex } from '../rest/types.js';
 
 export abstract class YasumuBaseModule<T extends WorkspaceModuleType = WorkspaceModuleType> {
