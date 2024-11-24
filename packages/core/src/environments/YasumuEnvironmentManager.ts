@@ -99,6 +99,12 @@ export class YasumuEnvironmentManager {
 
     await env.save();
 
+    this.#environments.set(env.id, env);
+
+    if (!this.getSelectedEnvironment()) {
+      await this.selectEnvironment(env.id);
+    }
+
     this.workspace.events.emit(YasumuWorkspaceEvents.EnvironmentCreated, env);
 
     return env;
@@ -120,6 +126,10 @@ export class YasumuEnvironmentManager {
     const workspaceMetadata = this.workspace.getMetadata();
     const metadata = workspaceMetadata.getRawData();
     delete metadata.blocks.Environment.environments[id];
+
+    if (metadata.blocks.Environment.selectedEnvironment === id) {
+      metadata.blocks.Environment.selectedEnvironment = '';
+    }
 
     await workspaceMetadata.save();
 

@@ -1,17 +1,19 @@
 'use client';
 
-import { Yasumu } from '@yasumu/core';
+import { Yasumu, YasumuEnvironment, YasumuWorkspaceEvents } from '@yasumu/core';
 import { initYasumu } from '@/lib/yasumu';
 import { LoaderCircle } from 'lucide-react';
 import React, { createContext, useEffect, useState } from 'react';
 import { NoWorkspaceScreen } from '@/components/NoWorkspace';
-import { isNative } from '@/lib/utils';
-import { toast } from 'sonner';
-import Link from 'next/link';
-import { YasumuSocials } from '@/lib/constants/socials';
-import { Button } from '@/components/ui/button';
+import { useWebWarning } from '@/hooks/use-web-warning';
 
-const YasumuContext = createContext<Yasumu | null>(null);
+export interface YasumuContextData {
+  yasumu: Yasumu;
+  environments: YasumuEnvironment[];
+  selectedEnvironmentId: string | null;
+}
+
+const YasumuContext = createContext<YasumuContextData | null>(null);
 
 export function useYasumu() {
   const ctx = React.useContext(YasumuContext);
@@ -21,73 +23,89 @@ export function useYasumu() {
 }
 
 export function useWorkspace() {
-  const ctx = useYasumu();
+  const { yasumu } = useYasumu();
 
-  return ctx.workspace;
+  return yasumu.workspace;
+}
+
+export function useYasumuEnvironments() {
+  const { environments } = useYasumu();
+
+  return environments;
+}
+
+export function useCurrentEnvironment() {
+  const { yasumu } = useYasumu();
+
+  return yasumu.workspace?.environments.getSelectedEnvironment();
 }
 
 export default function WorkspaceProvider({ children }: React.PropsWithChildren) {
   const [yasumu, setYasumu] = useState<Yasumu | null>(null);
   const [loading, setLoading] = useState(true);
+  const [environments, setEnvironments] = React.useState<YasumuEnvironment[]>([]);
+  const [selectedEnvironmentId, setSelectedEnvironmentId] = React.useState<string | null>(null);
+
+  useWebWarning();
 
   useEffect(() => {
-    const webWarning = localStorage.getItem('web-warning-dismissed');
+    if (!yasumu?.workspace) return;
+    setEnvironments(yasumu.workspace?.environments.getEnvironments() ?? []);
 
-    if (!isNative() && !webWarning) {
-      const toastInfo = toast.info('You are using the web version of Yasumu.', {
-        duration: 10000,
-        dismissible: true,
-        className: 'select-none',
-        onDismiss() {
-          localStorage.setItem('web-warning-dismissed', 'true');
-        },
-        description: (
-          <div className="space-y-2">
-            <p>
-              The web version may not have all the features of the native version. Please use the native version for the
-              best experience.
-            </p>
-            <div className="flex gap-4">
-              <Link href={YasumuSocials.Download} target="_blank">
-                <Button size="sm">Download</Button>
-              </Link>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() => {
-                  localStorage.setItem('web-warning-dismissed', 'true');
-                  toast.dismiss(toastInfo);
-                }}
-              >
-                Don{"'"}t show again
-              </Button>
-            </div>
-          </div>
-        ),
-      });
-    }
-  }, []);
+    const listener = () => {
+      console.log('environment event listener', yasumu.workspace?.environments.getEnvironments());
+      setEnvironments(yasumu.workspace?.environments.getEnvironments() ?? []);
+    };
+
+    const selectionListener = (env: YasumuEnvironment) => {
+      setSelectedEnvironmentId(env.id);
+    };
+
+    const unselectListener = () => {
+      setSelectedEnvironmentId(null);
+    };
+
+    yasumu.workspace?.events.on(YasumuWorkspaceEvents.EnvironmentCreated, listener);
+    yasumu.workspace?.events.on(YasumuWorkspaceEvents.EnvironmentDeleted, listener);
+    yasumu.workspace?.events.on(YasumuWorkspaceEvents.EnvironmentUpdated, listener);
+    yasumu.workspace?.events.on(YasumuWorkspaceEvents.EnvironmentSelected, selectionListener);
+    yasumu.workspace?.events.on(YasumuWorkspaceEvents.EnvironmentSelectionRemoved, unselectListener);
+
+    return () => {
+      yasumu.workspace?.events.off(YasumuWorkspaceEvents.EnvironmentCreated, listener);
+      yasumu.workspace?.events.off(YasumuWorkspaceEvents.EnvironmentDeleted, listener);
+      yasumu.workspace?.events.off(YasumuWorkspaceEvents.EnvironmentUpdated, listener);
+      yasumu.workspace?.events.off(YasumuWorkspaceEvents.EnvironmentSelected, selectionListener);
+      yasumu.workspace?.events.off(YasumuWorkspaceEvents.EnvironmentSelectionRemoved, unselectListener);
+    };
+  }, [yasumu]);
 
   useEffect(() => {
     initYasumu()
       .then((yasumu) => {
+        // @ts-expect-error - Expose yasumu to the window for debugging
+        window['yasumu'] = yasumu;
         setYasumu(yasumu);
         setLoading(false);
       })
       .finally(() => setLoading(false));
   }, []);
 
+  if (loading) {
+    return (
+      <div className="h-full grid place-items-center">
+        <LoaderCircle className="size-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!yasumu) {
+    return <NoWorkspaceScreen />;
+  }
+
   return (
-    <YasumuContext.Provider value={yasumu}>
-      {loading ? (
-        <div className="h-full grid place-items-center">
-          <LoaderCircle className="size-8 animate-spin" />
-        </div>
-      ) : !yasumu?.workspace ? (
-        <NoWorkspaceScreen />
-      ) : (
-        children
-      )}
+    <YasumuContext.Provider value={{ yasumu: yasumu, environments, selectedEnvironmentId }}>
+      {!yasumu.workspace ? <NoWorkspaceScreen /> : children}
     </YasumuContext.Provider>
   );
 }

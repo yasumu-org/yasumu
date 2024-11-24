@@ -1,5 +1,5 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
-import LayoutGroup from '@/components/layout-group';
+import LayoutGroup from '@/components/LayoutGroup';
 import { SiSocketdotio } from 'react-icons/si';
 import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
 

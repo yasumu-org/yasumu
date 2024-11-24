@@ -255,7 +255,7 @@ function SettingsDropdown({
 }
 
 function AppInfo() {
-  const yasumu = useYasumu();
+  const { yasumu } = useYasumu();
   const [info, setInfo] = useState({
     name: 'Yasumu',
     version: '0.0.0',

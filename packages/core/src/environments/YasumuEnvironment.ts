@@ -310,12 +310,62 @@ export class YasumuEnvironment {
     this.#emitUpdate();
   }
 
+  /**
+   * Set the value of a variable. If the variable does not exist, it will be created.
+   * @param key The variable key.
+   * @param value The variable value.
+   */
+  public async setVariable(key: string, value: string) {
+    const variable = await this.getVariable(key);
+
+    if (variable) {
+      variable.value = value;
+    } else {
+      this.data.variables.push({
+        enabled: true,
+        key,
+        value,
+      });
+    }
+
+    await this.save();
+
+    this.#emitUpdate();
+  }
+
+  /**
+   * Set the value of a secret. If the secret does not exist, it will be created.
+   * @param key The secret key.
+   * @param value The secret value.
+   */
+  public async setSecret(key: string, value: string) {
+    const secret = await this.getSecret(key);
+
+    if (secret) {
+      secret.value = value;
+    } else {
+      this.data.secrets.push({
+        enabled: true,
+        key,
+      });
+    }
+
+    await this.manager.workspace.yasumu.store.set(this.#getKey(key), value);
+    await this.save();
+
+    this.#emitUpdate();
+  }
+
   #emitUpdate() {
     this.manager.workspace.events.emit(YasumuWorkspaceEvents.EnvironmentUpdated, this);
   }
 
   #getKey(key: string) {
     return `secrets::${this.manager.workspace.getMetadata().id}::${this.data.id}::${key}`;
+  }
+
+  public isSelected() {
+    return this.manager.getSelectedEnvironment()?.id === this.data.id;
   }
 
   /**

@@ -39,7 +39,7 @@ export function useEnvSecrets() {
 }
 
 export function useEnvironment(envId?: string | null) {
-  const yasumu = useYasumu();
+  const { yasumu } = useYasumu();
   const envVars = useEnvVars();
   const envSecrets = useEnvSecrets();
   const env = yasumu.workspace?.environments.getEnvironment(envId ?? '');

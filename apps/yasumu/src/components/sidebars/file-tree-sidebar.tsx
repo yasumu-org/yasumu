@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/sidebar';
 import { MdFolder } from 'react-icons/md';
 import { DeleteMethodIcon, GetMethodIcon, PatchMethodIcon, PostMethodIcon, PutMethodIcon } from '../assets/HttpMethods';
+import { CreateInputDialog } from '../dialogs/CreateInputDialog';
 
 export interface FileTree {
   id?: string;
@@ -42,8 +43,12 @@ export function FileTreeSidebar({
             <div className="flex justify-between w-full">
               <div>Requests</div>
               <div className="flex items-center gap-2">
-                <Folder className="h-[0.9rem] w-[0.9rem] cursor-pointer hover:bg-zinc-700" />
-                <File className="h-[0.9rem] w-[0.9rem] cursor-pointer hover:bg-zinc-700" />
+                <CreateInputDialog title="Add new folder" description="This will add a new folder">
+                  <Folder className="h-[0.9rem] w-[0.9rem] cursor-pointer hover:bg-zinc-700" />
+                </CreateInputDialog>
+                <CreateInputDialog title="Add new item" description="This will add a new item">
+                  <File className="h-[0.9rem] w-[0.9rem] cursor-pointer hover:bg-zinc-700" />
+                </CreateInputDialog>
               </div>
             </div>
           </SidebarGroupLabel>

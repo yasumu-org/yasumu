@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "dev": "tsx ./test/index.ts",
+    "dev:env": "tsx ./test/env-test.ts",
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
     "build": "rimraf dist && tsc && tsc-alias",

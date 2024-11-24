@@ -47,6 +47,8 @@ export class YasumuWorkspaceMetadata {
     this.data.blocks.Metadata.id ??= generateId();
 
     this.data.blocks.Environment ??= { selectedEnvironment: '', environments: {} };
+    this.data.blocks.Environment.selectedEnvironment ??= '';
+    this.data.blocks.Environment.environments ??= {};
     this.data.blocks[WorkspaceModuleType.Rest] ??= { entities: {} };
     this.data.blocks[WorkspaceModuleType.GraphQL] ??= { entities: {} };
     this.data.blocks[WorkspaceModuleType.SMTP] ??= { entities: {} };
@@ -150,14 +152,16 @@ export class YasumuWorkspaceMetadata {
    * Deserializes a string to workspace metadata.
    */
   public deserialize(data: string): WorkspaceSchemaType {
-    return YasumuWorkspaceMetadata.deserialize(data);
+    const deserialized = YasumuWorkspaceMetadata.deserialize(data);
+    return deserialized;
   }
 
   /**
    * Serializes this workspace's metadata to a string.
    */
   public serialize(): string {
-    return YasumuWorkspaceMetadata.serialize(this.data);
+    const serialized = YasumuWorkspaceMetadata.serialize(this.data);
+    return serialized;
   }
 
   /**

@@ -17,9 +17,9 @@ export function RequestTabs({ tabs }: { tabs: RequestTab[] }) {
 
   return (
     <div className="flex items-center gap-2 select-none max-w-[80vw]">
-      <div ref={ref} className="flex flex-row items-center w-full overflow-x-auto zw-scrollbar">
-        {tabs.map((tab, id) => {
-          return <RequestTab tab={tab} key={id} />;
+      <div ref={ref} className="flex flex-row items-center w-full overflow-x-auto zw-scrollbar border-x">
+        {tabs.map((tab, id, arr) => {
+          return <RequestTab tab={tab} key={id} isFirst={id === 0} isLast={id === arr.length - 1} />;
         })}
       </div>
       <EnvironmentSelector />
@@ -27,7 +27,7 @@ export function RequestTabs({ tabs }: { tabs: RequestTab[] }) {
   );
 }
 
-function RequestTab({ tab }: { tab: RequestTab }) {
+function RequestTab({ tab, isFirst, isLast }: { tab: RequestTab; isFirst: boolean; isLast: boolean }) {
   const isActive = false;
 
   return (
@@ -37,6 +37,10 @@ function RequestTab({ tab }: { tab: RequestTab }) {
         isActive && 'bg-muted/80 hover:bg-muted/50',
         'border border-muted/80',
         'group',
+        {
+          'border-l-0': isFirst,
+          'border-r-0': isLast,
+        },
       )}
     >
       {tab.icon && <tab.icon />} {tab.name}

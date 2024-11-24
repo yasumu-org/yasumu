@@ -1,5 +1,5 @@
 import { FileTreeSidebar } from '@/components/sidebars/file-tree-sidebar';
-import LayoutGroup from '@/components/layout-group';
+import LayoutGroup from '@/components/LayoutGroup';
 import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
 import { WorkspaceModuleType } from '@yasumu/core';
 

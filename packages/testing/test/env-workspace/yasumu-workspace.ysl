@@ -32,32 +32,26 @@ Environment {
 }
 
 Rest {
-  entities: {
-  }
+  entities: {}
 }
 
 GraphQL {
-  entities: {
-  }
+  entities: {}
 }
 
 SMTP {
-  entities: {
-  }
+  entities: {}
 }
 
 WebSocket {
-  entities: {
-  }
+  entities: {}
 }
 
 SocketIO {
-  entities: {
-  }
+  entities: {}
 }
 
 SSE {
-  entities: {
-  }
+  entities: {}
 }
 

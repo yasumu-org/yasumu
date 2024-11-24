@@ -1,4 +1,4 @@
-import LayoutGroup from '@/components/layout-group';
+import LayoutGroup from '@/components/LayoutGroup';
 import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
 import { EnvironmentSidebar } from '@/components/sidebars/environment-sidebar';
 

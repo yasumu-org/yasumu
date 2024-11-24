@@ -49,7 +49,7 @@ export const graphqlDataTabs: RequestTab[] = [
 }));
 
 export default function Home() {
-  const yasumu = useYasumu();
+  const { yasumu } = useYasumu();
   const [entity, setEntity] = useState<YasumuGraphqlEntity | null>(null);
   const [url, setUrl] = useState('https://readonlydemo.vendure.io/shop-api');
   const debouncedUrl = useDebounce(url, 500);

@@ -5,11 +5,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CirclePlus, File, Trash } from 'lucide-react';
-import { type EnvVar } from '@/stores/EnvStore';
+import { YasumuEnvironmentVariable } from '@yasumu/core';
 
 interface Props {
-  envVars: Array<EnvVar>;
-  setEnvVars: (v: Array<EnvVar>) => void;
+  envVars: Array<YasumuEnvironmentVariable>;
+  setEnvVars: (v: Array<YasumuEnvironmentVariable>) => void;
 }
 
 export function EnvVarsTable({ envVars, setEnvVars }: Props) {
@@ -19,9 +19,9 @@ export function EnvVarsTable({ envVars, setEnvVars }: Props) {
     setEnvVars([
       ...envVars,
       {
-        id: Math.random().toString(),
         key: '',
         value: '',
+        enabled: true,
       },
     ]);
   }
@@ -29,13 +29,28 @@ export function EnvVarsTable({ envVars, setEnvVars }: Props) {
   function parseEnvContent(content: string) {
     const newEnvVars = content
       .split('\n')
-      .map((c): null | EnvVar => {
+      .map((c) => {
+        if (c.trim().startsWith('#')) return null;
         const [key, value] = c.split('=');
         if (!key || !value) return null;
 
-        return { id: Math.random().toString() + Date.now(), key, value };
+        // trim leading " and trailing " if they exist, also discard anything after # (comments)
+        const val = (() => {
+          const trimmed = value.trim();
+          const quote = trimmed.startsWith('"') && trimmed.endsWith('"');
+          const comment = trimmed.indexOf('#');
+          if (quote) {
+            return trimmed.slice(1, -1);
+          } else if (comment > -1) {
+            return trimmed.slice(0, comment);
+          } else {
+            return trimmed;
+          }
+        })();
+
+        return { enabled: true, key, value: val || '' };
       })
-      .filter(Boolean) as Array<EnvVar>;
+      .filter(Boolean) as Array<YasumuEnvironmentVariable>;
 
     setEnvVars([...envVars, ...newEnvVars]);
   }
@@ -69,16 +84,18 @@ export function EnvVarsTable({ envVars, setEnvVars }: Props) {
     parseEnvFile(file);
   }
 
-  function handlePaste(event: React.ClipboardEvent<HTMLTableElement>) {
-    event.preventDefault();
-
+  function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
     const data = event.clipboardData.getData('text');
+    const isEnvFileContent = /^[\w\d_]+=.+$/.test(data);
+    if (isEnvFileContent) {
+      event.preventDefault();
+    }
     parseEnvContent(data);
   }
 
   return (
     <>
-      <Table onDragOver={(event) => event.preventDefault()} onDrop={handleFileDrop} onPaste={handlePaste}>
+      <Table onDragOver={(event) => event.preventDefault()} onDrop={handleFileDrop}>
         <TableHeader className="border">
           <TableRow>
             <TableHead>Key</TableHead>
@@ -89,9 +106,14 @@ export function EnvVarsTable({ envVars, setEnvVars }: Props) {
         <TableBody className="border">
           {envVars.map((envVar) => {
             return (
-              <TableRow key={envVar.id} className="border">
+              <TableRow key={envVar.key} className="border">
                 <TableCell>
-                  <Input defaultValue={envVar.key} placeholder="e.g. CLIENT_KEY" className="py-3" />
+                  <Input
+                    defaultValue={envVar.key}
+                    placeholder="e.g. CLIENT_KEY"
+                    className="py-3"
+                    onPaste={handlePaste}
+                  />
                 </TableCell>
                 <TableCell>
                   <Input defaultValue={envVar.value} className="py-3" />

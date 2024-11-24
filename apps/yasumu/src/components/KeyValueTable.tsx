@@ -58,7 +58,7 @@ export default function KeyValueTable({
 
   return (
     <div className="space-y-4">
-      <Table>
+      <Table className="border">
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
