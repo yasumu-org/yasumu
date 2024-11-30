@@ -150,10 +150,7 @@ export class YasumuWorkspace {
   public getMetadata(strict = true): YasumuWorkspaceMetadata | undefined {
     const metadata = this.#metadata;
 
-    if (!metadata) {
-      if (!strict) return;
-      throw new WorkspaceNotLoadedError();
-    }
+    if (!metadata && strict) throw new WorkspaceNotLoadedError();
 
     return metadata;
   }
