@@ -1,6 +1,6 @@
 import { json } from '@codemirror/lang-json';
-import { usePrettier } from '@/hooks/use-prettier';
-import { useTextEditor } from '@/hooks/use-text-editor';
+import { usePrettier } from '@/hooks/usePrettier';
+import { useTextEditor } from '@/hooks/useTextEditor';
 import React, { useRef } from 'react';
 
 export function PrettyResponseViewer({ content }: { content: string }) {

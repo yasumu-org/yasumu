@@ -1,5 +1,5 @@
 import type { InteractiveWebResponse } from '@/network/InteractiveWebResponse.js';
-import type { WorkspaceModuleType } from './constants.js';
+import { WorkspaceModuleType } from './constants.js';
 import type { InteractiveWebRequest } from '@/network/InteractiveWebRequest.js';
 import type { RestEntitySchemaType } from '@/schema/RestEntitySchema.js';
 import type { GraphqlEntitySchemaType } from '@/schema/GraphqlEntitySchema.js';
@@ -13,6 +13,12 @@ import type { SseIndex } from '../sse/types.js';
 import type { WebsocketIndex } from '../websocket/types.js';
 import type { SmtpIndex } from '../smtp/types.js';
 import type { SocketioIndex } from '../socketio/types.js';
+import type { YasumuRest } from '../rest/YasumuRest.js';
+import type { YasumuGraphql } from '../graphql/YasumuGraphql.js';
+import type { YasumuSSE } from '../sse/YasumuSSE.js';
+import type { YasumuWebSocket } from '../websocket/YasumuWebSocket.js';
+import type { YasumuSmtp } from '../smtp/YasumuSmtp.js';
+import type { YasumuSocketIO } from '../socketio/YasumuSocketIO.js';
 
 export interface YasumuEntityDataMap {
   [WorkspaceModuleType.Rest]: RestEntitySchemaType;
@@ -133,3 +139,46 @@ export interface YasumuEntityTree<T extends WorkspaceModuleType> {
   children?: YasumuEntityTree<T>[];
   __type: T;
 }
+
+export interface YasumuModuleTypeMap {
+  [WorkspaceModuleType.Rest]: YasumuRest;
+  [WorkspaceModuleType.GraphQL]: YasumuGraphql;
+  [WorkspaceModuleType.SMTP]: YasumuSmtp;
+  [WorkspaceModuleType.SSE]: YasumuSSE;
+  [WorkspaceModuleType.SocketIO]: YasumuSocketIO;
+  [WorkspaceModuleType.Websocket]: YasumuWebSocket;
+}
+
+export const isEntityTree = (entity: unknown): entity is YasumuEntityTree<WorkspaceModuleType> => {
+  return typeof entity === 'object' && entity !== null && 'id' in entity && 'name' in entity && '__type' in entity;
+};
+
+export const isRestEntityTree = (entity: unknown): entity is YasumuEntityTree<(typeof WorkspaceModuleType)['Rest']> => {
+  return isEntityTree(entity) && entity.__type === WorkspaceModuleType.Rest;
+};
+
+export const isGraphqlEntityTree = (
+  entity: unknown,
+): entity is YasumuEntityTree<(typeof WorkspaceModuleType)['GraphQL']> => {
+  return isEntityTree(entity) && entity.__type === WorkspaceModuleType.GraphQL;
+};
+
+export const isSmtpEntityTree = (entity: unknown): entity is YasumuEntityTree<(typeof WorkspaceModuleType)['SMTP']> => {
+  return isEntityTree(entity) && entity.__type === WorkspaceModuleType.SMTP;
+};
+
+export const isSseEntityTree = (entity: unknown): entity is YasumuEntityTree<(typeof WorkspaceModuleType)['SSE']> => {
+  return isEntityTree(entity) && entity.__type === WorkspaceModuleType.SSE;
+};
+
+export const isSocketioEntityTree = (
+  entity: unknown,
+): entity is YasumuEntityTree<(typeof WorkspaceModuleType)['SocketIO']> => {
+  return isEntityTree(entity) && entity.__type === WorkspaceModuleType.SocketIO;
+};
+
+export const isWebsocketEntityTree = (
+  entity: unknown,
+): entity is YasumuEntityTree<(typeof WorkspaceModuleType)['Websocket']> => {
+  return isEntityTree(entity) && entity.__type === WorkspaceModuleType.Websocket;
+};

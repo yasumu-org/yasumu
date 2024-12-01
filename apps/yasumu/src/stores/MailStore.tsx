@@ -1,4 +1,4 @@
-import { IMail } from '@/components/sidebars/mail-sidebar';
+import { IMail } from '@/components/sidebars/MailSidebar';
 import { useStore } from '@nanostores/react';
 import { atom } from 'nanostores';
 

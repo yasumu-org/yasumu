@@ -1,6 +1,6 @@
 import LayoutGroup from '@/components/LayoutGroup';
 import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
-import { EnvironmentSidebar } from '@/components/sidebars/environment-sidebar';
+import { EnvironmentSidebar } from '@/components/sidebars/EnvironmentSidebar';
 
 export default function EnvironmentLayout({ children }: React.PropsWithChildren) {
   return (

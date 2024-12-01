@@ -2,7 +2,7 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import './globals.css';
 import type { Metadata } from 'next';
 import { JetBrains_Mono, Poppins } from 'next/font/google';
-import { AppSidebar } from '@/components/sidebars/app-sidebar';
+import { AppSidebar } from '@/components/sidebars/AppSidebar';
 import LayoutGroup from '@/components/LayoutGroup';
 import ThemeProvider from '@/providers/ThemeProvider';
 import WorkspaceProvider from '@/providers/WorkspaceProvider';

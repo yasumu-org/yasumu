@@ -27,15 +27,15 @@ import {
 import YasumuLogo from '../assets/YasumuLogo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import SidebarThemeSelector from './theme-selector';
+import SidebarThemeSelector from './ThemeSelector';
 import { TbWorldWww } from 'react-icons/tb';
 import { SiDiscord, SiGithub, SiGraphql, SiSocketdotio } from 'react-icons/si';
 import WebSocketLogo from '../assets/WebSocketLogo';
 import { YasumuSocials } from '@/lib/constants/socials';
-import SidebarLayoutStyleSelector from './layout-style-selector';
+import SidebarLayoutStyleSelector from './LayoutStyleSelector';
 import { useEffect, useState } from 'react';
 import { useYasumu } from '@/providers/WorkspaceProvider';
-import { AppMenu } from './app-menu';
+import { AppMenu } from './AppMenu';
 
 const data = {
   user: {

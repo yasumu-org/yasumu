@@ -38,6 +38,6 @@
     "rimraf": "^6.0.1",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.17.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.7.2"
   }
 }

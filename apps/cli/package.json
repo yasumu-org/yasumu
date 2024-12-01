@@ -31,7 +31,7 @@
   "homepage": "https://github.com/yasumu-org/yasumu#readme",
   "devDependencies": {
     "rimraf": "^6.0.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "@yasumu/core": "workspace:^",

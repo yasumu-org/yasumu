@@ -3,7 +3,15 @@ import { WorkspaceNotFoundError } from '@/common/errors/WorkspaceNotFoundError.j
 import type { Yasumu } from '@/Yasumu.js';
 import { createWorkspaceMetadata, YasumuWorkspaceMetadata } from './YasumuWorkspaceMetadata.js';
 import { WorkspaceNotLoadedError } from '@/common/index.js';
-import { YasumuGraphql, YasumuRest, YasumuSmtp, YasumuSocketIO, YasumuSSE, YasumuWebSocket } from './modules/index.js';
+import {
+  YasumuGraphql,
+  type YasumuModuleTypeMap,
+  YasumuRest,
+  YasumuSmtp,
+  YasumuSocketIO,
+  YasumuSSE,
+  YasumuWebSocket,
+} from './modules/index.js';
 import type { BaseScriptRuntime } from './runtime/BaseScriptRuntime.js';
 import { YasumuIndexerService } from './indexer/YasumuIndexerService.js';
 import { WorkspaceModuleType } from './modules/common/constants.js';
@@ -11,7 +19,7 @@ import { WebRequestService } from './network/WebRequestService.js';
 import { ExternalCollectionsUtility } from './externals/ExternalCollectionsUtility.js';
 import { YasumuEnvironmentManager } from './environments/YasumuEnvironmentManager.js';
 import { createYasumuEventBus } from './events/YasumuEventBus.js';
-import { YasumuWorkspaceEvents, type YasumuWorkspaceEventsMap } from './events/common.js';
+import { YasumuWorkspaceEvents } from './events/common.js';
 
 export interface YasumuWorkspaceOptions {
   /**
@@ -233,6 +241,30 @@ export class YasumuWorkspace {
         return this.yasumu.utils.joinPathSync(workspacePath, 'socketio');
       case WorkspaceModuleType.SSE:
         return this.yasumu.utils.joinPathSync(workspacePath, 'sse');
+      default:
+        throw new TypeError(`Unknown module type: ${type}`);
+    }
+  }
+
+  /**
+   * Resolves a workspace module by its type
+   * @param type The type of module to resolve.
+   */
+  public resolveModule<T extends WorkspaceModuleType>(type: T): YasumuModuleTypeMap[T] {
+    // TODO: remove 'as any' in typescript 5.8
+    switch (type) {
+      case WorkspaceModuleType.Rest:
+        return this.rest as any;
+      case WorkspaceModuleType.GraphQL:
+        return this.graphql as any;
+      case WorkspaceModuleType.SMTP:
+        return this.smtp as any;
+      case WorkspaceModuleType.Websocket:
+        return this.websocket as any;
+      case WorkspaceModuleType.SocketIO:
+        return this.socketio as any;
+      case WorkspaceModuleType.SSE:
+        return this.sse as any;
       default:
         throw new TypeError(`Unknown module type: ${type}`);
     }

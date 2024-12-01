@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { useLayout } from '@/stores/AppLayout';
 import { useEffect, useRef } from 'react';
 import { graphql, updateSchema } from 'cm6-graphql';
-import { useTextEditor } from '@/hooks/use-text-editor';
+import { useTextEditor } from '@/hooks/useTextEditor';
 import { setGraphqlDocument, useGraphqlDocument, useGraphqlSchema } from '@/stores/GraphqlSchemaStore';
 import { buildClientSchema } from 'graphql';
 

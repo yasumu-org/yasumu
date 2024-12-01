@@ -1,5 +1,5 @@
 'use client';
-import { useMounted } from '@/hooks/use-mounted';
+import { useMounted } from '@/hooks/useMounted';
 import { useTheme } from 'next-themes';
 import {
   DropdownMenuCheckboxItem,

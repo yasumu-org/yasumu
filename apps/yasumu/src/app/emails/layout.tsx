@@ -1,6 +1,6 @@
 import LayoutGroup from '@/components/LayoutGroup';
 import { ResizableApplicationLayout } from '@/components/ResizableApplicationLayout';
-import { MailSidebar } from '@/components/sidebars/mail-sidebar';
+import { MailSidebar } from '@/components/sidebars/MailSidebar';
 
 export default function EmailLayout({ children }: React.PropsWithChildren) {
   return (

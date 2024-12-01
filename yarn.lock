@@ -2979,20 +2979,20 @@ __metadata:
     mime-types: "npm:^2.1.35"
     nanostores: "npm:^0.11.3"
     next: "npm:15.0.3"
-    next-themes: "npm:^0.4.0"
+    next-themes: "npm:^0.4.3"
     path-browserify: "npm:^1.0.1"
     postcss: "npm:^8"
     prettier: "npm:^3.3.3"
     react: "npm:19.0.0-rc-02c0e824-20241028"
     react-dom: "npm:19.0.0-rc-02c0e824-20241028"
     react-icons: "npm:^5.3.0"
-    react-resizable-panels: "npm:^2.1.6"
+    react-resizable-panels: "npm:^2.1.7"
     shadcn: "npm:^2.1.6"
-    sonner: "npm:^1.5.0"
+    sonner: "npm:^1.7.0"
     tailwind-merge: "npm:^2.5.4"
     tailwindcss: "npm:^3.4.14"
     tailwindcss-animate: "npm:^1.0.7"
-    typescript: "npm:^5"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -3004,7 +3004,7 @@ __metadata:
     rimraf: "npm:^6.0.1"
     tsc-alias: "npm:^1.8.10"
     tsx: "npm:^4.17.0"
-    typescript: "npm:^5.5.4"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -3021,7 +3021,7 @@ __metadata:
     rimraf: "npm:^6.0.1"
     tsc-alias: "npm:^1.8.10"
     tsx: "npm:^4.17.0"
-    typescript: "npm:^5.5.4"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -3033,7 +3033,7 @@ __metadata:
     "@yasumu/tsconfig": "workspace:^"
     rimraf: "npm:^6.0.1"
     tsx: "npm:^4.19.2"
-    typescript: "npm:^5.5.4"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -3047,7 +3047,7 @@ __metadata:
     rimraf: "npm:^6.0.1"
     tsc-alias: "npm:^1.8.10"
     tsx: "npm:^4.17.0"
-    typescript: "npm:^5.5.4"
+    typescript: "npm:^5.7.2"
     vitest: "npm:^2.1.4"
   languageName: unknown
   linkType: soft
@@ -3056,7 +3056,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@yasumu/tsconfig@workspace:packages/tsconfig"
   dependencies:
-    typescript: "npm:^5.6.2"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -3082,7 +3082,7 @@ __metadata:
     tailwind-merge: "npm:^2.5.3"
     tailwindcss: "npm:^3.4.1"
     tailwindcss-animate: "npm:^1.0.7"
-    typescript: "npm:^5"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -6504,7 +6504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-themes@npm:^0.4.0":
+"next-themes@npm:^0.4.3":
   version: 0.4.3
   resolution: "next-themes@npm:0.4.3"
   peerDependencies:
@@ -7278,13 +7278,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resizable-panels@npm:^2.1.6":
-  version: 2.1.6
-  resolution: "react-resizable-panels@npm:2.1.6"
+"react-resizable-panels@npm:^2.1.7":
+  version: 2.1.7
+  resolution: "react-resizable-panels@npm:2.1.7"
   peerDependencies:
     react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
     react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-  checksum: 10c0/f81aa13b70aeac24feaeee648aadbeab13c0f048c06c46d23a0cc746216928b1aa8a169567009cac8352ffe86b58dbe5a8b957eda357400af38bd71a56874ab5
+  checksum: 10c0/644a57960507b809f571bf8c95f07a04e3aeb9b20405a1d9d8cb6deb72d2462192e6e5e9751237347e7818179a619a6f65de4b355e276334d10b8cfe737ca4e1
   languageName: node
   linkType: hard
 
@@ -7887,7 +7887,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sonner@npm:^1.5.0":
+"sonner@npm:^1.7.0":
   version: 1.7.0
   resolution: "sonner@npm:1.7.0"
   peerDependencies:
@@ -8506,23 +8506,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5, typescript@npm:^5.5.4, typescript@npm:^5.6.2":
-  version: 5.6.3
-  resolution: "typescript@npm:5.6.3"
+"typescript@npm:^5.7.2":
+  version: 5.7.2
+  resolution: "typescript@npm:5.7.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/44f61d3fb15c35359bc60399cb8127c30bae554cd555b8e2b46d68fa79d680354b83320ad419ff1b81a0bdf324197b29affe6cc28988cd6a74d4ac60c94f9799
+  checksum: 10c0/a873118b5201b2ef332127ef5c63fb9d9c155e6fdbe211cbd9d8e65877283797cca76546bad742eea36ed7efbe3424a30376818f79c7318512064e8625d61622
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.4#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.6.2#optional!builtin<compat/typescript>":
-  version: 5.6.3
-  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
+"typescript@patch:typescript@npm%3A^5.7.2#optional!builtin<compat/typescript>":
+  version: 5.7.2
+  resolution: "typescript@patch:typescript@npm%3A5.7.2#optional!builtin<compat/typescript>::version=5.7.2&hash=8c6c40"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/7c9d2e07c81226d60435939618c91ec2ff0b75fbfa106eec3430f0fcf93a584bc6c73176676f532d78c3594fe28a54b36eb40b3d75593071a7ec91301533ace7
+  checksum: 10c0/c891ccf04008bc1305ba34053db951f8a4584b4a1bf2f68fd972c4a354df3dc5e62c8bfed4f6ac2d12e5b3b1c49af312c83a651048f818cd5b4949d17baacd79
   languageName: node
   linkType: hard
 
@@ -8936,7 +8936,7 @@ __metadata:
     "@yasumu/core": "workspace:^"
     "@yasumu/schema": "workspace:^"
     rimraf: "npm:^6.0.1"
-    typescript: "npm:^5.5.4"
+    typescript: "npm:^5.7.2"
   bin:
     yasumu: ./dist/index.js
   languageName: unknown

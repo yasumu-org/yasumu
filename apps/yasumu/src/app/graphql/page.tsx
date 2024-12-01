@@ -2,8 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { RequestTab, RequestTabs } from '../../components/RequestTabs';
-import { SiGraphql } from 'react-icons/si';
+import { RequestTabs } from '../../components/RequestTabs';
 import GraphqlInput from './(components)/GraphqlInput';
 import { IoSync } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
@@ -19,34 +18,7 @@ import {
 } from '@/stores/GraphqlSchemaStore';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import useDebounce from '@/hooks/use-debounce';
-
-const icon = () => <SiGraphql className="text-pink-500 size-4" />;
-
-export const graphqlDataTabs: RequestTab[] = [
-  'Login',
-  'Logout',
-  'Register',
-  'Current user',
-  'Update current user',
-  'List comments',
-  'Create comment',
-  'Update comment',
-  'Delete comment',
-  'List users',
-  'Create user',
-  'Update user',
-  'Delete user',
-  'List todos',
-  'Create todo',
-  'Update todo',
-  'Delete todo',
-  'Health check',
-  'Ping',
-].map((name) => ({
-  icon,
-  name,
-}));
+import useDebounce from '@/hooks/useDebounce';
 
 export default function Home() {
   const { yasumu } = useYasumu();
@@ -146,7 +118,7 @@ export default function Home() {
 
   return (
     <main className="p-4 w-full h-full overflow-y-auto flex flex-col gap-4">
-      <RequestTabs tabs={graphqlDataTabs} />
+      <RequestTabs tabs={[]} />
       <div className="flex gap-4">
         <Input
           placeholder="Enter a URL..."

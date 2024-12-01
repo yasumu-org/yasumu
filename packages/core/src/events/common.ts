@@ -1,3 +1,4 @@
+import type { WorkspaceModuleType } from '@/modules/index.js';
 import type { YasumuEnvironment } from '../environments/YasumuEnvironment.js';
 import type { YasumuWorkspace } from '../YasumuWorkspace.js';
 import type { YasumuWorkspaceMetadata } from '../YasumuWorkspaceMetadata.js';
@@ -13,6 +14,9 @@ export const YasumuWorkspaceEvents = {
   // workspace events
   WorkspaceCreated: 'workspace:created',
   WorkspaceMetadataUpdated: 'workspace:metadata:updated',
+
+  // file tree events
+  RebuildTree: 'file-tree:rebuild',
 } as const;
 
 export type YasumuWorkspaceEvents = (typeof YasumuWorkspaceEvents)[keyof typeof YasumuWorkspaceEvents];
@@ -28,4 +32,7 @@ export interface YasumuWorkspaceEventsMap {
   // workspace events
   [YasumuWorkspaceEvents.WorkspaceCreated]: YasumuWorkspace;
   [YasumuWorkspaceEvents.WorkspaceMetadataUpdated]: YasumuWorkspaceMetadata;
+
+  // file tree events
+  [YasumuWorkspaceEvents.RebuildTree]: WorkspaceModuleType;
 }
