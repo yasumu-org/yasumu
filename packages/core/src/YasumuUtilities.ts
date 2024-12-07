@@ -10,17 +10,16 @@ export class YasumuUtilities {
    */
   public joinPathSync(...paths: string[]): string {
     const sep = this.yasumu.path.sep();
-    const normalized = paths.flatMap((p, i) => {
-      if (!p || typeof p !== 'string') return;
-      if (!p.includes(sep)) return p;
-      if (i === 0) return p;
-      return p.split(sep);
+    const isAbsolute = paths[0]?.startsWith(sep);
+
+    // Normalize and split paths
+    const segments = paths.flatMap((path) => {
+      if (!path || typeof path !== 'string') return [];
+      return path.split(/[/\\]/).filter(Boolean);
     });
 
-    return normalized
-      .filter((p) => {
-        return p && typeof p === 'string' && p.length > 0 && p !== sep;
-      })
-      .join(sep);
+    // Join segments and handle absolute paths
+    const result = segments.join(sep);
+    return isAbsolute ? sep + result : result;
   }
 }

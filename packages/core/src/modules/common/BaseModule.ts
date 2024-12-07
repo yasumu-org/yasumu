@@ -170,6 +170,8 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
 
     const fs = this.workspace.yasumu.fs;
 
+    await this.ensureLocation();
+
     for (const entity of Object.values(entities)) {
       const location = this.workspace.yasumu.utils.joinPathSync(this.getLocation(), entity.blocks.Metadata.path);
       const pathExists = await fs.exists(location);
@@ -197,6 +199,20 @@ export abstract class YasumuBaseModule<T extends WorkspaceModuleType = Workspace
     for (const [path, index] of Object.entries(indexes)) {
       const location = this.workspace.yasumu.utils.joinPathSync(this.getLocation(), path);
       await this.workspace.indexer.saveIndex(location, index);
+    }
+  }
+
+  /**
+   * Ensure the location for this module exists.
+   */
+  public async ensureLocation() {
+    const location = this.getLocation();
+    const fs = this.workspace.yasumu.fs;
+
+    const exists = await fs.exists(location);
+
+    if (!exists) {
+      await fs.mkdir(location, { recursive: true });
     }
   }
 
