@@ -1,3 +1,2 @@
-#!/usr/bin/env node
-
-console.log('Yeah Masuuuu!!!!');
+export * from './cli/cli.js';
+export * from './version.js';

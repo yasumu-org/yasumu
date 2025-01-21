@@ -29,5 +29,8 @@
   "devDependencies": {
     "git-cliff": "^2.6.1",
     "prettier": "^3.3.3"
+  },
+  "dependencies": {
+    "use-macro": "^1.1.0"
   }
 }

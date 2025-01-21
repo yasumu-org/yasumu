@@ -17,11 +17,15 @@ export interface FromStandaloneOptions {
 }
 
 export class ExternalCollectionsUtility {
-  public readonly postman = new Postman(this.workspace);
-  public readonly insomnia = new Insomnia(this.workspace);
-  public readonly yaak = new Yaak(this.workspace);
+  public readonly postman: Postman;
+  public readonly insomnia: Insomnia;
+  public readonly yaak: Yaak;
 
-  public constructor(public readonly workspace: YasumuWorkspace) {}
+  public constructor(public readonly workspace: YasumuWorkspace) {
+    this.postman = new Postman(this.workspace);
+    this.insomnia = new Insomnia(this.workspace);
+    this.yaak = new Yaak(this.workspace);
+  }
 
   public async toStandalone(): Promise<YasumuStandaloneFormat> {
     return createStandalone({

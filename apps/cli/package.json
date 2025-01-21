@@ -3,12 +3,14 @@
   "version": "0.0.0",
   "description": "Yasumu cli",
   "main": "dist/index.js",
-  "bin": "./dist/index.js",
+  "bin": "./bin/cli.mjs",
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
+  "type": "module",
   "scripts": {
-    "build": "rimraf dist && tsc"
+    "build": "tsup"
   },
   "repository": {
     "type": "git",
@@ -31,10 +33,14 @@
   "homepage": "https://github.com/yasumu-org/yasumu#readme",
   "devDependencies": {
     "rimraf": "^6.0.1",
+    "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },
   "dependencies": {
     "@yasumu/core": "workspace:^",
-    "@yasumu/schema": "workspace:^"
+    "@yasumu/schema": "workspace:^",
+    "commander": "^13.1.0",
+    "open": "^10.1.0",
+    "picocolors": "^1.1.1"
   }
 }

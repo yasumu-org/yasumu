@@ -11,7 +11,7 @@
         "LICENSE"
     ],
     "scripts": {
-        "build": "rimraf dist && tsc",
+        "build": "tsup",
         "example": "tsx example/example.ts",
         "example2": "tsx example/workspace.ts"
     },
@@ -32,6 +32,7 @@
         "@types/node": "^22.4.1",
         "@yasumu/tsconfig": "workspace:^",
         "rimraf": "^6.0.1",
+        "tsup": "^8.3.5",
         "tsx": "^4.19.2",
         "typescript": "^5.7.2"
     }
