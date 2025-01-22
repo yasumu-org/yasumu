@@ -10,7 +10,6 @@
     "lib": ["ES2021", "DOM"],
     "inlineSourceMap": true,
     "pretty": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
+    "skipDefaultLibCheck": true
   }
 }

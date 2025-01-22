@@ -1,4 +1,4 @@
-import { FetchCommon } from '@yasumu/core';
+import type { FetchCommon } from '@yasumu/core';
 import { version } from '../../version.js';
 
 export function createFetch(): FetchCommon {

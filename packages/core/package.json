@@ -13,7 +13,7 @@
   "scripts": {
     "prepare": "yarn build",
     "prepublishOnly": "yarn build",
-    "build": "tsup",
+    "build": "rimraf dist && tsc && tsc-alias",
     "build:check": "tsc --noEmit"
   },
   "repository": {
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@yasumu/tsconfig": "workspace:^",
     "rimraf": "^6.0.1",
-    "tsup": "^8.3.5",
+    "tsc-alias": "^1.8.10",
     "tsx": "^4.17.0",
     "typescript": "^5.7.2"
   },
