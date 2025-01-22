@@ -41,7 +41,7 @@
     "tsup": "^8.3.5",
     "tsx": "^4.17.0",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.4"
+    "vitest": "^3.0.3"
   },
   "dependencies": {
     "@yasumu/core": "workspace:^",
